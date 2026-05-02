@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 21:10:46 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/01 22:17:56 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/02 02:47:04 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,9 @@
 
 int	main(int argc, char **argv)
 {
-    
+	if (argc != 2)
+		exit(error_handling("Error\nInput:file dosent exist\n", 2));
+	t_game game;
+	ft_memset(&game, 0, sizeof(game));
+	init_game(&game, argv[1]);
 }

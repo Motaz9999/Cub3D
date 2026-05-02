@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_handling.c                                   :+:      :+:    :+:   */
+/*   init_game.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/01 22:18:27 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/02 02:32:52 by moodeh           ###   ########.fr       */
+/*   Created: 2026/05/02 02:43:11 by moodeh            #+#    #+#             */
+/*   Updated: 2026/05/02 02:47:20 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	error_handling(char *context, int exit_code)
+void	init_game(t_game *game , char *config_file)
 {
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(context, 2);
-	ft_putstr_fd("\n", 2);
-	return (exit_code);
+	game->config_file_data = parser_file(config_file);
+	if (game->config_file_data == NULL)
+		exit(2);
 }

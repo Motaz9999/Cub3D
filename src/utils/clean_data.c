@@ -1,21 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_handling.c                                   :+:      :+:    :+:   */
+/*   clean_data.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/01 22:18:27 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/02 02:32:52 by moodeh           ###   ########.fr       */
+/*   Created: 2026/05/02 02:50:38 by moodeh            #+#    #+#             */
+/*   Updated: 2026/05/02 02:55:57 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	error_handling(char *context, int exit_code)
+//this fun is for clean the config data file 
+void	clean_data(t_config *data)
 {
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(context, 2);
-	ft_putstr_fd("\n", 2);
-	return (exit_code);
+	if (data == NULL)
+		return ;
+	if (data->fd != -1)
+		close(data->fd);
+	if (data->floor_and_ceiling != NULL)
+		clean_t_c_f_data(data->floor_and_ceiling);
+	if (data->map != NULL)
+		clean_map(data->map);
+	if (data->texture != NULL)
+		clean_texture(data->texture);
+	free(data);
 }

@@ -22,27 +22,22 @@ typedef struct s_map
 }					t_map;
 
 
-
+//from 0-5 -> 6 elements
 typedef enum e_type_of_text
 {
 	NO,
 	SO,
 	WE,
-	EA
+	EA,
+	C,
+	F
 }					t_type_of_text;
-typedef struct s_texture
-{
-	t_type_of_text	type;
-	char			*path;
-}					t_texture;
 
 typedef struct s_config
 {
 	int				fd;
 	int count_of_elements;
-	t_texture *texture; // texture path checks NO,SO,WE,EA
-	char			*floor;
-	char 			*ceiling; // floor and ceiling F or C with (220,100,0)
+	char *texture[6]; // texture path checks NO,SO,WE,EA
 	char *save_line_map;
 	t_map			*map;
 }					t_config;

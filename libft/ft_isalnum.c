@@ -6,12 +6,16 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 14:00:50 by moodeh            #+#    #+#             */
-/*   Updated: 2025/08/19 14:41:48 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/02 03:26:33 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+
+/*
+** ft_isalnum: Checks for an alphanumeric character.
+*/
 int	ft_isalnum(int arg)
 {
 	if ((arg >= '0' && arg <= '9')

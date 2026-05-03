@@ -12,6 +12,9 @@
 
 #include "libft.h"
 
+/*
+** ft_toupper: Converts the letter c to upper case, if possible.
+*/
 int	ft_toupper(int ch)
 {
 	if (ch >= 97 && ch <= 122)

@@ -6,79 +6,97 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 22:19:32 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/02 03:23:55 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/03 22:59:03 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 // this file for checking on the extention of the file
-static int	check_cub(char *map_path)
+//this to check on path extension
+//use it later U can added to libft
+int check_extension(char *path, char *ext)
+{
+    int len;
+    int ext_len;
+
+    if (!path || !ext)
+        return (FALSE);
+    len = ft_strlen(path);
+    ext_len = ft_strlen(ext);
+    if (len < ext_len)
+        return (FALSE);
+    if (ft_strncmp(&path[len - ext_len], ext, ext_len) == 0 ) 
+    return TRUE;
+    else
+    return (FALSE);
+}
+
+// print error
+int	line_have_trash(line)
+{
+	return (FALSE); // dont have trash value
+}
+
+// just skip
+int	line_is_empty(char *line)
 {
 	int	i;
 
-	i = ft_strlen(map_path);
-	if (i < 4)
-		return (FALSE);
-	if (ft_strncmp(map_path + i - 4, ".cub", 4) == 0)
+	i = 0;
+	while (*(line + i) != EOF || *(line + i) != '\n')
 	{
-		return (TRUE);
+		if ((*line + i) != '\t' || (*line + i) != ' ')
+			// this mean that i have data on the line
+			return (FALSE);
+		i++;
 	}
-	return (FALSE);
+	return (TRUE); // this mean that the file is empty
 }
 
-//print error
-int line_have_trash(line)
-{
-    
-    return FALSE; //dont have trash value
-}
-//just skip
-int line_is_empty(char *line)
-{
-    if ()
-    return FALSE;
-    return TRUE;//this mean that the file is empty
-}
-//this fun is for gathering multible checks on map
-//first check is on the file have data i want
-//this fun must read all the lines before coming to the map if 
-//it comes to the map (like have a line start with the char not from those
+
+
+// this fun is for gathering multible checks on map
+// first check is on the file have data i want
+// this fun must read all the lines before coming to the map if
+// it comes to the map (like have a line start with the char not from those
 // NO ./path/north.xpm — north texture path
 // SO ./path/south.xpm — south texture path
 // WE ./path/west.xpm — west texture path
 // EA ./path/east.xpm — east texture path
 // F 220,100,0 — floor RGB color
 // C 225,30,0 — ceiling RGB color
-//so when i hit spaces with zeros and ones this mean i am inside the map 
-//and i must check on the counter element 
-//u also must check on duplicates
-//btw must be empty after the map
-//must the line dont have trash values (dont start with something we dont know)
+// so when i hit spaces with zeros and ones this mean i am inside the map
+// and i must check on the counter element
+// u also must check on duplicates
+// btw must be empty after the map
+// must the line dont have trash values (dont start with something we dont know)
 static int	fill_data(t_config *data)
 {
-    char *line;//take line by line (skip the empty lines or the one have trash values)
-    line = get_next_line(data->fd);
-    while (line != NULL)
-    {
-        if (line_is_empty(line))
-        {
-            free(line);
-            continue;
-        }else if (line_have_trash(line) || duplicates_vars() || start_map_without_finish())
-        {
-            free(line);
-            return FALSE;
-        }
-        if (start_map_without_finish())
-        {
-            data->save_line_map = line;
-            break;
-        }
-        free(line);
-        line = get_next_line(data->fd);
-    }
-    
+	char *line;
+		// take line by line (skip the empty lines or the one have trash values)
+	line = get_next_line(data->fd);
+	while (line != NULL)
+	{
+		if (line_is_empty(line))
+		{
+			free(line);
+			continue ;
+		}
+		else if (line_have_trash(line) || start_map_without_finish(data, line)
+			|| extract_data(data, line))
+		{
+			free(line);
+			return (FALSE);
+		}
+		if (start_map_without_finish())
+		{
+			data->save_line_map = line;
+			break ;
+		}
+		free(line);
+		line = get_next_line(data->fd);
+	}
 	return (TRUE);
 }
 
@@ -91,7 +109,7 @@ t_config	*parse_file(char *file_name)
 	if (data == NULL)
 		exit(error_handling("Malloc error", 2));
 	// first test to see if i can open fd
-	if (check_cub(file_name))
+	if (!check_extension(file_name , ".cub"))
 	{
 		free(data);
 		exit(error_handling("Wrong file name extention", 2));

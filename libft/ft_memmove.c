@@ -12,6 +12,9 @@
 
 #include "libft.h"
 
+/*
+** ft_memmove: Copies n bytes from memory area src to memory area dest. The memory areas may overlap.
+*/
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
 	unsigned char	*ptdest;

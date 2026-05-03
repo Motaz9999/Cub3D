@@ -1,29 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
+/*   check_on_values.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/14 17:57:41 by moodeh            #+#    #+#             */
-/*   Updated: 2025/08/19 14:42:10 by moodeh           ###   ########.fr       */
+/*   Created: 2026/05/03 22:43:39 by moodeh            #+#    #+#             */
+/*   Updated: 2026/05/03 22:43:47 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-/*
-** ft_lstadd_front: Adds the node new at the beginning of the list.
-*/
-void	ft_lstadd_front(t_list **lst, t_list *new)
-{
-	if (!new)
-		return ;
-	if (!*lst)
-	{
-		*lst = new;
-		return ;
-	}
-	new->next = *lst;
-	*lst = new;
-}
+#include "cub3d.h"

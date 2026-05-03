@@ -30,6 +30,9 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 #include "libft.h"
 
 // دالة لتغيير كل حرف إلى كبير إذا الفهرس زوجي
+/*
+** make_upper_even: Utility function: make_upper_even
+*/
 void make_upper_even(unsigned int i, char *c)
 {
     if (i % 2 == 0 && *c >= 'a' && *c <= 'z')

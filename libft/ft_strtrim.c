@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 14:23:52 by moodeh            #+#    #+#             */
-/*   Updated: 2025/08/19 14:43:54 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/03 22:00:36 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ static int	ft_is_inset(char s, char *set)
 	return (con);
 }
 
+/*
+** ft_strtrim: Allocates (with malloc) and returns a copy of
+** 's1' with the characters specified in 'set' removed
+** from the beginning and the end of the string.
+*/
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	char		*str;

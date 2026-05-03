@@ -37,6 +37,9 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+** ft_upper_even: Utility function: ft_upper_even
+*/
 char ft_upper_even(unsigned int i, char c)
 {
     if (i % 2 == 0 && c >= 'a' && c <= 'z')

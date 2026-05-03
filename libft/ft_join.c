@@ -14,6 +14,9 @@
 
 // Joins 3 strings into one.
 // Frees the intermediate string produced internally.
+/*
+** ft_merge_join: Utility function: ft_merge_join
+*/
 char	*ft_merge_join(char *s1, char *s2, char *s3)
 {
 	char	*tmp;

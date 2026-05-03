@@ -12,6 +12,9 @@
 
 #include "libft.h"
 
+/*
+** ft_strncmp: Compares the first n bytes of the two strings s1 and s2.
+*/
 int	ft_strncmp(const char *s1, const char *s2, size_t size)
 {
 	unsigned char	*pts1;

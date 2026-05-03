@@ -12,6 +12,9 @@
 
 #include "libft.h"
 
+/*
+** ft_lenint: Utility function: ft_lenint
+*/
 int	ft_lenint(int n)
 {
 	int	len;

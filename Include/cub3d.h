@@ -20,4 +20,5 @@ int			error_handling(char *context, int exit_code);
 void		clean_data(t_config *data);
 // parsing
 t_config	*parse_file(char *file_name);
+int check_extension(char *path, char *ext);
 #endif

@@ -12,6 +12,9 @@
 
 #include "libft.h"
 
+/*
+** ft_bzero: Erases the data in the n bytes of the memory starting at the location pointed to by s.
+*/
 void	ft_bzero(void *s, size_t n)
 {
 	unsigned char	*strpt ;

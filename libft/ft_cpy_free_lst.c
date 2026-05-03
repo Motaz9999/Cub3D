@@ -30,6 +30,9 @@ static void	set_next(void *node, size_t offset, void *value)
 ** wires the new nodes together, returns the new head.
 ** if any dup fails, frees everything so far and returns NULL.
 */
+/*
+** ft_lstcopy_generic: Utility function: ft_lstcopy_generic
+*/
 void	*ft_lstcopy_generic(void *head, t_lst_ops ops)
 {
 	void	*new_head;

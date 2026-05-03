@@ -15,6 +15,9 @@
 // this fun is designed to free what ever args you want its works like printf
 //This only frees heap-allocated pointers (from malloc, calloc, realloc).
 //Always terminate with NULL
+/*
+** ft_free_all: Helper to free multiple resources.
+*/
 void	ft_free_all(void *first, ...)
 {
 	void	*ptr;

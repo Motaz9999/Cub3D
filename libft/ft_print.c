@@ -12,6 +12,9 @@
 
 #include "libft.h"
 
+/*
+** ft_putstr_len: Utility function: ft_putstr_len
+*/
 int	ft_putstr_len(char *s, int fd)
 {
 	if (!s)

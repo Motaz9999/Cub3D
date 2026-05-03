@@ -12,6 +12,9 @@
 
 #include "libft.h"
 
+/*
+** ft_memchr: Scans the initial n bytes of the memory area pointed to by s for the first instance of c.
+*/
 void	*ft_memchr(const void *str, int c, size_t n)
 {
 	unsigned char	*pstr;

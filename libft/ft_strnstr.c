@@ -12,6 +12,9 @@
 
 #include "libft.h"
 
+/*
+** ft_strnstr: Locates the first occurrence of the null-terminated string needle in the string haystack, where not more than len characters are searched.
+*/
 char	*ft_strnstr(const char *haystack, const char *needle, size_t n)
 {
 	size_t	i;

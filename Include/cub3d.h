@@ -24,4 +24,6 @@ int check_extension(char *path, char *ext);
 //checks for paths and values 
 int check_on_path(char *path);
 int check_on_value(char *value);
+//data
+int	extract_data(t_config *data, char *line);
 #endif

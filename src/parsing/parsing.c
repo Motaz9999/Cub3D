@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 22:19:32 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/04 02:39:14 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/04 02:57:22 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,25 @@ int check_extension(char *path, char *ext)
     return (FALSE);
 }
 
-// print error
+//check of the line is part of the map (have all the map chars or some of them)
+static int	is_map_line(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n'
+			&& line[i] != '0' && line[i] != '1'
+			&& line[i] != 'N' && line[i] != 'S'
+			&& line[i] != 'E' && line[i] != 'W')
+			return (FALSE);
+		i++;
+	}
+	return (TRUE);
+}
+
+// check if the line have some char must not have or check on the line is from the map or not in the same time
 int	line_have_trash(char *line)
 {
 	int	i;
@@ -44,8 +62,9 @@ int	line_have_trash(char *line)
 		return (FALSE);
 	if (!ft_strncmp(&line[i], "NO ", 3) || !ft_strncmp(&line[i], "SO ", 3)
 		|| !ft_strncmp(&line[i], "WE ", 3) || !ft_strncmp(&line[i], "EA ", 3)
-		|| !ft_strncmp(&line[i], "F ", 2) || !ft_strncmp(&line[i], "C ", 2)
-		|| line[i] == '1' || line[i] == '0')
+		|| !ft_strncmp(&line[i], "F ", 2) || !ft_strncmp(&line[i], "C ", 2))
+		return (FALSE);
+	if (is_map_line(line))
 		return (FALSE);
 	error_handling("Line contains trash values", 2);
 	return (TRUE); // has trash value
@@ -95,13 +114,17 @@ static int	fill_data(t_config *data)
 			free(line);
 			continue ;
 		}
-		else if (line_have_trash(line) || start_map_without_finish(data, line)
-			|| extract_data(data, line))
+		else if (line_have_trash(line) || extract_data(data, line) )
 		{
 			free(line);
 			return (FALSE);
 		}
-		if (start_map_without_finish())
+		else if ( is_map_line(line) && data->count_of_elements != 6)
+			{
+				free(line);
+				return error_handling("start the map without having all texture element" , (int)FALSE);
+			}
+		else if (is_map_line(line) && data->count_of_elements == 6)
 		{
 			data->save_line_map = line;
 			break ;

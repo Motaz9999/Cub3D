@@ -21,4 +21,7 @@ void		clean_data(t_config *data);
 // parsing
 t_config	*parse_file(char *file_name);
 int check_extension(char *path, char *ext);
+//checks for paths and values 
+int check_on_path(char *path);
+int check_on_value(char *value);
 #endif

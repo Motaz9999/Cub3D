@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 22:19:32 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/03 22:59:03 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/04 02:39:14 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,22 @@ int check_extension(char *path, char *ext)
 }
 
 // print error
-int	line_have_trash(line)
+int	line_have_trash(char *line)
 {
-	return (FALSE); // dont have trash value
+	int	i;
+
+	i = 0;
+	while (line[i] == ' ' || line[i] == '\t')
+		i++;
+	if (line[i] == '\n' || line[i] == '\0')
+		return (FALSE);
+	if (!ft_strncmp(&line[i], "NO ", 3) || !ft_strncmp(&line[i], "SO ", 3)
+		|| !ft_strncmp(&line[i], "WE ", 3) || !ft_strncmp(&line[i], "EA ", 3)
+		|| !ft_strncmp(&line[i], "F ", 2) || !ft_strncmp(&line[i], "C ", 2)
+		|| line[i] == '1' || line[i] == '0')
+		return (FALSE);
+	error_handling("Line contains trash values", 2);
+	return (TRUE); // has trash value
 }
 
 // just skip
@@ -73,8 +86,7 @@ int	line_is_empty(char *line)
 // must the line dont have trash values (dont start with something we dont know)
 static int	fill_data(t_config *data)
 {
-	char *line;
-		// take line by line (skip the empty lines or the one have trash values)
+	char *line;// take line by line (skip the empty lines or the one have trash values)
 	line = get_next_line(data->fd);
 	while (line != NULL)
 	{

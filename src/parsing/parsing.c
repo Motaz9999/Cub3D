@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 22:19:32 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/04 02:57:22 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/04 03:15:59 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ int	line_is_empty(char *line)
 	int	i;
 
 	i = 0;
-	while (*(line + i) != EOF || *(line + i) != '\n')
+	while (line[i] != '\0' && line[i] != '\n')
 	{
-		if ((*line + i) != '\t' || (*line + i) != ' ')
+		if (line[i] != '\t' && line[i] != ' ')
 			// this mean that i have data on the line
 			return (FALSE);
 		i++;
@@ -112,27 +112,49 @@ static int	fill_data(t_config *data)
 		if (line_is_empty(line))
 		{
 			free(line);
+			line = get_next_line(data->fd);
 			continue ;
 		}
-		else if (line_have_trash(line) || extract_data(data, line) )
+		else if (line_have_trash(line))
 		{
 			free(line);
 			return (FALSE);
 		}
-		else if ( is_map_line(line) && data->count_of_elements != 6)
+		else if (is_map_line(line))
+		{
+			if (data->count_of_elements != 6)
 			{
 				free(line);
-				return error_handling("start the map without having all texture element" , (int)FALSE);
+				return error_handling("starts the map without having all texture element" , (int)FALSE);
 			}
-		else if (is_map_line(line) && data->count_of_elements == 6)
-		{
 			data->save_line_map = line;
 			break ;
+		}
+		else if (!extract_data(data, line))
+		{
+			free(line);
+			return (FALSE);
 		}
 		free(line);
 		line = get_next_line(data->fd);
 	}
 	return (TRUE);
+}
+
+static void	init_data(t_config *data)
+{
+	int	i;
+
+	data->fd = -1;
+	data->count_of_elements = 0;
+	data->save_line_map = NULL;
+	data->map = NULL;
+	i = 0;
+	while (i < 6)
+	{
+		data->texture[i] = NULL;
+		i++;
+	}
 }
 
 t_config	*parse_file(char *file_name)
@@ -143,7 +165,7 @@ t_config	*parse_file(char *file_name)
 	// now i have element that can store data so lets start
 	if (data == NULL)
 		exit(error_handling("Malloc error", 2));
-	// first test to see if i can open fd
+	init_data(data);// first test to see if i can open fd
 	if (!check_extension(file_name , ".cub"))
 	{
 		free(data);

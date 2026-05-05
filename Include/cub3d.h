@@ -18,8 +18,15 @@
 int			error_handling(char *context, int exit_code);
 // clean data and structs and free them
 void		clean_data(t_config *data);
+
+// Init structs
+void		init_game(t_game *game);
+void		init_map(t_map *map);
+void		init_config(t_config *config);
+
 // parsing
 t_config	*parse_file(char *file_name);
+int			parse_map(t_config *data);
 int check_extension(char *path, char *ext);
 //checks for paths and values 
 int check_on_path(char *path);

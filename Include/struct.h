@@ -17,7 +17,8 @@ typedef struct s_player
 typedef struct s_map
 {
 	char **map;       // the hole map
-	char map_char[6]; // allowed chars
+	char *map_char; // allowed chars
+	int map_hight;//the hight of the whole map
 						// u must also add the player loc
 }					t_map;
 
@@ -39,7 +40,7 @@ typedef struct s_config
 	int count_of_elements;
 	char *texture[6]; // texture path checks NO,SO,WE,EA
 	char *save_line_map;
-	t_map			*map;
+	t_map			*map_data;
 }					t_config;
 
 typedef struct s_game

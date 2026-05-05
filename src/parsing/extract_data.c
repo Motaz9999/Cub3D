@@ -6,48 +6,49 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 22:35:40 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/04 02:38:59 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/05 06:07:44 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-//add new path and 
-// checks if i already added this path 
-//and take the path 
-int add_to_data(t_config *data,char *extract_path , t_type_of_text type, int skip)
+// add new path and
+// checks if i already added this path
+// and take the path
+int	add_to_data(t_config *data, char *extract_path, t_type_of_text type,
+		int skip)
 {
-	char *path;
+	char	*path;
 
 	if (data->texture[(int)type] != NULL)
-		return error_handling("Duplicates" , (int)FALSE);
-	path = ft_strtrim(extract_path+skip , " \t\n");
+		return (error_handling("Duplicates texture paths", (int)FALSE));
+	path = ft_strtrim(extract_path + skip, " \t\n");
 	if (path == NULL)
 	{
-		error_handling("strtrim" , 2);
-		return FALSE;
+		error_handling("strtrim", 2);
+		return (FALSE);
 	}
 	if ((type != C && type != F) && !check_on_path(path))
 	{
 		free(path);
-		return FALSE;
+		return (FALSE);
 	}
 	else if ((type == C || type == F) && !check_on_value(path))
 	{
 		free(path);
-		return FALSE;
+		return (FALSE);
 	}
 	data->texture[(int)type] = path;
 	data->count_of_elements++;
-	return TRUE;
+	return (TRUE);
 }
 
 // this fun is for searching for the something i needs and it starts with
 // NO//SO//WE//EA//F//C
 int	extract_data(t_config *data, char *line)
 {
-	char	*trim;
-	int		status;
+	char *trim;
+	int status;
 
 	trim = ft_strtrim(line, "\n \t");
 	if (!trim)

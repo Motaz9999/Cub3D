@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 02:50:38 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/02 02:55:57 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/05 04:31:22 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	clean_data(t_config *data)
 			free(data->texture[i]);
 		i++;
 	}
-	if (data->map != NULL)
-		clean_map(data->map);
+	if (data->map_data != NULL)
+		clean_map(data->map_data);
 	free(data);
 }

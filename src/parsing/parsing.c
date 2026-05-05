@@ -6,33 +6,33 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 22:19:32 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/04 03:15:59 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/05 06:08:54 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 // this file for checking on the extention of the file
-//this to check on path extension
-//use it later U can added to libft
-int check_extension(char *path, char *ext)
+// this to check on path extension
+// use it later U can added to libft
+int	check_extension(char *path, char *ext)
 {
-    int len;
-    int ext_len;
+	int	len;
+	int	ext_len;
 
-    if (!path || !ext)
-        return (FALSE);
-    len = ft_strlen(path);
-    ext_len = ft_strlen(ext);
-    if (len < ext_len)
-        return (FALSE);
-    if (ft_strncmp(&path[len - ext_len], ext, ext_len) == 0 ) 
-    return TRUE;
-    else
-    return (FALSE);
+	if (!path || !ext)
+		return (FALSE);
+	len = ft_strlen(path);
+	ext_len = ft_strlen(ext);
+	if (len < ext_len)
+		return (FALSE);
+	if (ft_strncmp(&path[len - ext_len], ext, ext_len) == 0)
+		return (TRUE);
+	else
+		return (FALSE);
 }
 
-//check of the line is part of the map (have all the map chars or some of them)
+// check of the line is part of the map (have all the map chars or some of them)
 static int	is_map_line(char *line)
 {
 	int	i;
@@ -41,9 +41,8 @@ static int	is_map_line(char *line)
 	while (line[i])
 	{
 		if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n'
-			&& line[i] != '0' && line[i] != '1'
-			&& line[i] != 'N' && line[i] != 'S'
-			&& line[i] != 'E' && line[i] != 'W')
+			&& line[i] != '0' && line[i] != '1' && line[i] != 'N'
+			&& line[i] != 'S' && line[i] != 'E' && line[i] != 'W')
 			return (FALSE);
 		i++;
 	}
@@ -86,8 +85,6 @@ int	line_is_empty(char *line)
 	return (TRUE); // this mean that the file is empty
 }
 
-
-
 // this fun is for gathering multible checks on map
 // first check is on the file have data i want
 // this fun must read all the lines before coming to the map if
@@ -105,7 +102,8 @@ int	line_is_empty(char *line)
 // must the line dont have trash values (dont start with something we dont know)
 static int	fill_data(t_config *data)
 {
-	char *line;// take line by line (skip the empty lines or the one have trash values)
+	char *line;
+		// take line by line (skip the empty lines or the one have trash values)
 	line = get_next_line(data->fd);
 	while (line != NULL)
 	{
@@ -125,7 +123,8 @@ static int	fill_data(t_config *data)
 			if (data->count_of_elements != 6)
 			{
 				free(line);
-				return error_handling("starts the map without having all texture element" , (int)FALSE);
+				return (error_handling("starts the map without having all texture element",
+						(int)FALSE));
 			}
 			data->save_line_map = line;
 			break ;
@@ -138,23 +137,10 @@ static int	fill_data(t_config *data)
 		free(line);
 		line = get_next_line(data->fd);
 	}
+	if (data->count_of_elements != 6)
+		return (error_handling("the file dosent have all required info",
+				(int)FALSE));
 	return (TRUE);
-}
-
-static void	init_data(t_config *data)
-{
-	int	i;
-
-	data->fd = -1;
-	data->count_of_elements = 0;
-	data->save_line_map = NULL;
-	data->map = NULL;
-	i = 0;
-	while (i < 6)
-	{
-		data->texture[i] = NULL;
-		i++;
-	}
 }
 
 t_config	*parse_file(char *file_name)
@@ -165,8 +151,8 @@ t_config	*parse_file(char *file_name)
 	// now i have element that can store data so lets start
 	if (data == NULL)
 		exit(error_handling("Malloc error", 2));
-	init_data(data);// first test to see if i can open fd
-	if (!check_extension(file_name , ".cub"))
+	init_config(data); // first test to see if i can open fd
+	if (!check_extension(file_name, ".cub"))
 	{
 		free(data);
 		exit(error_handling("Wrong file name extention", 2));
@@ -177,7 +163,7 @@ t_config	*parse_file(char *file_name)
 		free(data);
 		exit(error_handling("File not found or couldn't access", 2));
 	} // now i have an open file so
-	if (!fill_data(data))
+	if (!fill_data(data) || !parse_map(data))
 	{
 		clean_data(data);
 		exit(2);

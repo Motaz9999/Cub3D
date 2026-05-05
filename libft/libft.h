@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:04:10 by moodeh            #+#    #+#             */
-/*   Updated: 2026/03/23 20:25:00 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/05 05:29:32 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,11 @@ size_t				ft_strlcpy(char *dest, const char *src, size_t size);
 void				ft_free_all(void *first, ...);
 void				ft_free_all2(void **first, ...);
 char				*ft_merge_join(char *s1, char *s2, char *s3);
-
+int					ft_inset(char c, char *set);
 /*
 ** t_lst_ops — teach the generic functions about YOUR node type
 **
-**   next_offset : offsetof(your_type, next) -- count the bytes 
+**   next_offset : offsetof(your_type, next) -- count the bytes
 **   dup         : malloc a new node, deep copy all fields, set next=NULL
 **   del         : free all inner pointers (key, value...) but NOT the node
 **                 pass NULL if your node has no inner pointers to free

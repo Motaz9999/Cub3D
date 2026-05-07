@@ -12,9 +12,6 @@
 
 #include "libft.h"
 
-/*
-** ft_calloc: Allocates memory for an array of nmemb elements of size bytes each and returns a pointer to the allocated memory.
-*/
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	unsigned char	*loca;
@@ -41,41 +38,3 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	}
 	return (loca);
 }
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include "libft.h" 
-
-int main(void)
-{
-    int *arr;
-    size_t n = 10; // عدد العناصر
-    size_t size = sizeof(int);
-
-    // استخدام calloc الأصلية
-    arr = (int *)calloc(n, size);
-    if (!arr)
-    {
-        printf("Memory allocation failed!\n");
-        return 1;
-    }
-
-    // تحقق أن كل البايتات صفر
-    int zero = 1;
-    for (size_t i = 0; i < n; i++)
-    {
-        if (arr[i] != 0)
-            zero = 0;
-        printf("arr[%zu] = %d\n", i, arr[i]);
-    }
-
-    if (zero)
-        printf("All elements are zero! ✅\n");
-    else
-        printf("Some elements are not zero! ❌\n");
-
-    free(arr); // لا تنسى تحرير الذاكرة
-
-    return 0;
-}
-*/

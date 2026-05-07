@@ -12,27 +12,16 @@
 
 #include "libft.h"
 
-// get the next pointer of any node using the offset
 static void	*get_next(void *node, size_t offset)
 {
 	return (*(void **)((char *)node + offset));
 }
 
-// helper: set the next pointer of any node using the offset
 static void	set_next(void *node, size_t offset, void *value)
 {
 	*(void **)((char *)node + offset) = value;
 }
 
-/*
-** ft_lstcopy_generic
-** walks the list, calls ops.dup on each node to deep copy it,
-** wires the new nodes together, returns the new head.
-** if any dup fails, frees everything so far and returns NULL.
-*/
-/*
-** ft_lstcopy_generic: Utility function: ft_lstcopy_generic
-*/
 void	*ft_lstcopy_generic(void *head, t_lst_ops ops)
 {
 	void	*new_head;
@@ -61,11 +50,6 @@ void	*ft_lstcopy_generic(void *head, t_lst_ops ops)
 	return (new_head);
 }
 
-/*
-** ft_lstfree_generic
-** walks the list, calls ops.del on each node (to free inner pointers),
-** then frees the node itself.
-*/
 void	ft_lstfree_generic(void *head, t_lst_ops ops)
 {
 	void	*current;

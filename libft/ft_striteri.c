@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 17:18:53 by moodeh            #+#    #+#             */
-/*   Updated: 2025/08/19 14:43:19 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/07 06:33:26 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,28 +25,3 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 		i++;
 	}
 }
-/*
-#include <stdio.h>
-#include "libft.h"
-
-// دالة لتغيير كل حرف إلى كبير إذا الفهرس زوجي
-/*
-** make_upper_even: Utility function: make_upper_even
-*/
-void make_upper_even(unsigned int i, char *c)
-{
-    if (i % 2 == 0 && *c >= 'a' && *c <= 'z')
-        *c = *c - 32;
-}
-
-int main(void)
-{
-    char str[] = "hello world";
-
-    printf("Original: %s\n", str);
-    ft_striteri(str, make_upper_even);
-    printf("After ft_striteri: %s\n", str);
-
-    return 0;
-}
-*/

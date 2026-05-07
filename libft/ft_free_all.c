@@ -12,12 +12,6 @@
 
 #include "libft.h"
 
-// this fun is designed to free what ever args you want its works like printf
-//This only frees heap-allocated pointers (from malloc, calloc, realloc).
-//Always terminate with NULL
-/*
-** ft_free_all: Helper to free multiple resources.
-*/
 void	ft_free_all(void *first, ...)
 {
 	void	*ptr;
@@ -35,8 +29,6 @@ void	ft_free_all(void *first, ...)
 	va_end(args_to_free);
 }
 
-// this fun is to free ** like split
-//Only use this on null-terminated arrays, like what ft_split creates.
 void	ft_free_all2(void **first, ...)
 {
 	void	**ptr;

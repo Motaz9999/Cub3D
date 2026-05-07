@@ -12,9 +12,6 @@
 
 #include "libft.h"
 
-/*
-** ft_atoi: Converts the initial portion of the string pointed to by str to int representation.
-*/
 int	ft_atoi(const char *str)
 {
 	int	num;
@@ -43,36 +40,3 @@ int	ft_atoi(const char *str)
 	}
 	return (sign * num);
 }
-/*
-#include <stdio.h>
-#include <stdlib.h> // for original atoi
-
-int	main(void)
-{
-	char *tests[] = {
-		"42",
-		"   42",
-		"   -42",
-		"+42",
-		"--42",
-		"4193 with words",
-		"words and 987",
-		"2147483647",    // INT_MAX
-		"-2147483648",   // INT_MIN
-		"2147483648",    // Overflow
-		"-2147483649",   // Underflow
-		"",
-		"   +0",
-		"0000123",
-		NULL
-	};
-	for (int i = 0; tests[i] != NULL; i++)
-	{
-		printf("Input: \"%s\"\n", tests[i]);
-		printf("ft_atoi: %d | atoi: %d\n", ft_atoi(tests[i]), atoi(tests[i]));
-		printf("-----------------------------\n");
-	}
-	return (0);
-}
-
-*/

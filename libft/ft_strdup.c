@@ -12,9 +12,6 @@
 
 #include "libft.h"
 
-/*
-** ft_strdup: Returns a pointer to a new string which is a duplicate of the string s.
-*/
 char	*ft_strdup(const char *s)
 {
 	unsigned char		*str;
@@ -35,18 +32,3 @@ char	*ft_strdup(const char *s)
 	*str = '\0';
 	return ((char *)ptr);
 }
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include "libft.h"
-
-int main(void)
-{
-    char *original = "Hello, 42!";
-    char *copy = ft_strdub(original, 5);
-
-    printf("Copy: %s\n", copy); // Copy: Hello
-
-    free(copy); // لا تنسى تحرير الذاكرة
-    return 0;
-}*/

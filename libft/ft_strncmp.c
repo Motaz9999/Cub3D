@@ -12,9 +12,6 @@
 
 #include "libft.h"
 
-/*
-** ft_strncmp: Compares the first n bytes of the two strings s1 and s2.
-*/
 int	ft_strncmp(const char *s1, const char *s2, size_t size)
 {
 	unsigned char	*pts1;
@@ -36,62 +33,3 @@ int	ft_strncmp(const char *s1, const char *s2, size_t size)
 	}
 	return (0);
 }
-/*
-#include <stdio.h>
-#include <string.h>
-
-int main(void)
-{
-    char *a = "Hello";
-    char *b = "Hello";
-    char *c = "HelLo";
-    char *d = "HelloWorld";
-    char *e = "";
-    char *f = "H";
-
-    size_t n_values[] = {0, 1, 3, 5, 10};
-    int i;
-
-    printf("===== ft_strncmp Advanced Test =====\n\n");
-
-    // Case 1: Equal strings
-    for (i = 0; i < 5; i++)
-    {
-        size_t n = n_values[i];
-        printf("Compare \"%s\" vs \"%s\" for n=%zu: ft=%d, std=%d\n",
-               a, b, n, ft_strncmp(a, b, n), strncmp(a, b, n));
-    }
-
-    printf("\n");
-
-    // Case 2: Case sensitive difference
-    for (i = 0; i < 5; i++)
-    {
-        size_t n = n_values[i];
-        printf("Compare \"%s\" vs \"%s\" for n=%zu: ft=%d, std=%d\n",
-               a, c, n, ft_strncmp(a, c, n), strncmp(a, c, n));
-    }
-
-    printf("\n");
-
-    // Case 3: One string shorter
-    for (i = 0; i < 5; i++)
-    {
-        size_t n = n_values[i];
-        printf("Compare \"%s\" vs \"%s\" for n=%zu: ft=%d, std=%d\n",
-               a, d, n, ft_strncmp(a, d, n), strncmp(a, d, n));
-    }
-
-    printf("\n");
-
-    // Case 4: Empty string
-    for (i = 0; i < 5; i++)
-    {
-        size_t n = n_values[i];
-        printf("Compare \"%s\" vs \"%s\" for n=%zu: ft=%d, std=%d\n",
-               e, f, n, ft_strncmp(e, f, n), strncmp(e, f, n));
-    }
-
-    return 0;
-}
-*/

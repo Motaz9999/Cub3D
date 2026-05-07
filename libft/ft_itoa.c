@@ -12,9 +12,6 @@
 
 #include "libft.h"
 
-/*
-** ft_lenint: Utility function: ft_lenint
-*/
 int	ft_lenint(int n)
 {
 	int	len;
@@ -70,28 +67,3 @@ char	*ft_itoa(int n)
 	str = ft_fillstr(len, sign, n);
 	return (str);
 }
-/*
-#include <stdio.h>
-#include <limits.h>
-
-int main(void)
-{
-    int numbers[] = {0, 123, -123, 42, -42, INT_MAX, INT_MIN + 1};
-    size_t size = sizeof(numbers) / sizeof(numbers[0]);
-    char *str;
-    
-    for (size_t i = 0; i < size; i++)
-    {
-        str = ft_itoa(numbers[i]);
-        if (str)
-        {
-            printf("ft_itoa(%d) = %s\n", numbers[i], str);
-            free(str);
-        }
-        else
-        {
-            printf("ft_itoa(%d) returned NULL\n", numbers[i]);
-        }
-    }
-    return 0;
-}*/

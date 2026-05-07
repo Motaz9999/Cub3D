@@ -12,9 +12,6 @@
 
 #include "libft.h"
 
-/*
-** ft_strlcpy: Copies up to dstsize - 1 characters from the string src to dst, NUL-terminating the result if dstsize is not 0.
-*/
 size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
 	size_t		len_src;
@@ -34,33 +31,3 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	*dest = '\0';
 	return (len_src);
 }
-/*
-#include <stdio.h>
-#include <string.h>
-
-int main()
-{
-    char dest[6];
-    const char *src = "HelloWorld";
-    size_t ret;
-
-    ret = ft_strlcpy(dest, src, sizeof(dest));
-
-    printf("Copied string: %s\n", dest);
-    printf("Returned length of src: %zu\n", ret);
-
-    return 0;
-}
-#include <stdio.h>
-#include <string.h>
-
-int main(void)
-{
-    char src[] = "Hello";
-    char dst[3];
-
-    size_t ret = ft_strlcpy(dst, src, sizeof(dst));
-
-    printf("Return = %zu\n", ret);
-    printf("Dst = \"%s\"\n", dst);
-}*/

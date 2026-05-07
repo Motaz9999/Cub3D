@@ -11,10 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-//#include <stdio.h>
-/*
-** ft_strrchr: Returns a pointer to the last occurrence of the character c in the string s.
-*/
+
 char	*ft_strrchr(const char *s, int c)
 {
 	int			str_len;
@@ -30,29 +27,3 @@ char	*ft_strrchr(const char *s, int c)
 	}
 	return (NULL);
 }
-/*
-
-
-int main(void)
-{
-    const char *str = "HelloWorld";
-    char *res;
-
-    res = ft_strrchr(str, 'l');
-    if (res)
-        printf("%s\n", res);
-
-    res = ft_strrchr(str, 'H');
-    if (res)
-        printf("%s\n", res);
-
-    res = ft_strrchr(str, 'z');
-    if (res)
-        printf("%s\n", res);
-    else
-        printf("Character not found!\n");
-
-    res = ft_strrchr(str, '\0');
-    if (res)
-        printf("Found null terminator at the end of string.\n");
-}*/

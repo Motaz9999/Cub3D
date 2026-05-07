@@ -78,9 +78,6 @@ static int	ft_select(const char format, va_list *ap2)
 	return (len);
 }
 
-/*
-** ft_printf: Outputs formatted string to standard output.
-*/
 int	ft_printf(const char *format, ...)
 {
 	int		len;

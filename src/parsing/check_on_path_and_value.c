@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 22:36:17 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/04 02:30:44 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/07 06:37:51 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ static int check_on_number_range(char *str)
 static int is_valid_rgb_number(char *str)
 {
     int j;
-    int color;
 
     j = 0;
     while (str[j] == ' ' || str[j] == '\t')

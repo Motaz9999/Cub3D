@@ -12,9 +12,6 @@
 
 #include "libft.h"
 
-/*
-** ft_tolower: Converts the letter c to lower case, if possible.
-*/
 int	ft_tolower(int ch)
 {
 	if (ch >= 65 && ch <= 90)

@@ -12,9 +12,6 @@
 
 #include "libft.h"
 
-/*
-** ft_count_words: Utility function: ft_count_words
-*/
 int	ft_count_words(char const *s, char c)
 {
 	int	count;

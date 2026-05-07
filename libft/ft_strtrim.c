@@ -29,11 +29,6 @@ static int	ft_is_inset(char s, char *set)
 	return (con);
 }
 
-/*
-** ft_strtrim: Allocates (with malloc) and returns a copy of
-** 's1' with the characters specified in 'set' removed
-** from the beginning and the end of the string.
-*/
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	char		*str;
@@ -61,23 +56,3 @@ char	*ft_strtrim(char const *s1, char const *set)
 	*str = '\0';
 	return (ptr);
 }
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-int main(void)
-{
-    char *str1 = "  HelloWorld  ";
-    char *str2 = "---Hello-42---";
-    char *set1 = " -";
-
-    char *res1 = ft_strtrim(str1, set1);
-    char *res2 = ft_strtrim(str2, set1);
-
-    printf("'%s'\n", res1); // 'HelloWorld'
-    printf("'%s'\n", res2); // 'Hello-42'
-
-    free(res1);
-    free(res2);
-}
-*/

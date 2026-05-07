@@ -12,9 +12,6 @@
 
 #include "libft.h"
 
-/*
-** ft_strjoin: Allocates and returns a new string, which is the result of the concatenation of s1 and s2.
-*/
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*join;
@@ -39,26 +36,3 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	*join = '\0';
 	return (ptr);
 }
-/*
-#include <stdio.h>
-#include "libft.h"
-
-int main(void)
-{
-    char *s1 = "Hello my name is motaz and i am student at ";
-    char *s2 = "42 amman!";
-    char *joined;
-
-    joined = ft_strjoin(s1, s2);
-    if (joined)
-    {
-        printf("Joined string: %s\n", joined);
-        free(joined);
-    }
-    else
-    {
-        printf("Memory allocation failed\n");
-    }
-    return 0;
-}
-*/

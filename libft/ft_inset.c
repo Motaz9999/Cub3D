@@ -12,8 +12,6 @@
 
 #include "libft.h"
 
-// this fun is for searching if c is
-// part of set
 int	ft_inset(char c, char *set)
 {
 	while (*set != '\0')

@@ -155,11 +155,15 @@ char	**make_map(int fd, char *first_row, char *set)
 
 int	parse_map(t_config *data)
 {
+	char	*saved_line;
+
 	data->map_data = malloc(sizeof(t_map));
 	if (!data->map_data)
 		return (FALSE);
 	init_map(data->map_data);
-	data->map_data->map = make_map(data->fd, data->save_line_map,
+	saved_line = data->save_line_map;
+	data->save_line_map = NULL;
+	data->map_data->map = make_map(data->fd, saved_line,
 									data->map_data->map_char);// start with malloc the map to fill it up (open so_long file to remember)
     if (data->map_data->map == NULL)
     {

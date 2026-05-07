@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 22:19:32 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/05 06:08:54 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/07 08:36:32 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,9 @@ static int	fill_data(t_config *data)
 	}
 	if (data->count_of_elements != 6)
 		return (error_handling("the file dosent have all required info",
+				(int)FALSE));
+	if (data->count_of_elements == 6 && data->save_line_map == NULL)
+	return (error_handling("missing map",
 				(int)FALSE));
 	return (TRUE);
 }

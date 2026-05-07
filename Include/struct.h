@@ -19,6 +19,7 @@ typedef struct s_map
 	char **map;       // the hole map
 	char *map_char; // allowed chars
 	int map_hight;//the hight of the whole map
+	int map_width;
 						// u must also add the player loc
 }					t_map;
 

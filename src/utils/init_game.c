@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 02:43:11 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/05 05:09:58 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/07 09:18:18 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	init_map(t_map *map)
 {
 	map->map = NULL;
 	map->map_hight = 0;
-	map->map_char = "01NSEW \n";//allowed chars for now to take line
+	map->map_width = 0;
+	map->map_char = "01NSEW \n"; // allowed chars for now to take line
 }
 
 void	init_config(t_config *config)

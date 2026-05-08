@@ -29,6 +29,8 @@ t_config	*parse_file(char *file_name);
 int			parse_map(t_config *data);
 int			check_extension(char *path, char *ext);
 void		print_map(t_map *map);
+// texture
+int			check_texture(t_config *data);
 // make map
 char		**make_map(int fd, char *first_row, char *set);
 // remake map

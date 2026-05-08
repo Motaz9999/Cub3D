@@ -23,7 +23,7 @@
             "todo": {
               "content": "map errors",
               "id": 1778126654460,
-              "level": "default",
+              "level": "danger",
               "done": false,
               "start": 1778126654460
             }
@@ -38,17 +38,32 @@
                   "content": "checks on map",
                   "id": 1778132261673,
                   "level": "default",
+                  "done": true,
+                  "start": 1778132261673,
+                  "focus": false,
+                  "end": 1778217344711
+                }
+              },
+              {
+                "key": 1778217319199,
+                "children": [],
+                "todo": {
+                  "content": "BFS algo",
+                  "id": 1778217319199,
+                  "level": "danger",
                   "done": false,
-                  "start": 1778132261673
+                  "start": 1778217319199,
+                  "focus": true
                 }
               }
             ],
             "todo": {
-              "content": "map food fill",
+              "content": "valid_map",
               "id": 1778132246529,
               "level": "warning",
               "done": false,
-              "start": 1778132246529
+              "start": 1778132246529,
+              "focus": true
             }
           },
           {
@@ -77,6 +92,19 @@
         "key": 1778126599401,
         "children": [
           {
+            "key": 1778138554487,
+            "children": [],
+            "todo": {
+              "content": "so dose he want me to open textuer file to check if i can open them ??",
+              "id": 1778138554487,
+              "level": "default",
+              "done": true,
+              "start": 1778138554487,
+              "focus": false,
+              "end": 1778217351419
+            }
+          },
+          {
             "key": 1778126622687,
             "children": [],
             "todo": {
@@ -91,7 +119,7 @@
         "todo": {
           "content": "texture",
           "id": 1778126599401,
-          "level": "default",
+          "level": "success",
           "done": false,
           "start": 1778126599401
         }
@@ -113,6 +141,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1778135982693"
+    "version": "1778217351443"
   }
 }

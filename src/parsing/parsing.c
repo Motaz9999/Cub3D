@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 22:19:32 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/07 08:36:32 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/08 07:26:30 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,9 @@ int	line_is_empty(char *line)
 // must the line dont have trash values (dont start with something we dont know)
 static int	fill_data(t_config *data)
 {
-	char *line;
-		// take line by line (skip the empty lines or the one have trash values)
+	char	*line;
+
+	// take line by line (skip the empty lines or the one have trash values)
 	line = get_next_line(data->fd);
 	while (line != NULL)
 	{
@@ -141,8 +142,7 @@ static int	fill_data(t_config *data)
 		return (error_handling("the file dosent have all required info",
 				(int)FALSE));
 	if (data->count_of_elements == 6 && data->save_line_map == NULL)
-	return (error_handling("missing map",
-				(int)FALSE));
+		return (error_handling("missing map", (int)FALSE));
 	return (TRUE);
 }
 
@@ -166,7 +166,7 @@ t_config	*parse_file(char *file_name)
 		free(data);
 		exit(error_handling("File not found or couldn't access", 2));
 	} // now i have an open file so
-	if (!fill_data(data) || !parse_map(data))
+	if (!fill_data(data) || !check_texture(data) || !parse_map(data))
 	{
 		clean_data(data);
 		exit(2);

@@ -1,0 +1,451 @@
+
+<style>
+:root {
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f3f4f6;
+  --color-border-secondary: #d1d5db;
+  --color-border-tertiary: #e5e7eb;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #9ca3af;
+  --color-text-danger: #ef4444;
+  --color-border-info: #3b82f6;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+:root.dark {
+  --color-background-primary: #111827;
+  --color-background-secondary: #1f2937;
+  --color-border-secondary: #374151;
+  --color-border-tertiary: #374151;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-text-tertiary: #9ca3af;
+  --color-text-danger: #f87171;
+  --color-border-info: #60a5fa;
+}
+body { background: var(--color-background-primary); color: var(--color-text-primary); }
+*{box-sizing:border-box;margin:0;padding:0}
+.road{font-family:var(--font-sans);padding:1.5rem 1rem 2rem}
+.road h1{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.road .sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.5rem}
+.phases{display:flex;flex-direction:column;gap:10px}
+.phase{border:0.5px solid var(--color-border-tertiary);border-radius:12px;overflow:hidden;background:var(--color-background-primary)}
+.ph-head{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;user-select:none}
+.ph-head:hover{background:var(--color-background-secondary)}
+.ph-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.ph-title{flex:1;font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.ph-count{font-size:12px;color:var(--color-text-secondary)}
+.ph-arrow{font-size:10px;color:var(--color-text-tertiary);transition:transform .2s}
+.ph-arrow.open{transform:rotate(90deg)}
+.ph-body{display:none;border-top:0.5px solid var(--color-border-tertiary)}
+.ph-body.open{display:block}
+.topic{padding:12px 16px 12px 56px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.topic:last-child{border-bottom:none}
+.topic:hover{background:var(--color-background-secondary)}
+.topic-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.topic-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.tag-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.tag{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.detail-panel{border:0.5px solid var(--color-border-tertiary);border-radius:12px;background:var(--color-background-primary);margin-top:12px;overflow:hidden}
+.dp-head{padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px}
+.dp-title{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.dp-close{font-size:16px;color:var(--color-text-tertiary);cursor:pointer;line-height:1}
+.dp-close:hover{color:var(--color-text-primary)}
+.dp-body{padding:14px 16px;font-size:13px;color:var(--color-text-secondary);line-height:1.7}
+.dp-body code{font-family:var(--font-mono);font-size:12px;background:var(--color-background-secondary);padding:1px 5px;border-radius:4px;color:var(--color-text-primary)}
+.dp-body ul{padding-left:18px;margin:6px 0}
+.dp-body li{margin-bottom:4px}
+.dp-body .must{color:var(--color-text-danger);font-weight:500}
+.dp-body .tip{background:var(--color-background-secondary);border-left:2px solid var(--color-border-info);padding:8px 10px;border-radius:0 6px 6px 0;margin-top:8px;font-size:12px;color:var(--color-text-secondary)}
+.progress-bar{height:4px;background:var(--color-background-secondary);border-radius:2px;margin-bottom:1.2rem}
+.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#7F77DD,#1D9E75);transition:width .4s}
+.prog-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:6px}
+.check{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-border-secondary);margin-right:8px;flex-shrink:0;cursor:pointer;transition:all .2s;vertical-align:middle}
+.check.done{background:#1D9E75;border-color:#1D9E75;color:#fff}
+</style>
+<div class="road">
+  <h2 class="sr-only">cub3D prerequisite learning roadmap</h2>
+  <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+    <h1>cub3D — everything you must learn</h1>
+    <button onclick="toggleTheme()" style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer;">Toggle Dark Mode</button>
+  </div>
+  <p class="sub">Click a phase to expand · Click a topic for deep detail · Check off what you know</p>
+  <p class="prog-label" id="prog-label">0 / 18 topics understood</p>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+  <div class="phases" id="phases"></div>
+  <div id="detail-panel" style="display:none"></div>
+</div>
+<script>
+const phases=[
+  {id:0,color:"#7F77DD",bg:"#EEEDFE",label:"P1",title:"Math foundations",topics:[
+    {name:"2D vectors",
+     desc:"Position, direction, magnitude — the language of raycasting",
+     tags:["algebra","physics"],tagColors:["#534AB7","#0F6E56"],
+     detail:`<b>Why it matters:</b> Everything in cub3D — player position, ray direction, wall normals — is a vector.<br><br>
+<b>You must understand:</b>
+<ul>
+<li><span class="must">Vector representation:</span> <code>(x, y)</code> in 2D space — x goes right, y goes down in screen coords</li>
+<li><span class="must">Magnitude (length):</span> <code>|v| = sqrt(x²+y²)</code> — how far the vector reaches</li>
+<li><span class="must">Normalization:</span> <code>v/|v|</code> — make it length 1. You do this for ray directions</li>
+<li><span class="must">Adding vectors:</span> <code>(a.x+b.x, a.y+b.y)</code> — moving a point by a direction</li>
+<li><span class="must">Dot product:</span> <code>a.x*b.x + a.y*b.y</code> — tells you the angle between two vectors</li>
+<li>Scalar multiplication: <code>v * speed</code> — makes a vector longer/shorter</li>
+</ul>
+<div class="tip">💡 If you understand "a player at position P facing direction D moves to P + D*speed" — you get vectors.</div>`},
+    {name:"Trigonometry",
+     desc:"sin, cos, tan — how angles become directions",
+     tags:["math","angles"],tagColors:["#534AB7","#993C1D"],
+     detail:`<b>Why it matters:</b> You rotate the player and cast rays at angles — trig translates angle → direction vector.<br><br>
+<b>You must understand:</b>
+<ul>
+<li><span class="must">Unit circle:</span> at angle θ, the direction is <code>(cos θ, sin θ)</code></li>
+<li><span class="must">Rotating a vector:</span><br><code>x' = x*cos(a) - y*sin(a)</code><br><code>y' = x*sin(a) + y*cos(a)</code></li>
+<li><span class="must">Radians vs degrees:</span> C math.h uses radians. <code>PI radians = 180°</code></li>
+<li><code>atan2(y, x)</code> — converts direction vector back to angle</li>
+</ul>
+<div class="tip">💡 When the player turns left/right, you rotate the direction vector using a 2×2 rotation matrix. That's it.</div>`},
+    {name:"Coordinate systems",
+     desc:"World space vs screen space — don't get lost",
+     tags:["graphics"],tagColors:["#185FA5"],
+     detail:`<b>Two systems you'll constantly switch between:</b><br><br>
+<ul>
+<li><span class="must">Map space:</span> 2D grid, each cell = 1 unit. Player position is a float inside this grid</li>
+<li><span class="must">Screen space:</span> pixels (0,0) = top-left. x goes right, y goes DOWN</li>
+<li><span class="must">Camera plane:</span> a vector perpendicular to player direction — defines the FOV width</li>
+</ul>
+<div class="tip">💡 In map space Y-up feels natural, but screen space is Y-down. Most raycasting code uses Y-down for both to avoid confusion.</div>`},
+  ]},
+  {id:1,color:"#1D9E75",bg:"#E1F5EE",label:"P2",title:"Raycasting engine",topics:[
+    {name:"How raycasting works",
+     desc:"The illusion of 3D from a 2D grid — conceptual model",
+     tags:["core","algorithm"],tagColors:["#A32D2D","#3B6D11"],
+     detail:`<b>The Big Idea:</b> For each column of pixels on screen, you shoot one ray from the player into the map. When it hits a wall, you calculate how far away it is. Far = short wall strip. Close = tall wall strip.<br><br>
+<b>The steps:</b>
+<ul>
+<li>Loop through every screen column (0 to WIDTH-1)</li>
+<li>Calculate the ray direction for that column based on FOV</li>
+<li>Cast the ray through the grid using DDA until it hits a wall</li>
+<li>Calculate perpendicular distance (not Euclidean — avoids fisheye)</li>
+<li>Compute line height = <code>SCREEN_HEIGHT / perpDistance</code></li>
+<li>Draw a vertical strip of the wall texture at that height</li>
+</ul>
+<div class="tip">💡 This is NOT real raytracing. No reflections. No recursive bouncing. One ray per column, straight to first wall hit.</div>`},
+    {name:"DDA algorithm",
+     desc:"Digital Differential Analysis — stepping through the grid",
+     tags:["core","must-know"],tagColors:["#A32D2D","#A32D2D"],
+     detail:`<b>DDA is the heart of cub3D.</b> It finds which grid cells a ray passes through efficiently.<br><br>
+<b>Key variables:</b>
+<ul>
+<li><code>rayDirX, rayDirY</code> — normalized ray direction</li>
+<li><code>deltaDistX</code> — distance ray travels to cross 1 X cell = <code>|1/rayDirX|</code></li>
+<li><code>deltaDistY</code> — distance ray travels to cross 1 Y cell = <code>|1/rayDirY|</code></li>
+<li><code>sideDistX, sideDistY</code> — distance to first X/Y gridline from player</li>
+<li><code>stepX, stepY</code> — +1 or -1, which direction to step in grid</li>
+<li><code>side</code> — was the wall hit on X side (0) or Y side (1)?</li>
+</ul>
+<b>The loop:</b> repeatedly compare sideDistX vs sideDistY, jump to the smaller one, until you hit a wall cell. O(map dimension) per ray.
+<div class="tip">💡 Study Lode's Raycasting Tutorial (lodev.org). It's the bible for this project and the exact algorithm most 42 students use.</div>`},
+    {name:"Fisheye correction",
+     desc:"Why you can't use raw Euclidean distance",
+     tags:["math","visual"],tagColors:["#534AB7","#185FA5"],
+     detail:`<b>The problem:</b> If you use the real (Euclidean) distance to the wall, corners appear curved — like a fisheye lens.<br><br>
+<b>The fix:</b> Use <b>perpendicular distance</b> — the distance along the camera direction, not along the ray itself.<br><br>
+<b>Formula:</b>
+<ul>
+<li>If side == 0 (X wall hit): <code>perpWallDist = sideDistX - deltaDistX</code></li>
+<li>If side == 1 (Y wall hit): <code>perpWallDist = sideDistY - deltaDistY</code></li>
+</ul>
+This is already computed during DDA — no extra sqrt needed!
+<div class="tip">💡 This is why DDA tracks sideDistX/Y: those values ARE the perpendicular distance when you subtract one deltaDistX/Y at the end.</div>`},
+    {name:"Field of View (FOV)",
+     desc:"Camera plane, ray distribution, and FOV angle",
+     tags:["camera","math"],tagColors:["#534AB7","#534AB7"],
+     detail:`<b>FOV determines how wide the player sees.</b><br><br>
+<ul>
+<li><span class="must">Camera plane:</span> a vector perpendicular to player direction, length = tan(FOV/2)</li>
+<li>For each screen column x: <code>cameraX = 2*x/WIDTH - 1</code> (goes from -1 to +1)</li>
+<li>Ray direction: <code>rayDir = playerDir + cameraPlane * cameraX</code></li>
+<li>Typical FOV = 66° (camera plane length ≈ 0.66)</li>
+</ul>
+<div class="tip">💡 Do NOT use angles per ray. The camera plane + linear interpolation approach is cleaner and avoids trig in the inner loop.</div>`},
+    {name:"Wall height calculation",
+     desc:"Projecting 3D onto 2D screen",
+     tags:["rendering"],tagColors:["#3B6D11"],
+     detail:`<b>Once you have perpWallDist:</b>
+<ul>
+<li><span class="must">Line height:</span> <code>lineHeight = (int)(SCREEN_HEIGHT / perpWallDist)</code></li>
+<li>Draw start: <code>drawStart = -lineHeight/2 + SCREEN_HEIGHT/2</code> (clamp to 0)</li>
+<li>Draw end: <code>drawEnd = lineHeight/2 + SCREEN_HEIGHT/2</code> (clamp to SCREEN_HEIGHT-1)</li>
+<li>This centers the wall strip vertically on screen</li>
+</ul>
+<div class="tip">💡 The wall appears taller when closer (small perpWallDist → large lineHeight) — exactly like real perspective projection.</div>`},
+  ]},
+  {id:2,color:"#185FA5",bg:"#E6F1FB",label:"P3",title:"MiniLibX (MLX)",topics:[
+    {name:"Window & image setup",
+     desc:"mlx_init, mlx_new_window, mlx_new_image — your canvas",
+     tags:["mlx","graphics"],tagColors:["#185FA5","#185FA5"],
+     detail:`<b>The rendering pipeline:</b><br><br>
+<ul>
+<li><code>mlx_init()</code> — connect to display server (returns mlx pointer)</li>
+<li><code>mlx_new_window(mlx, W, H, title)</code> — create window</li>
+<li><span class="must"><code>mlx_new_image(mlx, W, H)</code></span> — create an off-screen image buffer</li>
+<li><code>mlx_get_data_addr(img, bpp, line_len, endian)</code> — get raw pixel array</li>
+<li><code>mlx_put_image_to_window(mlx, win, img, 0, 0)</code> — blit image to screen</li>
+</ul>
+<b>Never draw pixel-by-pixel to the window.</b> Always draw to the image buffer, then blit once per frame.
+<div class="tip">💡 bpp (bits per pixel) is usually 32. Your pixel formula: <code>addr[y*line_len/4 + x] = color</code> — but verify endianness!</div>`},
+    {name:"Pixel drawing",
+     desc:"Writing directly to the image buffer",
+     tags:["mlx","must-know"],tagColors:["#185FA5","#A32D2D"],
+     detail:`<b>Your pixel function:</b>
+<ul>
+<li>Get addr with <code>mlx_get_data_addr</code></li>
+<li><code>char *pixel = addr + (y * line_len + x * (bpp/8))</code></li>
+<li><code>*(int *)pixel = color</code></li>
+</ul>
+<b>Color encoding:</b> <code>color = (r << 16) | (g << 8) | b</code> — standard RGB packing.
+<div class="tip">💡 Write a <code>my_mlx_pixel_put(img, x, y, color)</code> helper immediately. You'll call it millions of times.</div>`},
+    {name:"Hooks & events",
+     desc:"Keyboard input, window close, game loop",
+     tags:["mlx","events"],tagColors:["#185FA5","#3B6D11"],
+     detail:`<b>Key hooks:</b>
+<ul>
+<li><code>mlx_hook(win, KeyPress, KeyPressMask, handler, param)</code></li>
+<li><code>mlx_hook(win, DestroyNotify, 0, close_handler, param)</code></li>
+<li><code>mlx_loop_hook(mlx, render_loop, param)</code> — called every frame</li>
+<li><code>mlx_loop(mlx)</code> — starts the event loop (blocks forever)</li>
+</ul>
+<b>Key codes (Linux X11):</b> W=119, A=97, S=115, D=100, ←=65361, →=65363, ESC=65307
+<div class="tip">💡 On macOS vs Linux the keycodes differ. Use a header to define them and test on your target platform.</div>`},
+    {name:"Texture loading",
+     desc:"XPM files, mlx_xpm_file_to_image",
+     tags:["mlx","textures"],tagColors:["#185FA5","#854F0B"],
+     detail:`<b>Loading a texture:</b>
+<ul>
+<li><code>mlx_xpm_file_to_image(mlx, path, &width, &height)</code></li>
+<li>Then <code>mlx_get_data_addr</code> on the returned image to get pixel data</li>
+<li>Store width, height, addr, line_len, bpp per texture</li>
+</ul>
+<b>Textures needed:</b> NO (north wall), SO (south), WE (west), EA (east) — all 4 directions.
+<div class="tip">💡 Store all 4 textures as structs at program start. Freeing them at the end is part of the norm (no leaks allowed).</div>`},
+  ]},
+  {id:3,color:"#BA7517",bg:"#FAEEDA",label:"P4",title:"Texture mapping",topics:[
+    {name:"UV coordinates (wallX)",
+     desc:"Which part of the texture to draw on each wall column",
+     tags:["textures","math"],tagColors:["#854F0B","#534AB7"],
+     detail:`<b>After DDA finds the hit wall:</b>
+<ul>
+<li>Calculate exact hit position: <code>wallX</code></li>
+<li>If X wall: <code>wallX = posY + perpWallDist * rayDirY</code></li>
+<li>If Y wall: <code>wallX = posX + perpWallDist * rayDirX</code></li>
+<li><code>wallX -= floor(wallX)</code> — keep fractional part (0.0 to 1.0)</li>
+<li><code>texX = (int)(wallX * texWidth)</code></li>
+<li>Adjust texX based on ray direction to avoid mirroring</li>
+</ul>
+<div class="tip">💡 wallX gives you the horizontal position on the wall (0=left edge, 1=right edge). Multiply by texture width → pixel column in texture.</div>`},
+    {name:"Vertical texture sampling",
+     desc:"Stepping through texture pixels as you draw the wall strip",
+     tags:["textures","rendering"],tagColors:["#854F0B","#3B6D11"],
+     detail:`<b>For each screen y pixel in the wall strip:</b>
+<ul>
+<li><code>step = (float)texHeight / lineHeight</code></li>
+<li><code>texPos = (drawStart - SCREEN_HEIGHT/2 + lineHeight/2) * step</code></li>
+<li>For each y from drawStart to drawEnd:</li>
+<li>&nbsp;&nbsp;<code>texY = (int)texPos & (texHeight - 1)</code></li>
+<li>&nbsp;&nbsp;<code>texPos += step</code></li>
+<li>&nbsp;&nbsp;<code>color = texture[texX][texY]</code> (or via addr)</li>
+<li>&nbsp;&nbsp;Draw pixel at (x, y) on screen</li>
+</ul>
+<div class="tip">💡 The &amp; mask only works if texHeight is a power of 2. Most XPM textures are 64×64 — use 63 (or 0x3F) as the mask.</div>`},
+    {name:"Wall side detection",
+     desc:"N/S/E/W — picking the right texture",
+     tags:["textures","logic"],tagColors:["#854F0B","#0F6E56"],
+     detail:`<b>Which texture to use:</b>
+<ul>
+<li>If <code>side == 0</code> (hit vertical wall / X side):</li>
+<li>&nbsp;&nbsp;If <code>rayDirX > 0</code> → hit from west → use EA texture</li>
+<li>&nbsp;&nbsp;If <code>rayDirX < 0</code> → hit from east → use WE texture</li>
+<li>If <code>side == 1</code> (hit horizontal wall / Y side):</li>
+<li>&nbsp;&nbsp;If <code>rayDirY > 0</code> → hit from north → use SO texture</li>
+<li>&nbsp;&nbsp;If <code>rayDirY < 0</code> → hit from south → use NO texture</li>
+</ul>
+<div class="tip">💡 The side variable from DDA is exactly what you need. Combined with ray direction sign → 4 cases → 4 textures.</div>`},
+  ]},
+  {id:4,color:"#993556",bg:"#FBEAF0",label:"P5",title:"Player & movement",topics:[
+    {name:"Player struct",
+     desc:"Position, direction vector, camera plane — your game state",
+     tags:["logic","struct"],tagColors:["#72243E","#0F6E56"],
+     detail:`<b>Minimum player state:</b>
+<ul>
+<li><code>posX, posY</code> — float position inside the map grid</li>
+<li><code>dirX, dirY</code> — normalized direction vector (where they face)</li>
+<li><code>planeX, planeY</code> — camera plane vector (perpendicular to dir)</li>
+</ul>
+<b>Initial values example (facing south):</b>
+<ul>
+<li>dir = (0.0, 1.0), plane = (0.66, 0.0)</li>
+</ul>
+<div class="tip">💡 dirX and planeX, and dirY and planeY always rotate together. When dir rotates by angle a, plane must also rotate by the same a.</div>`},
+    {name:"Rotation",
+     desc:"Turning left/right with rotation matrix",
+     tags:["math","movement"],tagColors:["#534AB7","#3B6D11"],
+     detail:`<b>Rotating player by rotSpeed radians:</b>
+<ul>
+<li>Old values: <code>oldDirX = dirX</code>, <code>oldPlaneX = planeX</code></li>
+<li><code>dirX = oldDirX*cos(rotSpeed) - dirY*sin(rotSpeed)</code></li>
+<li><code>dirY = oldDirX*sin(rotSpeed) + dirY*cos(rotSpeed)</code></li>
+<li><code>planeX = oldPlaneX*cos(rotSpeed) - planeY*sin(rotSpeed)</code></li>
+<li><code>planeY = oldPlaneX*sin(rotSpeed) + planeY*cos(rotSpeed)</code></li>
+</ul>
+Use negative angle for right turn.
+<div class="tip">💡 rotSpeed ≈ 0.03 radians per frame feels natural (~1.7° per frame). Adjust to taste.</div>`},
+    {name:"Movement & collision",
+     desc:"WASD movement with wall collision detection",
+     tags:["logic","must-know"],tagColors:["#72243E","#A32D2D"],
+     detail:`<b>Moving forward (W key):</b>
+<ul>
+<li>New X: <code>newX = posX + dirX * moveSpeed</code></li>
+<li>New Y: <code>newY = posY + dirY * moveSpeed</code></li>
+<li>Check map: <code>if(map[(int)newX][(int)posY] == 0) posX = newX</code></li>
+<li>Check map: <code>if(map[(int)posX][(int)newY] == 0) posY = newY</code></li>
+</ul>
+<b>Check X and Y independently</b> — this allows sliding along walls!
+<div class="tip">💡 moveSpeed ≈ 0.05 per frame. Add a small offset (e.g. 0.1) to the collision check to avoid getting too close to walls.</div>`},
+  ]},
+  {id:5,color:"#5F5E5A",bg:"#F1EFE8",label:"P6",title:"Map & config parsing",topics:[
+    {name:".cub file format",
+     desc:"Reading the scene configuration file",
+     tags:["parsing","file-io"],tagColors:["#3B3B38","#3B3B38"],
+     detail:`<b>The .cub file has two parts:</b><br><br>
+<b>1. Configuration lines (any order, before or around map):</b>
+<ul>
+<li><code>NO ./path/north.xpm</code> — north texture path</li>
+<li><code>SO ./path/south.xpm</code> — south texture path</li>
+<li><code>WE ./path/west.xpm</code> — west texture path</li>
+<li><code>EA ./path/east.xpm</code> — east texture path</li>
+<li><code>F 220,100,0</code> — floor RGB color</li>
+<li><code>C 225,30,0</code> — ceiling RGB color</li>
+</ul>
+<b>2. The map</b> — last element in the file, made of 1s (walls), 0s (floor), and N/S/E/W (player start + facing dir).<br><br>
+<div class="tip">💡 Lines can have spaces/tabs. Map rows can have different lengths (the map is NOT always rectangular). Handle trailing spaces.</div>`},
+    {name:"Map validation",
+     desc:"Closed walls, valid characters, one player start",
+     tags:["parsing","must-know"],tagColors:["#3B3B38","#A32D2D"],
+     detail:`<b>Mandatory checks:</b>
+<ul>
+<li><span class="must">Exactly one player position</span> (N, S, E, or W character)</li>
+<li><span class="must">Map surrounded by walls</span> — no gaps, no open edges</li>
+<li><span class="must">Valid characters only:</span> 0, 1, N, S, E, W (and spaces)</li>
+<li>All config identifiers present (NO, SO, WE, EA, F, C)</li>
+<li>Valid RGB values (0-255 each)</li>
+<li>Texture files exist and are readable</li>
+</ul>
+<b>Flood fill</b> is the standard way to check map is enclosed — fill from player position, if you reach the edge → invalid map.
+<div class="tip">💡 Invalid map = clean error message to stderr + exit(1). No leaks. Test with many broken .cub files during development.</div>`},
+    {name:"Flood fill validation",
+     desc:"BFS/DFS to verify map is fully enclosed",
+     tags:["algorithm","validation"],tagColors:["#3B6D11","#0F6E56"],
+     detail:`<b>Flood fill approach:</b>
+<ul>
+<li>Copy the map to a temporary buffer</li>
+<li>Start from player position, flood fill with DFS or BFS</li>
+<li>At each step: if current cell is space or out-of-bounds → map is invalid</li>
+<li>Mark visited cells (e.g. replace 0 with 2)</li>
+<li>If the fill finishes without hitting an edge → map is valid</li>
+</ul>
+<div class="tip">💡 Work on the copy, not the real map. Use a stack (DFS) or queue (BFS). This is the same algorithm as a maze solver.</div>`},
+  ]},
+];
+
+let checked=new Set(JSON.parse(localStorage.getItem('cub3d_roadmap_checked') || '[]'));
+let openPhase=null;
+let openTopic=null;
+
+function toggleTheme() {
+  document.documentElement.classList.toggle('dark');
+  localStorage.setItem('cub3d_roadmap_theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+}
+
+if (localStorage.getItem('cub3d_roadmap_theme') === 'dark' || (!localStorage.getItem('cub3d_roadmap_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  document.documentElement.classList.add('dark');
+}
+
+function updateProgress(){
+  const total=18;
+  const done=checked.size;
+  document.getElementById('prog-label').textContent=done+' / '+total+' topics understood';
+  document.getElementById('prog-fill').style.width=(done/total*100)+'%';
+}
+
+function renderDetail(phase,topicIdx){
+  const t=phase.topics[topicIdx];
+  const panel=document.getElementById('detail-panel');
+  panel.style.display='block';
+  panel.innerHTML=`<div class="detail-panel">
+    <div class="dp-head">
+      <div class="dp-title">${t.name}</div>
+      <span class="dp-close" onclick="closeDetail()">×</span>
+    </div>
+    <div class="dp-body">${t.detail}</div>
+  </div>`;
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function closeDetail(){
+  document.getElementById('detail-panel').style.display='none';
+  openTopic=null;
+}
+
+function renderPhases(){
+  const container=document.getElementById('phases');
+  container.innerHTML='';
+  phases.forEach(ph=>{
+    const div=document.createElement('div');
+    div.className='phase';
+    const isOpen=openPhase===ph.id;
+    div.innerHTML=`<div class="ph-head" onclick="togglePhase(${ph.id})">
+      <div class="ph-badge" style="background:${ph.bg};color:${ph.color}">${ph.label}</div>
+      <span class="ph-title">${ph.title}</span>
+      <span class="ph-count">${ph.topics.length} topics</span>
+      <span class="ph-arrow ${isOpen?'open':''}">▶</span>
+    </div>
+    <div class="ph-body ${isOpen?'open':''}">
+      ${ph.topics.map((t,i)=>{
+        const key=ph.id+'-'+i;
+        const isDone=checked.has(key);
+        return `<div class="topic" onclick="selectTopic(${ph.id},${i})">
+          <span class="check ${isDone?'done':''}" onclick="event.stopPropagation();toggleCheck('${key}')">${isDone?'✓':''}</span>
+          <span class="topic-name">${t.name}</span>
+          <div class="topic-desc">${t.desc}</div>
+          <div class="tag-row">${t.tags.map((tg,j)=>`<span class="tag" style="background:${t.tagColors[j]}20;color:${t.tagColors[j]}">${tg}</span>`).join('')}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+    container.appendChild(div);
+  });
+}
+
+function togglePhase(id){
+  openPhase=openPhase===id?null:id;
+  closeDetail();
+  renderPhases();
+}
+
+function toggleCheck(key){
+  if(checked.has(key))checked.delete(key);
+  else checked.add(key);
+  localStorage.setItem('cub3d_roadmap_checked', JSON.stringify([...checked]));
+  updateProgress();
+  renderPhases();
+}
+
+function selectTopic(phId,i){
+  const ph=phases.find(p=>p.id===phId);
+  renderDetail(ph,i);
+}
+
+renderPhases();
+updateProgress();
+</script>

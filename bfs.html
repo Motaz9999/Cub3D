@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .grid { display: grid; grid-template-columns: repeat(10, 30px); gap: 2px; background: #333; padding: 5px; width: max-content; }
+        .cell { width: 30px; height: 30px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .wall { background: #2c3e50; color: white; } /* جدار 1 */
+        .floor { background: #ecf0f1; } /* أرضية 0 */
+        .visited { background: #3498db; transition: background 0.3s; } /* تم فحصها */
+        .player { background: #e74c3c; color: white; font-weight: bold; } /* اللاعب */
+        .error { background: #f1c40f; border: 2px solid red; } /* ثغرة! */
+    </style>
+</head>
+<body>
+    <h3>BFS Map Check Animation</h3>
+    <div id="grid" class="grid"></div>
+    <p id="status">Status: Waiting...</p>
+
+    <script>
+        // 1 = Wall, 0 = Floor, P = Player, S = Space (Hole)
+        const map = [
+            ['1','1','1','1','1','1','1','1','1','1'],
+            ['1','0','0','0','1','0','0','0','0','1'],
+            ['1','0','P','0','1','0','0','0','0','1'],
+            ['1','0','0','0','0','0','0','1','1','1'],
+            ['1','1','1','1','0','1','0','0','0','1'],
+            ['1','0','0','0','0','1','1','1','0','0'],
+            ['1','0','1','1','1','1','0','0','0','1'],
+            ['1','0','0','0','0','0','0','0','0','1'], // هنا ثغرة في النهاية!
+            ['0','1','1','1','1','1','1','1','1','1']
+        ];
+
+        const gridEl = document.getElementById('grid');
+        const statusEl = document.getElementById('status');
+        let queue = [];
+
+        // رسم الخريطة لأول مرة
+        function drawMap() {
+            gridEl.style.gridTemplateColumns = `repeat(${map[0].length}, 30px)`;
+            map.forEach((row, y) => {
+                row.forEach((cell, x) => {
+                    const div = document.createElement('div');
+                    div.id = `cell-${y}-${x}`;
+                    div.className = 'cell ' + (cell === '1' ? 'wall' : (cell === 'P' ? 'player' : 'floor'));
+                    div.innerText = cell;
+                    gridEl.appendChild(div);
+                    if(cell === 'P') queue.push({x, y});
+                });
+            });
+        }
+
+        async function startBFS() {
+            statusEl.innerText = "Status: Checking...";
+            while(queue.length > 0) {
+                let {x, y} = queue.shift();
+                
+                // الاتجاهات الأربعة
+                const dirs = [[0,1], [0,-1], [1,0], [-1,0]];
+                for(let [dx, dy] of dirs) {
+                    let nx = x + dx, ny = y + dy;
+
+                    // تحقق من الثغرة (Hole Check)
+                    if(ny < 0 || ny >= map.length || nx < 0 || nx >= map[ny].length || map[ny][nx] === ' ') {
+                        document.getElementById(`cell-${y}-${x}`).classList.add('error');
+                        statusEl.innerText = "Status: HOLE DETECTED! Map Invalid.";
+                        return;
+                    }
+
+                    if(map[ny][nx] === '0') {
+                        map[ny][nx] = 'V'; // Mark as visited
+                        const el = document.getElementById(`cell-${ny}-${nx}`);
+                        el.classList.add('visited');
+                        queue.push({x: nx, y: ny});
+                        await new Promise(r => setTimeout(r, 100)); // تأخير بسيط للرؤية
+                    }
+                }
+            }
+            statusEl.innerText = "Status: Map is Enclosed (Valid)";
+        }
+
+        drawMap();
+        setTimeout(startBFS, 1000);
+    </script>
+</body>
+</html>

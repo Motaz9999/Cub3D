@@ -6,21 +6,24 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 08:31:27 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/14 14:22:15 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/16 09:56:29 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-//add (enqueue) add to back , delete(dequeue) remove from the front, free queue 
+// add (enqueue) add to back , delete(dequeue) remove from the front, free queue
 
-//the queue can be linked list or it can be array but here we want to use it as array
+// the queue can be linked list or it can be array but here we want to use it as array
 
-void	init_queue(t_point *queue, int capacity)
+void	init_queue(t_point *queue, int capacity, int *tail_index,
+		int *head_index)
 {
 	int	i;
 
 	i = 0;
+	*tail_index = 0;
+	*head_index = 0;
 	while (i < capacity)
 	{
 		queue[i].x = 0;
@@ -29,14 +32,14 @@ void	init_queue(t_point *queue, int capacity)
 	}
 }
 
-//put in the queue
+// put in the queue
 void	inqueue(t_point *queue, int *tail, t_point new_point)
 {
 	queue[*tail] = new_point;
 	(*tail)++;
 }
 
-//remove from the queue
+// remove from the queue
 t_point	dequeue(t_point *queue, int *head)
 {
 	t_point	temp;

@@ -24,6 +24,12 @@ void	init_map(t_map *map)
 	map->map_hight = 0;
 	map->map_width = 0;
 	map->map_char = "01NSEW \n"; // allowed chars for now to take line
+	map->player_loc = malloc(sizeof(t_point));
+	if (map->player_loc)
+	{
+		map->player_loc->x = -1;
+		map->player_loc->y = -1;
+	}
 }
 
 void	init_config(t_config *config)

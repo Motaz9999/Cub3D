@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bfs.c                                              :+:      :+:    :+:   */
+/*   flood_fill.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:08:05 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/16 09:52:49 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/16 09:58:20 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+// (this is flood fill using BFS & Queue)
 // malloc(sizeof(t_point) * hight * max_width);
 // cuse i want to store points locations in the whole map if it require to
 // the queue will have an head and tail
@@ -20,15 +21,15 @@
 // when u add(push) an element u add on tail and the head will still remain
 // and when u delete(pop) u use the first element the tail adds (head)
 // then head goes to the next 1 and by this we make queue
-// this is flood fill using BFS & Queue
 // X is the line and y is the the element in the line
 
-t_point	add_point(t_point point, int x, int y)
+static t_point	add_point(t_point point, int x, int y)
 {
 	point.x = x;
 	point.y = y;
 	return (point);
 }
+
 // ok this fun job is adding the right neighbors
 // but check on them before adding them like are they are valid
 // like if the row have 4zeros 0000 and the last zero try to go to then next its not valid
@@ -38,7 +39,7 @@ t_point	add_point(t_point point, int x, int y)
 // so the check are
 // (1 , 0) up  , (-1 ,0 ) down ,  (0 , 1) right , (0 , -1) right left
 // so we make them as double arrays and these arrays
-int	check_on_4_dirs(t_point *queue, char **map, t_point *point, int *tail,
+static int	check_on_4_dirs(t_point *queue, char **map, t_point *point, int *tail,
 		t_map *map_data)
 {
 	int	i;
@@ -85,14 +86,10 @@ int	flood_fill(char **map, t_map *map_data)
 	int		tail_index;
 	t_point	point;
 
-	point.x = -1;
-	point.y = -1;
+
 	queue = malloc(sizeof(t_point) * (map_data->map_hight
 				* map_data->map_width));
-	init_queue(queue, (map_data->map_hight * map_data->map_width));
-	tail_index = 0; // as an index this
-	head_index = 0;
-	// the start point is the player point so the first element in the queue is the player
+	init_queue(queue, (map_data->map_hight * map_data->map_width) ,&tail_index , &head_index);
 	point.x = map_data->player_loc->x;
 	point.y = map_data->player_loc->y;
 	map[point.x][point.y] = '1'; // already visited

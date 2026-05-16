@@ -25,7 +25,7 @@ int	check_outer_edges(char **map, int height)
 	y = 0;
 	while (y < height)
 	{
-		line_len = strlen(map[y]);
+		line_len = ft_strlen(map[y]);
 		x = 0;
 		while (x < line_len)
 		{
@@ -46,15 +46,19 @@ char	**copy_map(char **map_2d, int n)
 {
 	int		i;
 	char	**copy_map;
-	char	*row_copy;
 
 	i = 0;
 	copy_map = malloc((n + 1) * sizeof(char *));
+	if (!copy_map)
+		return (NULL);
 	while (i < n)
 	{
-		row_copy = malloc((n + 1) * sizeof(char));
-		row_copy = ft_strcpy(row_copy, map_2d[i]);
-		copy_map[i] = row_copy;
+		copy_map[i] = ft_strdup(map_2d[i]);
+		if (!copy_map[i])
+		{
+			ft_free_all2((void **)copy_map, NULL);
+			return (NULL);
+		}
 		i++;
 	}
 	copy_map[n] = NULL;
@@ -102,17 +106,18 @@ int	valid_map(t_map *map_data)
 	char **new_map;
 	if (!find_player_and_check(map_data))
 	{
-		ft_free_all2((void *)new_map, NULL);
 		return (FALSE);
 	}
 	new_map = copy_map(map_data->map, map_data->map_hight);
+	if (!new_map)
+		return (FALSE);
 	if (!check_outer_edges(map_data->map, map_data->map_hight)
-		|| !flood_fill(map_data))
+		|| !flood_fill(new_map, map_data))
 
 	{
-		ft_free_all2((void *)new_map, NULL);
+		ft_free_all2((void **)new_map, NULL);
 		return (FALSE);
 	}
-	ft_free_all2((void *)new_map, NULL);
+	ft_free_all2((void **)new_map, NULL);
 	return (TRUE);
 }

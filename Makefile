@@ -18,6 +18,10 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)parsing/parsing_map.c \
 			  $(SRC_DIR)parsing/make_map.c \
 			  $(SRC_DIR)parsing/remake_map.c \
+			  $(SRC_DIR)parsing/check_texture.c \
+			  $(SRC_DIR)parsing/flood_fill.c \
+			  $(SRC_DIR)parsing/queue.c \
+			  $(SRC_DIR)parsing/valid_map.c \
 			  $(SRC_DIR)utils/init_game.c \
 			  $(SRC_DIR)utils/clean_data.c \
 			  $(GNL_DIR)get_next_line.c \

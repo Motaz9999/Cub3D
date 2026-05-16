@@ -28,6 +28,8 @@ static void	clean_map(t_map *map)
 		}
 		free(map->map);
 	}
+	if (map->player_loc != NULL)
+		free(map->player_loc);
 	free(map);
 }
 

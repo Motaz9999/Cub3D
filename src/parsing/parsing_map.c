@@ -75,7 +75,7 @@ int	parse_map(t_config *data)
 	data->map_data->map = remake_map(data->map_data);
 	if (data->map_data->map == NULL)
 		return (FALSE);
-	if (!valid_map(data->map_data->map))
+	if (!valid_map(data->map_data))
 	 	return (FALSE);
 	return (TRUE);
 }

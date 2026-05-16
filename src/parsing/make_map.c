@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 08:39:33 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/07 08:41:21 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/16 10:23:41 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,25 +58,24 @@ static int	dose_the_map_ended(int fd)
 {
 	char	*line;
 	int		i;
+	int		is_valid;
 
+	is_valid = TRUE;
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
 		i = 0;
-		while (line[i] != '\0')
+		while (is_valid && line[i] != '\0')
 		{
 			// I added '\t' here in case you have empty tabs below the map
 			if (!ft_strchr(" \t\n", line[i]))
-			{
-				free(line);
-				return (FALSE);
-			}
+				is_valid = FALSE;
 			i++;
 		}
 		free(line);
 		line = get_next_line(fd);
 	}
-	return (TRUE);
+	return (is_valid);
 }
 
 // this fun is just for malloc the map inside the map
@@ -90,6 +89,8 @@ char	**make_map(int fd, char *first_row, char *set)
 	new_map = NULL;
 	hight = 1;
 	map = malloc(sizeof(char *) * (hight + 1));
+	if (!map)
+		return (NULL);
 	map[hight] = NULL;  // end of the map
 	map[0] = first_row; // first row of the map
 	line = get_next_line(fd);

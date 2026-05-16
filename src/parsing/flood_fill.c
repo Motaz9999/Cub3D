@@ -68,7 +68,7 @@ static int	check_on_4_dirs(t_point *queue, char **map, t_point *point, int *tail
 		if (map[next_x][next_y] == '0')
 		{
 			map[next_x][next_y] = '1';
-			inqueue(queue, tail, add_point(*point, dx[i], dy[i]));
+			inqueue(queue, tail, add_point(*point, next_x, next_y));
 		}
 		i++;
 	}

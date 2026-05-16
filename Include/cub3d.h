@@ -36,7 +36,11 @@ char		**make_map(int fd, char *first_row, char *set);
 // remake map
 char		**remake_map(t_map *map);
 // algorithm to check of map
-
+// queue
+void		init_queue(t_point *queue, int capacity);
+t_point		dequeue(t_point *queue, int *head);
+void		inqueue(t_point *queue, int *tail, t_point new_point);
+int			is_queue_empty(int head, int tail);
 // checks for paths and values
 int			check_on_path(char *path);
 int			check_on_value(char *value);

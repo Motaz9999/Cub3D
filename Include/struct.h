@@ -1,5 +1,14 @@
 #ifndef STRUCT_H
 # define STRUCT_H
+
+//for queue and player
+typedef struct s_point
+{
+	int			x;
+	int			y;
+}				t_point;
+
+//use when i make the raycasting 
 typedef struct s_player
 {
 	float		x;
@@ -13,6 +22,8 @@ typedef struct s_map
 	char *map_char; // allowed chars
 	int map_hight;  // the hight of the whole map
 	int			map_width;
+	t_point *player_loc;
+	char player_face;
 	// u must also add the player loc
 }				t_map;
 
@@ -42,10 +53,5 @@ typedef struct s_game
 	t_player	*player;
 }				t_game;
 
-typedef struct s_point
-{
-	int			x;
-	int			y;
-}				t_point;
 
 #endif

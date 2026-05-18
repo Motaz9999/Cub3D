@@ -1,7 +1,8 @@
 #ifndef CUB3D_H
 # define CUB3D_H
-# include "../get_next_line/get_next_line.h"
-# include "../libft/libft.h"
+# include "get_next_line.h"
+# include "libft.h"
+# include "mlx.h"
 # include "struct.h"
 # include <error.h>
 # include <fcntl.h>
@@ -13,6 +14,14 @@
 # include <unistd.h>
 # define TRUE 1
 # define FALSE 0
+# define KEY_W 119
+# define KEY_A 97
+# define KEY_S 115
+# define KEY_D 100
+# define KEY_ESC 65307
+# define WIDTH_OF_WIN 800
+# define HIGHT_OF_WIN 600
+# define BYTES_PER_PIXEL 4
 
 // errors
 int			error_handling(char *context, int exit_code);
@@ -23,6 +32,10 @@ void		clean_data(t_config *data);
 void		init_game(t_game *game);
 void		init_map(t_map *map);
 void		init_config(t_config *config);
+void		init_mlx_lib(t_mlx *mlx_lib);
+
+// mlx
+int			setup_mlx(t_game *game);
 
 // parsing
 t_config	*parse_file(char *file_name);

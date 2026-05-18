@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 02:43:11 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/07 09:18:18 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/18 11:44:33 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	init_game(t_game *game)
 {
 	game->config_file_data = NULL;
 	game->player = NULL;
+	game->mlx = NULL;
 }
 
 void	init_map(t_map *map)
@@ -46,4 +47,15 @@ void	init_config(t_config *config)
 		config->texture[i] = NULL;
 		i++;
 	}
+}
+
+void	init_mlx_lib(t_mlx *mlx_lib)
+{
+	mlx_lib->mlx = NULL;
+	mlx_lib->win = NULL;
+	mlx_lib->img = NULL;
+	mlx_lib->addr = NULL;
+	mlx_lib->bpp = -1;
+	mlx_lib->line_len = -1;
+	mlx_lib->endian = -1;
 }

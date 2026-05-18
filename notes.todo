@@ -24,8 +24,10 @@
               "content": "map errors",
               "id": 1778126654460,
               "level": "danger",
-              "done": false,
-              "start": 1778126654460
+              "done": true,
+              "start": 1778126654460,
+              "focus": false,
+              "end": 1779092811509
             }
           },
           {
@@ -51,9 +53,10 @@
                   "content": "BFS algo",
                   "id": 1778217319199,
                   "level": "danger",
-                  "done": false,
+                  "done": true,
                   "start": 1778217319199,
-                  "focus": true
+                  "focus": false,
+                  "end": 1779092812482
                 }
               }
             ],
@@ -61,9 +64,10 @@
               "content": "valid_map",
               "id": 1778132246529,
               "level": "warning",
-              "done": false,
+              "done": true,
               "start": 1778132246529,
-              "focus": true
+              "focus": false,
+              "end": 1779092811910
             }
           },
           {
@@ -89,8 +93,10 @@
                   "content": "first must be sure there is only 1 player '",
                   "id": 1778739984953,
                   "level": "default",
-                  "done": false,
-                  "start": 1778739984953
+                  "done": true,
+                  "start": 1778739984953,
+                  "focus": false,
+                  "end": 1779092814291
                 }
               }
             ],
@@ -98,8 +104,10 @@
               "content": "point before goes to anyplace so after i find the player location",
               "id": 1778739939222,
               "level": "default",
-              "done": false,
-              "start": 1778739939222
+              "done": true,
+              "start": 1778739939222,
+              "focus": false,
+              "end": 1779092813880
             }
           }
         ],
@@ -107,8 +115,10 @@
           "content": "maps",
           "id": 1778126591331,
           "level": "default",
-          "done": false,
-          "start": 1778126591331
+          "done": true,
+          "start": 1778126591331,
+          "focus": false,
+          "end": 1779092810634
         }
       },
       {
@@ -134,8 +144,10 @@
               "content": "forrbiden texture",
               "id": 1778126622687,
               "level": "default",
-              "done": false,
-              "start": 1778126622687
+              "done": true,
+              "start": 1778126622687,
+              "focus": false,
+              "end": 1779092816150
             }
           }
         ],
@@ -143,8 +155,78 @@
           "content": "texture",
           "id": 1778126599401,
           "level": "success",
+          "done": true,
+          "start": 1778126599401,
+          "focus": false,
+          "end": 1779092814714
+        }
+      },
+      {
+        "key": 1779092808436,
+        "children": [],
+        "todo": {
+          "content": "",
+          "id": 1779092808436,
+          "level": "default",
+          "done": true,
+          "start": 1779092808436,
+          "focus": false,
+          "end": 1779092820057
+        }
+      },
+      {
+        "key": 1779092821177,
+        "children": [],
+        "todo": {
+          "content": "mlx setup",
+          "id": 1779092821177,
+          "level": "default",
           "done": false,
-          "start": 1778126599401
+          "start": 1779092821177
+        }
+      },
+      {
+        "key": 1779092831347,
+        "children": [],
+        "todo": {
+          "content": "game loop",
+          "id": 1779092831347,
+          "level": "default",
+          "done": false,
+          "start": 1779092831347
+        }
+      },
+      {
+        "key": 1779092837580,
+        "children": [],
+        "todo": {
+          "content": "raycasting",
+          "id": 1779092837580,
+          "level": "default",
+          "done": false,
+          "start": 1779092837580
+        }
+      },
+      {
+        "key": 1779092843099,
+        "children": [],
+        "todo": {
+          "content": "render",
+          "id": 1779092843099,
+          "level": "default",
+          "done": false,
+          "start": 1779092843099
+        }
+      },
+      {
+        "key": 1779092846517,
+        "children": [],
+        "todo": {
+          "content": "moving",
+          "id": 1779092846517,
+          "level": "default",
+          "done": false,
+          "start": 1779092846517
         }
       }
     ],
@@ -165,6 +247,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1778740009845"
+    "version": "1779092848574"
   }
 }

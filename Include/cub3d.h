@@ -48,11 +48,9 @@ int			parse_map(t_config *data);
 int			check_extension(char *path, char *ext);
 void		print_map(t_map *map);
 
-
 // texture
 int			check_texture(t_config *data);
-t_texture	*setup_texture(t_game *game);
-
+void		setup_texture(t_game *game);
 
 // make map
 char		**make_map(int fd, char *first_row, char *set);
@@ -69,15 +67,12 @@ void		inqueue(t_point *queue, int *tail, t_point new_point);
 int			is_queue_empty(int head, int tail);
 int			flood_fill(char **map, t_map *map_data);
 
-
 // checks for paths and values
 int			check_on_path(char *path);
 int			check_on_value(char *value);
 
-
 // data
 int			extract_data(t_config *data, char *line);
 int			valid_map(t_map *map_data);
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:37:44 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/20 20:13:16 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/20 20:25:55 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,17 @@ int	convert_to_color(char *data)
 // this fun for setup the texture to use them later in the img draw
 static int	load_texture(void *mlx, t_texture *texture, t_config *data)
 {
-	texture->no_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)NO],
-			WIDTH_OF_WIN, HIGHT_OF_WIN);
-	texture->so_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)SO],
-			WIDTH_OF_WIN, HIGHT_OF_WIN);
-	texture->we_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)WE],
-			WIDTH_OF_WIN, HIGHT_OF_WIN);
-	texture->ea_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)EA],
-			WIDTH_OF_WIN, HIGHT_OF_WIN);
+	int	w;
+	int	h;
+
+	texture->no_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)NO], &w,
+			&h);
+	texture->so_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)SO], &w,
+			&h);
+	texture->we_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)WE], &w,
+			&h);
+	texture->ea_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)EA], &w,
+			&h);
 	texture->c_color = convert_to_color(data->texture[(int)C]);
 	texture->f_color = convert_to_color(data->texture[(int)F]);
 	if (!check_on_all_texture(texture))
@@ -94,17 +97,15 @@ static int	load_texture(void *mlx, t_texture *texture, t_config *data)
 //	WE,
 //	EA,
 //	C,	F not texture but i need them as 1 number 32 bit (use bitwise ops to do it )
-t_texture	*setup_texture(t_game *game)
+void	setup_texture(t_game *game)
 {
-	t_texture	*text;
-
-	text = malloc(sizeof(t_texture));
-	init_texture(text);
-	if (!load_texture(game->mlx_lib->mlx, text, game->config_file_data))
+	game->loaded_texture = malloc(sizeof(t_texture));
+	init_texture(game->loaded_texture);
+	if (!load_texture(game->mlx_lib->mlx, game->loaded_texture,
+			game->config_file_data))
 	{
-		clean_texture(game->mlx_lib->mlx, text);
-		text = NULL;
-		return (NULL);
+		clean_texture(game->mlx_lib->mlx, game->loaded_texture);
+		game->loaded_texture = NULL;
+		return ;
 	}
-	return (text);
 }

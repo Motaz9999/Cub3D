@@ -25,6 +25,7 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)utils/init_game.c \
 			  $(SRC_DIR)utils/clean_data.c \
 			  $(SRC_DIR)utils/setup_mlx.c \
+			  $(SRC_DIR)utils/setup_texture.c \
 			  $(GNL_DIR)get_next_line.c \
 			  $(GNL_DIR)get_next_line_utils.c
 

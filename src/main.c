@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 21:10:46 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/18 11:43:49 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/20 14:48:48 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(int argc, char **argv)
 	game.config_file_data = parse_file(argv[1]);
 	if (game.config_file_data == NULL)
 				exit(1);
-	setup_mlx(&game);
+	//setup_mlx(&game);
 	if (game.mlx_lib == NULL)
 	{
 		clean_data(game.config_file_data);

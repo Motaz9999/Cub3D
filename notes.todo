@@ -176,7 +176,19 @@
       },
       {
         "key": 1779092821177,
-        "children": [],
+        "children": [
+          {
+            "key": 1779276886969,
+            "children": [],
+            "todo": {
+              "content": "add clean data with it",
+              "id": 1779276886969,
+              "level": "default",
+              "done": false,
+              "start": 1779276886969
+            }
+          }
+        ],
         "todo": {
           "content": "mlx setup",
           "id": 1779092821177,
@@ -228,13 +240,175 @@
           "done": false,
           "start": 1779092846517
         }
+      },
+      {
+        "key": 1779276988288,
+        "children": [
+          {
+            "key": 1779276991783,
+            "children": [],
+            "todo": {
+              "content": ". Position in the world.",
+              "id": 1779276991783,
+              "level": "default",
+              "done": false,
+              "start": 1779276991783
+            }
+          },
+          {
+            "key": 1779277004823,
+            "children": [],
+            "todo": {
+              "content": ". Direction vector (where they look).",
+              "id": 1779277004823,
+              "level": "default",
+              "done": false,
+              "start": 1779277004823
+            }
+          },
+          {
+            "key": 1779277018373,
+            "children": [
+              {
+                "key": 1779277131519,
+                "children": [],
+                "todo": {
+                  "content": "The camera plane is always perpendicular to the direction vector.s",
+                  "id": 1779277131519,
+                  "level": "default",
+                  "done": false,
+                  "start": 1779277131519
+                }
+              }
+            ],
+            "todo": {
+              "content": ". Camera plane (for rendering perspective).",
+              "id": 1779277018373,
+              "level": "default",
+              "done": false,
+              "start": 1779277018373
+            }
+          },
+          {
+            "key": 1779277027152,
+            "children": [
+              {
+                "key": 1779277054334,
+                "children": [],
+                "todo": {
+                  "content": "| `N`    | Facing up (y-)    |",
+                  "id": 1779277054334,
+                  "level": "default",
+                  "done": false,
+                  "start": 1779277054334
+                }
+              },
+              {
+                "key": 1779277061553,
+                "children": [],
+                "todo": {
+                  "content": "| `S`    | Facing down (y+)  |",
+                  "id": 1779277061553,
+                  "level": "default",
+                  "done": false,
+                  "start": 1779277061553
+                }
+              },
+              {
+                "key": 1779277067711,
+                "children": [],
+                "todo": {
+                  "content": "| `E`    | Facing right (x+) |",
+                  "id": 1779277067711,
+                  "level": "default",
+                  "done": false,
+                  "start": 1779277067711
+                }
+              },
+              {
+                "key": 1779277073613,
+                "children": [],
+                "todo": {
+                  "content": "| `W`    | Facing left (x-)  |",
+                  "id": 1779277073613,
+                  "level": "default",
+                  "done": false,
+                  "start": 1779277073613
+                }
+              }
+            ],
+            "todo": {
+              "content": ". Spawn letters meaning.",
+              "id": 1779277027152,
+              "level": "default",
+              "done": false,
+              "start": 1779277027152
+            }
+          },
+          {
+            "key": 1779277084228,
+            "children": [
+              {
+                "key": 1779277102812,
+                "children": [],
+                "todo": {
+                  "content": "| `x`, `y`             | Initial coordinates in the map            |",
+                  "id": 1779277102812,
+                  "level": "default",
+                  "done": false,
+                  "start": 1779277102812
+                }
+              },
+              {
+                "key": 1779277109011,
+                "children": [],
+                "todo": {
+                  "content": "| `dir_x`, `dir_y`     | Where the player is looking               |",
+                  "id": 1779277109011,
+                  "level": "default",
+                  "done": false,
+                  "start": 1779277109011
+                }
+              },
+              {
+                "key": 1779277117194,
+                "children": [],
+                "todo": {
+                  "content": "| `plane_x`, `plane_y` | Used for FOV in raycasting (camera width) |",
+                  "id": 1779277117194,
+                  "level": "default",
+                  "done": false,
+                  "start": 1779277117194
+                }
+              }
+            ],
+            "todo": {
+              "content": "player data",
+              "id": 1779277084228,
+              "level": "default",
+              "done": false,
+              "start": 1779277084228
+            }
+          }
+        ],
+        "todo": {
+          "content": "player",
+          "id": 1779276988288,
+          "level": "success",
+          "done": false,
+          "start": 1779276988288
+        }
       }
     ],
     "expandKeys": [
       1778126591331,
       1778126599401,
       1778132246529,
-      1778739939222
+      1778739939222,
+      1779092821177,
+      1779277027152,
+      1779277084228,
+      1779277018373
     ],
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",
@@ -247,6 +421,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1779092848574"
+    "version": "1779277175780"
   }
 }

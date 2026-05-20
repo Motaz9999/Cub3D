@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 11:25:19 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/18 11:53:51 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/20 13:29:46 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	init_window(t_game *game)
 	return (TRUE);
 }
 
-// this fun is for putting first image into the window that i make
+// this fun is for setting (img pointer) i will use to put imgs in it then print it in window
 static int	init_image(t_game *game)
 {
 	game->mlx_lib->img = mlx_new_image(game->mlx_lib->mlx, WIDTH_OF_WIN,
@@ -47,13 +47,15 @@ static int	init_image(t_game *game)
 	return (TRUE);
 }
 
+//this fun malloc a whole stuct for the mlx lib
+//each element in this struct is for something
 int	setup_mlx(t_game *game)
 {
 	game->mlx_lib = malloc(sizeof(t_mlx));
 	if (!game->mlx_lib)
 		return (error_handling("error in mlx lib", (int)FALSE));
 	init_mlx_lib(game->mlx_lib);
-	game->mlx_lib->mlx = mlx_init();
+	game->mlx_lib->mlx = mlx_init();//link to lib
 	if (!game->mlx_lib->mlx)
 	{
 		free(game->mlx_lib);

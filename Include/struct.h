@@ -42,7 +42,7 @@ typedef struct s_config
 {
 	int			fd;
 	int			count_of_elements;
-	char *texture[6]; // texture path checks NO,SO,WE,EA
+	char *texture[6]; // texture path checks NO,SO,WE,EA,C,F(see the enum to know what each index mean)
 	char		*save_line_map;
 	t_map		*map_data;
 }				t_config;

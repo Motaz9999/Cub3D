@@ -55,3 +55,56 @@ void	clean_data(t_config *data)
 		clean_map(data->map_data);
 	free(data);
 }
+
+void	clean_mlx_data(t_mlx *mlx_lib)
+{
+	if (mlx_lib == NULL)
+		return ;
+	if (mlx_lib->img != NULL)
+		mlx_destroy_image(mlx_lib->mlx, mlx_lib->img);
+	if (mlx_lib->win != NULL)
+		mlx_destroy_window(mlx_lib->mlx, mlx_lib->win);
+	if (mlx_lib->mlx != NULL)
+	{
+		mlx_destroy_display(mlx_lib->mlx);
+		free(mlx_lib->mlx);
+	}
+	free(mlx_lib);
+}
+
+void	clean_texture(void *mlx_ptr, t_texture *texture)
+{
+	if (texture == NULL)
+		return ;
+	if (mlx_ptr != NULL)
+	{
+		if (texture->no_texture != NULL)
+			mlx_destroy_image(mlx_ptr, texture->no_texture);
+		if (texture->so_texture != NULL)
+			mlx_destroy_image(mlx_ptr, texture->so_texture);
+		if (texture->we_texture != NULL)
+			mlx_destroy_image(mlx_ptr, texture->we_texture);
+		if (texture->ea_texture != NULL)
+			mlx_destroy_image(mlx_ptr, texture->ea_texture);
+	}
+	free(texture);
+}
+
+void	clean_game(t_game *game)
+{
+	void	*mlx_ptr;
+
+	if (game == NULL)
+		return ;
+	mlx_ptr = NULL;
+	if (game->mlx_lib != NULL)
+		mlx_ptr = game->mlx_lib->mlx;
+	if (game->loaded_texture != NULL)
+		clean_texture(mlx_ptr, game->loaded_texture);
+	if (game->mlx_lib != NULL)
+		clean_mlx_data(game->mlx_lib);
+	if (game->config_file_data != NULL)
+		clean_data(game->config_file_data);
+	if (game->player != NULL)
+		free(game->player);
+}

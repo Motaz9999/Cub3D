@@ -16,7 +16,8 @@ void	init_game(t_game *game)
 {
 	game->config_file_data = NULL;
 	game->player = NULL;
-	game->mlx = NULL;
+	game->mlx_lib = NULL;
+	game->loaded_texture = NULL;
 }
 
 void	init_map(t_map *map)
@@ -58,4 +59,14 @@ void	init_mlx_lib(t_mlx *mlx_lib)
 	mlx_lib->bpp = -1;
 	mlx_lib->line_len = -1;
 	mlx_lib->endian = -1;
+}
+
+void	init_texture(t_texture *texture)
+{
+	texture->no_texture = NULL;
+	texture->so_texture = NULL;
+	texture->we_texture = NULL;
+	texture->ea_texture = NULL;
+	texture->c_color = -1;
+	texture->f_color = -1;
 }

@@ -8,14 +8,6 @@ typedef struct s_point
 	int			y;
 }				t_point;
 
-// use when i make the raycasting
-typedef struct s_player
-{
-	float		x;
-	float		y;
-	float		z;
-}				t_player;
-
 typedef struct s_map
 {
 	char **map;     // the hole map
@@ -38,14 +30,24 @@ typedef enum e_type_of_text
 	F
 }				t_type_of_text;
 
+
+//this i can take from it what i need later to use
 typedef struct s_config
 {
 	int			fd;
 	int			count_of_elements;
-	char *texture[6]; // texture path checks NO,SO,WE,EA,C,F(see the enum to know what each index mean)
+	char		*texture[6];
+	// texture path checks NO,SO,WE,EA,C,F(see the enum to know what each index mean)
 	char		*save_line_map;
 	t_map		*map_data;
 }				t_config;
+
+
+
+
+
+
+
 
 typedef struct s_mlx
 {
@@ -58,11 +60,35 @@ typedef struct s_mlx
 	int endian;   // byte order
 }				t_mlx;
 
+// have texture ready to use
+typedef struct s_texture
+{
+	void		*no_texture;
+	void		*so_texture;
+	void		*we_texture;
+	void		*ea_texture;
+	int			c_color;
+	int			f_color;
+}				t_texture;
+
+
+
+
+
+
+
+
+// use when i make the raycasting
+typedef struct s_player
+{
+}				t_player;
+
 typedef struct s_game
 {
 	t_config	*config_file_data;
 	t_player	*player;
 	t_mlx		*mlx_lib;
+	t_texture	*loaded_texture;
 }				t_game;
 
 #endif

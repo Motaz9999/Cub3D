@@ -162,19 +162,6 @@
         }
       },
       {
-        "key": 1779092808436,
-        "children": [],
-        "todo": {
-          "content": "",
-          "id": 1779092808436,
-          "level": "default",
-          "done": true,
-          "start": 1779092808436,
-          "focus": false,
-          "end": 1779092820057
-        }
-      },
-      {
         "key": 1779092821177,
         "children": [
           {
@@ -187,14 +174,26 @@
               "done": false,
               "start": 1779276886969
             }
+          },
+          {
+            "key": 1779287472536,
+            "children": [],
+            "todo": {
+              "content": "color and texture setup for using",
+              "id": 1779287472536,
+              "level": "default",
+              "done": false,
+              "start": 1779287472536
+            }
           }
         ],
         "todo": {
           "content": "mlx setup",
           "id": 1779092821177,
-          "level": "default",
+          "level": "danger",
           "done": false,
-          "start": 1779092821177
+          "start": 1779092821177,
+          "focus": true
         }
       },
       {
@@ -232,7 +231,30 @@
       },
       {
         "key": 1779092846517,
-        "children": [],
+        "children": [
+          {
+            "key": 1779287530943,
+            "children": [],
+            "todo": {
+              "content": "keys",
+              "id": 1779287530943,
+              "level": "default",
+              "done": false,
+              "start": 1779287530943
+            }
+          },
+          {
+            "key": 1779287538022,
+            "children": [],
+            "todo": {
+              "content": "acully moving",
+              "id": 1779287538022,
+              "level": "default",
+              "done": false,
+              "start": 1779287538022
+            }
+          }
+        ],
         "todo": {
           "content": "moving",
           "id": 1779092846517,
@@ -401,14 +423,13 @@
       }
     ],
     "expandKeys": [
-      1778126591331,
-      1778126599401,
       1778132246529,
       1778739939222,
       1779092821177,
       1779277027152,
       1779277084228,
-      1779277018373
+      1779277018373,
+      1779092846517
     ],
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",
@@ -421,6 +442,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1779277175780"
+    "version": "1779287542929"
   }
 }

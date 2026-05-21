@@ -21,7 +21,7 @@
 // when u add(push) an element u add on tail and the head will still remain
 // and when u delete(pop) u use the first element the tail adds (head)
 // then head goes to the next 1 and by this we make queue
-// X is the line and y is the the element in the line
+// y is the line and x is the the element in the line
 
 static t_point	add_point(t_point point, int x, int y)
 {
@@ -46,28 +46,28 @@ static int	check_on_4_dirs(t_point *queue, char **map, t_point *point, int *tail
 	int	next_x;
 	int	next_y;
 
-	int dx[] = {1, -1, 0, 0}; // first the up and down
-	int dy[] = {0, 0, 1, -1}; // the right then left
+	int dx[] = {0, 0, 1, -1}; // right, left
+	int dy[] = {1, -1, 0, 0}; // down, up
 	i = 0;
 	while (i < 4) // sec step is to check on the map chars
 	{
 		next_x = point->x + dx[i];
 		next_y = point->y + dy[i];
-		if (next_x < 0 || next_x >= map_data->map_hight || next_y < 0
-			|| next_y >= map_data->map_width)
+		if (next_y < 0 || next_y >= map_data->map_hight || next_x < 0
+			|| next_x >= map_data->map_width)
 		{
 			return (FALSE);
 		}
-		if (map[next_x][next_y] == ' ')
+		if (map[next_y][next_x] == ' ')
 			return (FALSE);
-		if (map[next_x][next_y] == '1')
+		if (map[next_y][next_x] == '1')
 		{
 			i++;
 			continue ;
 		}
-		if (map[next_x][next_y] == '0')
+		if (map[next_y][next_x] == '0')
 		{
-			map[next_x][next_y] = '1';
+			map[next_y][next_x] = '1';
 			inqueue(queue, tail, add_point(*point, next_x, next_y));
 		}
 		i++;
@@ -92,7 +92,7 @@ int	flood_fill(char **map, t_map *map_data)
 	init_queue(queue, (map_data->map_hight * map_data->map_width) ,&tail_index , &head_index);
 	point.x = map_data->player_loc->x;
 	point.y = map_data->player_loc->y;
-	map[point.x][point.y] = '1'; // already visited
+	map[point.y][point.x] = '1'; // already visited
 	inqueue(queue, &tail_index, point);
 	while (!is_queue_empty(head_index, tail_index))
 	{

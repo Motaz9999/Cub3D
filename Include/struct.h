@@ -52,12 +52,12 @@ typedef struct s_config
 typedef struct s_mlx
 {
 	void *mlx;    // connection to display
-	void *win;    // the window
-	void *img;    // the image buffer
-	char *addr;   // raw pixel array inside the image
-	int bpp;      // bits per pixel
-	int line_len; // bytes per row
-	int endian;   // byte order
+	void *win;    // the window here we want to put the img
+	void *img;    // the image buffer the img i want to print on the window
+	char *addr;   // raw pixel array (pointer to the first pixel in the screen)  useed when we want to color pixel at x,y  on the img
+	int bpp;      // bits per pixel  always its 32 its mean each pixel have 4bytes argb coloring  and to till what each time i move and how in the the adder
+	int line_len; // bytes per row  used to get to the next row on the img
+	int endian;   // byte order  we dont use it 
 }				t_mlx;
 
 // have texture ready to use

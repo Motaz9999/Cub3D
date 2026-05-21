@@ -85,8 +85,8 @@ int	find_player_and_check(t_map *map_data)
 			if (map_data->map[i][j] == 'S' || map_data->map[i][j] == 'E'
 				|| map_data->map[i][j] == 'W' || map_data->map[i][j] == 'N')
 			{
-				map_data->player_loc->x = i;
-				map_data->player_loc->y = j;
+				map_data->player_loc->x = j;
+				map_data->player_loc->y = i;
 				map_data->player_face = map_data->map[i][j];
 				count++;
 			}

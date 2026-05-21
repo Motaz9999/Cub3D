@@ -21,9 +21,8 @@
 # define KEY_ESC 65307
 # define WIDTH_OF_WIN 800
 # define HIGHT_OF_WIN 600
-# define BYTES_PER_PIXEL 4
 # define ALPHA_COLOR 120
-
+# define FPS 60
 // errors
 int			error_handling(char *context, int exit_code);
 // clean data and structs and free them
@@ -41,7 +40,7 @@ void		init_texture(t_texture *texture);
 
 // mlx
 int			setup_mlx(t_game *game);
-
+void	put_pixel_to_img_buffer(t_mlx *mlx_lib, int x, int y, int color);
 // parsing
 t_config	*parse_file(char *file_name);
 int			parse_map(t_config *data);

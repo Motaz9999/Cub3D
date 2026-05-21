@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:37:44 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/20 20:25:55 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/21 16:36:11 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	check_on_all_texture(t_texture *texture)
 // aw each element start from bit to bit and we must be sure about colors
 // this like i insert each num in
 // its right place in the 32bit  like the 32-24 bits are for alpha a...
-int	convert_to_color(char *data)
+static int	convert_to_color(char *data)
 {
 	char	**nums;
 	int		ret;
@@ -59,13 +59,13 @@ int	convert_to_color(char *data)
 	r = ft_atoi(nums[0]); // red color
 	g = ft_atoi(nums[1]); // green color
 	b = ft_atoi(nums[2]); // blue color
-	if ((alpha > 254 || alpha < 0) || (r > 254 || r < 0) || (g > 254 || g < 0)
-		|| (b > 254 || b < 0))
+	if ((alpha > 255 || alpha < 0) || (r > 255 || r < 0) || (g > 255 || g < 0)
+		|| (b > 255 || b < 0))
 	{
 		ft_free_all2((void **)nums, NULL);
 		return (-1);
 	}
-	ret = (alpha << 24 | r << 16 | g << 8 | b);
+	ret = (alpha << 24) | (r << 16) | (g << 8) | b;
 	ft_free_all2((void **)nums, NULL);
 	return (ret);
 }

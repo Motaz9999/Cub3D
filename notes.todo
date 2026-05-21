@@ -171,8 +171,10 @@
               "content": "add clean data with it",
               "id": 1779276886969,
               "level": "default",
-              "done": false,
-              "start": 1779276886969
+              "done": true,
+              "start": 1779276886969,
+              "focus": false,
+              "end": 1779377584944
             }
           },
           {
@@ -182,8 +184,10 @@
               "content": "color and texture setup for using",
               "id": 1779287472536,
               "level": "default",
-              "done": false,
-              "start": 1779287472536
+              "done": true,
+              "start": 1779287472536,
+              "focus": false,
+              "end": 1779377586778
             }
           }
         ],
@@ -191,9 +195,10 @@
           "content": "mlx setup",
           "id": 1779092821177,
           "level": "danger",
-          "done": false,
+          "done": true,
           "start": 1779092821177,
-          "focus": true
+          "focus": false,
+          "end": 1779377581724
         }
       },
       {
@@ -203,8 +208,10 @@
           "content": "game loop",
           "id": 1779092831347,
           "level": "default",
-          "done": false,
-          "start": 1779092831347
+          "done": true,
+          "start": 1779092831347,
+          "focus": false,
+          "end": 1779377590480
         }
       },
       {
@@ -252,6 +259,17 @@
               "level": "default",
               "done": false,
               "start": 1779287538022
+            }
+          },
+          {
+            "key": 1779377601476,
+            "children": [],
+            "todo": {
+              "content": "looks",
+              "id": 1779377601476,
+              "level": "default",
+              "done": false,
+              "start": 1779377601476
             }
           }
         ],
@@ -420,6 +438,28 @@
           "done": false,
           "start": 1779276988288
         }
+      },
+      {
+        "key": 1779377535928,
+        "children": [],
+        "todo": {
+          "content": "mouse",
+          "id": 1779377535928,
+          "level": "default",
+          "done": false,
+          "start": 1779377535928
+        }
+      },
+      {
+        "key": 1779377542146,
+        "children": [],
+        "todo": {
+          "content": "render cieling first then floor then the imges upthem",
+          "id": 1779377542146,
+          "level": "default",
+          "done": false,
+          "start": 1779377542146
+        }
       }
     ],
     "expandKeys": [
@@ -442,6 +482,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1779287542929"
+    "version": "1779377604516"
   }
 }

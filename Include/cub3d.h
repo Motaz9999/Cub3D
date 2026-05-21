@@ -40,7 +40,7 @@ void		init_texture(t_texture *texture);
 
 // mlx
 int			setup_mlx(t_game *game);
-void	put_pixel_to_img_buffer(t_mlx *mlx_lib, int x, int y, int color);
+void		put_pixel_to_img_buffer(t_mlx *mlx_lib, int x, int y, int color);
 // parsing
 t_config	*parse_file(char *file_name);
 int			parse_map(t_config *data);
@@ -74,4 +74,9 @@ int			check_on_value(char *value);
 int			extract_data(t_config *data, char *line);
 int			valid_map(t_map *map_data);
 
+// render
+int			render(void *game_void);
+
+// hooks
+int			setup_hooks(t_game *game);
 #endif

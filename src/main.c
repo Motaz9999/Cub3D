@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 21:10:46 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/20 20:26:03 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/21 18:26:24 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 
 void	loop(t_game *game)
 {
-	mlx_loop(game->mlx_lib->mlx);
+	if (!setup_hooks(game))
+	{
+		clean_game(game);
+		exit(1);
+	}
+	mlx_loop(game->mlx_lib->mlx);//start the game until i exit 
 }
 
 int	main(int argc, char **argv)

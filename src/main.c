@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 21:10:46 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/21 18:26:24 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/23 14:11:12 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	loop(t_game *game)
 {
-	if (!setup_hooks(game))
+	if (!setup_hooks(game) || !setup_player(game))
 	{
 		clean_game(game);
 		exit(1);

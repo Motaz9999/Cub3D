@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 02:50:38 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/07 06:51:45 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/23 14:09:49 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	clean_map(t_map *map)
 	free(map);
 }
 
-//this fun is for clean the config data file 
+// this fun is for clean the config data file
 void	clean_data(t_config *data)
 {
 	int	i;
@@ -105,6 +105,21 @@ void	clean_game(t_game *game)
 		clean_mlx_data(game->mlx_lib);
 	if (game->config_file_data != NULL)
 		clean_data(game->config_file_data);
+	if (game->keys != NULL)
+		free(game->keys);
 	if (game->player != NULL)
 		free(game->player);
+}
+
+int	close_game(void *game_void)
+{
+	t_game *game;
+
+	game = (t_game *)game_void;
+	if (game != NULL)
+	{
+		clean_game(game);
+		exit(0);
+	}
+	return (0);
 }

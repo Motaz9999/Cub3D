@@ -1,23 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render.c                                           :+:      :+:    :+:   */
+/*   pov_for_player.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/21 18:07:48 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/23 20:43:42 by moodeh           ###   ########.fr       */
+/*   Created: 2026/05/23 13:56:28 by moodeh            #+#    #+#             */
+/*   Updated: 2026/05/23 20:41:27 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-int	render(void *game_void)
-{
-	t_game *game;
-	game = (t_game *)game_void;
-	handle_movement(game);
-	raycasting(game);
-	draw_img();
-	return (0);
-}

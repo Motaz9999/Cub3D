@@ -1,0 +1,472 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1rem}
+.section{margin-bottom:1.5rem}
+.label{font-size:13px;color:var(--color-text-secondary);margin-bottom:8px}
+.title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+canvas{border:0.5px solid var(--color-border-tertiary);border-radius:8px;display:block}
+.ctrl{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.ctrl label{font-size:13px;color:var(--color-text-secondary);min-width:80px}
+.ctrl input[type=range]{flex:1;min-width:120px}
+.ctrl span{font-size:13px;font-weight:500;color:var(--color-text-primary);min-width:36px}
+.card{background:var(--color-background-secondary);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:10px}
+.card code{font-family:var(--font-mono);font-size:12px;background:var(--color-background-primary);padding:1px 5px;border-radius:4px;color:var(--color-text-primary)}
+.hl{color:var(--color-text-primary);font-weight:500}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;margin-right:4px}
+.tag-blue{background:#E6F1FB;color:#185FA5}
+.tag-amber{background:#FAEEDA;color:#BA7517}
+.tag-teal{background:#E1F5EE;color:#0F6E56}
+.tag-coral{background:#FAECE7;color:#993C1D}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tab{font-size:12px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--color-border-secondary);cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary)}
+.tab.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.panel{display:none}.panel.active{display:block}
+</style>
+<div class="wrap">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(0)">What is FOV</div>
+    <div class="tab" onclick="switchTab(1)">Camera plane</div>
+    <div class="tab" onclick="switchTab(2)">Ray casting</div>
+    <div class="tab" onclick="switchTab(3)">Interactive</div>
+  </div>
+
+  <!-- PANEL 0: What is FOV -->
+  <div class="panel active" id="p0">
+    <div class="card">
+      <span class="hl">FOV = Field Of View.</span> It is how wide the player can see — like human peripheral vision. A narrow FOV feels zoomed in (like binoculars). A wide FOV feels wide but distorts the edges.
+    </div>
+    <canvas id="c0" width="640" height="260"></canvas>
+    <div class="ctrl" style="margin-top:10px">
+      <label>FOV angle</label>
+      <input type="range" min="20" max="120" value="66" id="fov0" oninput="drawFOV(this.value)">
+      <span id="fov0v">66°</span>
+    </div>
+    <div class="card" style="margin-top:8px">
+      Standard cub3D FOV = <code>66°</code>. This comes from the camera plane length = <code>0.66</code>.<br>
+      Formula: <code>FOV = 2 * atan(plane_length) * (180/PI)</code><br>
+      So: <code>2 * atan(0.66) * 57.3 ≈ 66°</code>
+    </div>
+  </div>
+
+  <!-- PANEL 1: Camera plane -->
+  <div class="panel" id="p1">
+    <div class="card">
+      The camera plane is a line <span class="hl">perpendicular to the direction</span> the player faces. Its width controls FOV. Think of it as the "screen" in the 2D world that the player projects onto.
+    </div>
+    <canvas id="c1" width="640" height="300"></canvas>
+    <div class="ctrl" style="margin-top:10px">
+      <label>Rotate player</label>
+      <input type="range" min="0" max="360" value="0" id="rot1" oninput="drawPlane(this.value)">
+      <span id="rot1v">0°</span>
+    </div>
+    <div class="card" style="margin-top:8px">
+      <span class="hl">Rule:</span> dir and plane must ALWAYS be perpendicular. When dir rotates 30°, plane also rotates 30°. They are always 90° apart. If you break this rule, your FOV distorts.
+    </div>
+  </div>
+
+  <!-- PANEL 2: Ray casting -->
+  <div class="panel" id="p2">
+    <div class="card">
+      For each screen column (0 to WIDTH-1), you shoot one ray. The ray direction is computed from dir + plane * cameraX.<br>
+      <code>cameraX = 2*x/WIDTH - 1</code> → goes from <span class="hl">-1 (left edge)</span> to <span class="hl">+1 (right edge)</span>.
+    </div>
+    <canvas id="c2" width="640" height="300"></canvas>
+    <div class="ctrl" style="margin-top:10px">
+      <label>Column x</label>
+      <input type="range" min="0" max="319" value="160" id="col2" oninput="drawRays(this.value)">
+      <span id="col2v">160</span>
+    </div>
+    <div class="card" style="margin-top:8px">
+      <code>cameraX = 2 * x / 320 - 1</code><br>
+      <code>ray_dir_x = dir_x + plane_x * cameraX</code><br>
+      <code>ray_dir_y = dir_y + plane_y * cameraX</code><br><br>
+      The highlighted ray is the one for the selected column. All other rays shown in gray.
+    </div>
+  </div>
+
+  <!-- PANEL 3: Interactive full demo -->
+  <div class="panel" id="p3">
+    <div class="card">
+      Drag the slider to rotate the player. Watch how dir, plane, and all rays rotate together as one unit.
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div>
+        <div class="label">2D map view (top down)</div>
+        <canvas id="c3map" width="300" height="300"></canvas>
+      </div>
+      <div>
+        <div class="label">What player sees (3D)</div>
+        <canvas id="c3d" width="320" height="200"></canvas>
+      </div>
+    </div>
+    <div class="ctrl" style="margin-top:10px">
+      <label>Rotate</label>
+      <input type="range" min="0" max="360" value="0" id="rot3" oninput="drawDemo(this.value)">
+      <span id="rot3v">0°</span>
+    </div>
+    <div class="ctrl">
+      <label>Plane len</label>
+      <input type="range" min="10" max="100" value="66" id="plen3" oninput="drawDemo(document.getElementById('rot3').value)">
+      <span id="plen3v">0.66</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+const C = {
+  bg:     isDark ? '#1a1a18' : '#ffffff',
+  bg2:    isDark ? '#2a2a28' : '#f5f4f0',
+  text:   isDark ? '#c2c0b6' : '#3d3d3a',
+  border: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)',
+  dir:    '#7F77DD',
+  plane:  '#1D9E75',
+  ray:    '#E85D24',
+  rayd:   isDark ? 'rgba(232,93,36,0.2)' : 'rgba(232,93,36,0.15)',
+  player: '#D85A30',
+  grid:   isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+  wall:   isDark ? '#444441' : '#d3d1c7',
+};
+
+function ctx(id){
+  const c=document.getElementById(id);
+  c.getContext('2d').clearRect(0,0,c.width,c.height);
+  return c.getContext('2d');
+}
+
+// ---- PANEL 0: FOV ----
+function drawFOV(deg){
+  document.getElementById('fov0v').textContent=deg+'°';
+  const cx=ctx('c0'), W=640, H=260, px=160, py=160;
+  cx.fillStyle=C.bg2; cx.fillRect(0,0,W,H);
+
+  const fov=deg*Math.PI/180;
+  const len=120;
+
+  // FOV cone
+  cx.beginPath();
+  cx.moveTo(px,py);
+  cx.arc(px,py,len,-Math.PI/2-fov/2,-Math.PI/2+fov/2);
+  cx.closePath();
+  cx.fillStyle=isDark?'rgba(127,119,221,0.15)':'rgba(127,119,221,0.1)';
+  cx.fill();
+
+  // FOV boundary lines
+  const a1=-Math.PI/2-fov/2, a2=-Math.PI/2+fov/2;
+  cx.strokeStyle=C.dir; cx.lineWidth=1.5; cx.setLineDash([4,4]);
+  cx.beginPath(); cx.moveTo(px,py); cx.lineTo(px+Math.cos(a1)*len,py+Math.sin(a1)*len); cx.stroke();
+  cx.beginPath(); cx.moveTo(px,py); cx.lineTo(px+Math.cos(a2)*len,py+Math.sin(a2)*len); cx.stroke();
+  cx.setLineDash([]);
+
+  // Dir arrow
+  cx.strokeStyle=C.dir; cx.lineWidth=2.5;
+  cx.beginPath(); cx.moveTo(px,py); cx.lineTo(px,py-len); cx.stroke();
+  arrowHead(cx,px,py-len,0,-1,C.dir);
+
+  // Camera plane
+  const plLen=Math.tan(fov/2)*80;
+  cx.strokeStyle=C.plane; cx.lineWidth=3;
+  cx.beginPath(); cx.moveTo(px-plLen,py-80); cx.lineTo(px+plLen,py-80); cx.stroke();
+
+  // labels
+  cx.fillStyle=C.dir; cx.font='12px sans-serif'; cx.textAlign='center';
+  cx.fillText('dir',px+14,py-len/2);
+  cx.fillStyle=C.plane; cx.textAlign='center';
+  cx.fillText('camera plane (length='+Math.tan(fov/2).toFixed(2)+')',px,py-80-14);
+
+  // FOV arc label
+  cx.strokeStyle=C.text; cx.lineWidth=1; cx.setLineDash([2,3]);
+  cx.beginPath(); cx.arc(px,py,50,-Math.PI/2-fov/2,-Math.PI/2+fov/2); cx.stroke();
+  cx.setLineDash([]);
+  cx.fillStyle=C.text; cx.font='13px sans-serif'; cx.textAlign='left';
+  cx.fillText('FOV = '+deg+'°', px+55, py-50);
+
+  // player dot
+  cx.fillStyle=C.player; cx.beginPath(); cx.arc(px,py,7,0,Math.PI*2); cx.fill();
+
+  // right side explanation
+  const rx=340, ry=40;
+  cx.fillStyle=C.text; cx.font='13px sans-serif'; cx.textAlign='left';
+  const lines=[
+    'Narrow FOV (< 60°):',
+    '  feels zoomed in, less distortion',
+    '',
+    'Normal FOV (66°):',
+    '  standard cub3D feel',
+    '',
+    'Wide FOV (> 90°):',
+    '  see more, but edges distort',
+    '',
+    'plane length = tan(FOV/2)',
+    '66° → tan(33°) ≈ 0.66',
+  ];
+  lines.forEach((l,i)=>{
+    if(l.startsWith(' ')){cx.fillStyle=isDark?'#888780':'#888780'; cx.fillText(l,rx,ry+i*20);}
+    else{cx.fillStyle=C.text; cx.fillText(l,rx,ry+i*20);}
+  });
+}
+
+// ---- PANEL 1: Camera plane ----
+function drawPlane(deg){
+  document.getElementById('rot1v').textContent=deg+'°';
+  const cx=ctx('c1'), W=640, H=300, px=220, py=150;
+  cx.fillStyle=C.bg2; cx.fillRect(0,0,W,H);
+
+  // grid
+  for(let i=0;i<W;i+=30){cx.strokeStyle=C.grid;cx.lineWidth=0.5;cx.beginPath();cx.moveTo(i,0);cx.lineTo(i,H);cx.stroke();}
+  for(let i=0;i<H;i+=30){cx.beginPath();cx.moveTo(0,i);cx.lineTo(W,i);cx.stroke();}
+
+  const rad=(deg-90)*Math.PI/180;
+  const len=100, pl=0.66*100;
+  const dx=Math.cos(rad), dy=Math.sin(rad);
+  const px2=Math.cos(rad+Math.PI/2), py2=Math.sin(rad+Math.PI/2);
+
+  // FOV cone
+  const fov=2*Math.atan(0.66);
+  cx.beginPath();
+  cx.moveTo(px,py);
+  cx.arc(px,py,len,rad-fov/2,rad+fov/2);
+  cx.closePath();
+  cx.fillStyle=isDark?'rgba(127,119,221,0.1)':'rgba(127,119,221,0.08)';
+  cx.fill();
+
+  // plane line
+  cx.strokeStyle=C.plane; cx.lineWidth=3;
+  cx.beginPath();
+  cx.moveTo(px+px2*pl, py+py2*pl);
+  cx.lineTo(px-px2*pl, py-py2*pl);
+  cx.stroke();
+  // plane endpoints
+  cx.fillStyle=C.plane;
+  cx.beginPath(); cx.arc(px+px2*pl,py+py2*pl,5,0,Math.PI*2); cx.fill();
+  cx.beginPath(); cx.arc(px-px2*pl,py-py2*pl,5,0,Math.PI*2); cx.fill();
+
+  // dir arrow
+  cx.strokeStyle=C.dir; cx.lineWidth=2.5;
+  cx.beginPath(); cx.moveTo(px,py); cx.lineTo(px+dx*len,py+dy*len); cx.stroke();
+  arrowHead(cx,px+dx*len,py+dy*len,dx,dy,C.dir);
+
+  // perp indicator (small square)
+  const sq=10;
+  const mx=px+dx*40, my=py+dy*40;
+  cx.strokeStyle=C.border; cx.lineWidth=1;
+  cx.beginPath();
+  cx.moveTo(mx+px2*sq,my+py2*sq);
+  cx.lineTo(mx+px2*sq+dx*sq,my+py2*sq+dy*sq);
+  cx.lineTo(mx+dx*sq,my+dy*sq);
+  cx.stroke();
+
+  // player
+  cx.fillStyle=C.player; cx.beginPath(); cx.arc(px,py,8,0,Math.PI*2); cx.fill();
+
+  // labels
+  cx.font='13px sans-serif';
+  cx.fillStyle=C.dir; cx.textAlign='center';
+  cx.fillText('dir ('+Math.cos(rad).toFixed(2)+', '+Math.sin(rad).toFixed(2)+')',px+dx*len+dx*30,py+dy*len+dy*20);
+  cx.fillStyle=C.plane;
+  const plx=px+px2*pl, ply=py+py2*pl;
+  cx.textAlign= plx>px?'left':'right';
+  cx.fillText('plane',plx+(px2>0?8:-8),ply);
+
+  // right panel
+  cx.fillStyle=C.text; cx.font='13px sans-serif'; cx.textAlign='left';
+  const info=[
+    ['dir_x', Math.cos(rad).toFixed(3), C.dir],
+    ['dir_y', Math.sin(rad).toFixed(3), C.dir],
+    ['plane_x', (px2*0.66).toFixed(3), C.plane],
+    ['plane_y', (py2*0.66).toFixed(3), C.plane],
+  ];
+  cx.fillStyle=C.text; cx.fillText('Current values:',400,80);
+  info.forEach(([k,v,col],i)=>{
+    cx.fillStyle=col; cx.fillText(k+' = '+v, 400, 110+i*28);
+  });
+  cx.fillStyle=C.text; cx.font='12px sans-serif';
+  cx.fillText('dir · plane = '+( Math.cos(rad)*px2*0.66 + Math.sin(rad)*py2*0.66 ).toFixed(4)+' (always 0)',400,230);
+  cx.fillText('→ always perpendicular ✓',400,250);
+}
+
+// ---- PANEL 2: Rays ----
+function drawRays(col){
+  col=parseInt(col);
+  document.getElementById('col2v').textContent=col;
+  const cx=ctx('c2'), W=640, H=300, px=200, py=150;
+  cx.fillStyle=C.bg2; cx.fillRect(0,0,W,H);
+  for(let i=0;i<W;i+=30){cx.strokeStyle=C.grid;cx.lineWidth=0.5;cx.beginPath();cx.moveTo(i,0);cx.lineTo(i,H);cx.stroke();}
+  for(let i=0;i<H;i+=30){cx.beginPath();cx.moveTo(0,i);cx.lineTo(W,i);cx.stroke();}
+
+  const WIDTH=320,len=110,pl=0.66*len;
+  const rad=-Math.PI/2;
+  const dx=Math.cos(rad),dy=Math.sin(rad);
+  const px2=Math.cos(rad+Math.PI/2),py2=Math.sin(rad+Math.PI/2);
+
+  for(let x=0;x<WIDTH;x+=3){
+    const cX=2*x/WIDTH-1;
+    const rdx2=dx+px2*0.66*cX,rdy2=dy+py2*0.66*cX;
+    const m=Math.sqrt(rdx2*rdx2+rdy2*rdy2);
+    cx.strokeStyle=C.rayd;cx.lineWidth=0.8;
+    cx.beginPath();cx.moveTo(px,py);cx.lineTo(px+rdx2/m*len,py+rdy2/m*len);cx.stroke();
+  }
+
+  cx.strokeStyle=C.plane;cx.lineWidth=3;
+  cx.beginPath();cx.moveTo(px+px2*pl,py+py2*pl);cx.lineTo(px-px2*pl,py-py2*pl);cx.stroke();
+
+  const camX=2*col/WIDTH-1;
+  const rdx=dx+px2*0.66*camX,rdy=dy+py2*0.66*camX;
+  const mag=Math.sqrt(rdx*rdx+rdy*rdy);
+  cx.strokeStyle=C.ray;cx.lineWidth=2.5;
+  cx.beginPath();cx.moveTo(px,py);cx.lineTo(px+rdx/mag*len,py+rdy/mag*len);cx.stroke();
+  arrowHead(cx,px+rdx/mag*len,py+rdy/mag*len,rdx/mag,rdy/mag,C.ray);
+
+  // dot on plane
+  const dotX=px+px2*pl*camX, dotY=py+py2*pl*camX;
+  cx.fillStyle=C.ray;cx.beginPath();cx.arc(dotX,dotY,6,0,Math.PI*2);cx.fill();
+
+  cx.strokeStyle=C.dir;cx.lineWidth=2;
+  cx.beginPath();cx.moveTo(px,py);cx.lineTo(px+dx*len,py+dy*len);cx.stroke();
+  arrowHead(cx,px+dx*len,py+dy*len,dx,dy,C.dir);
+
+  cx.fillStyle=C.player;cx.beginPath();cx.arc(px,py,8,0,Math.PI*2);cx.fill();
+
+  cx.font='12px sans-serif';cx.textAlign='left';
+  cx.fillStyle=C.ray; cx.fillText('column x = '+col, 370, 70);
+  cx.fillStyle=C.text; cx.fillText('cameraX = 2×'+col+'/320 - 1', 370, 92);
+  cx.fillStyle=C.ray; cx.fillText('       = '+camX.toFixed(3), 370, 112);
+  cx.fillText(' ', 370, 132);
+  cx.fillStyle=C.dir; cx.fillText('ray_dir_x = dir_x + plane_x × cameraX', 370, 152);
+  cx.fillStyle=C.ray; cx.fillText('         = '+rdx.toFixed(3), 370, 172);
+  cx.fillStyle=C.dir; cx.fillText('ray_dir_y = dir_y + plane_y × cameraX', 370, 196);
+  cx.fillStyle=C.ray; cx.fillText('         = '+rdy.toFixed(3), 370, 216);
+
+  cx.fillStyle=C.plane;cx.textAlign='center';
+  cx.fillText('camera plane',px,py+pl+18);
+}
+
+// ---- PANEL 3: Full demo ----
+const demoMap=[
+  [1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,1],
+  [1,0,0,1,1,0,0,1],
+  [1,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1],
+];
+function drawDemo(deg){
+  deg=parseInt(deg);
+  const plen=parseInt(document.getElementById('plen3').value)/100;
+  document.getElementById('rot3v').textContent=deg+'°';
+  document.getElementById('plen3v').textContent=plen.toFixed(2);
+  const rad=(deg-90)*Math.PI/180;
+  const dx=Math.cos(rad),dy=Math.sin(rad);
+  const px2=Math.cos(rad+Math.PI/2),py2=Math.sin(rad+Math.PI/2);
+  const px=3.5,py=3.5; // player pos in map
+
+  // --- 2D map ---
+  const mc=document.getElementById('c3map');
+  const mx=mc.getContext('2d');
+  const cs=38;
+  mx.fillStyle=C.bg2;mx.fillRect(0,0,300,300);
+  demoMap.forEach((row,r)=>row.forEach((cell,c)=>{
+    mx.fillStyle=cell?C.wall:C.bg;
+    mx.fillRect(c*cs,r*cs,cs-1,cs-1);
+  }));
+
+  // rays on map
+  const COLS=40;
+  for(let x=0;x<=COLS;x++){
+    const cX=2*x/COLS-1;
+    const rdx=dx+px2*plen*cX,rdy=dy+py2*plen*cX;
+    const mag=Math.sqrt(rdx*rdx+rdy*rdy);
+    const rndx=rdx/mag,rndy=rdy/mag;
+    let rx=px,ry=py,hit=false,dist=0;
+    while(!hit&&dist<8){
+      rx+=rndx*0.05;ry+=rndy*0.05;dist+=0.05;
+      if(demoMap[Math.floor(ry)]&&demoMap[Math.floor(ry)][Math.floor(rx)]===1)hit=true;
+    }
+    mx.strokeStyle=x===COLS/2?C.ray:C.rayd;
+    mx.lineWidth=x===COLS/2?2:0.8;
+    mx.beginPath();
+    mx.moveTo(px*cs,py*cs);
+    mx.lineTo(rx*cs,ry*cs);
+    mx.stroke();
+  }
+
+  // plane line on map
+  const pl=plen*cs*2;
+  mx.strokeStyle=C.plane;mx.lineWidth=3;
+  mx.beginPath();
+  mx.moveTo(px*cs+px2*pl,py*cs+py2*pl);
+  mx.lineTo(px*cs-px2*pl,py*cs-py2*pl);
+  mx.stroke();
+
+  // dir arrow
+  mx.strokeStyle=C.dir;mx.lineWidth=2;
+  mx.beginPath();mx.moveTo(px*cs,py*cs);mx.lineTo(px*cs+dx*50,py*cs+dy*50);mx.stroke();
+  arrowHead(mx,px*cs+dx*50,py*cs+dy*50,dx,dy,C.dir);
+
+  // player
+  mx.fillStyle=C.player;mx.beginPath();mx.arc(px*cs,py*cs,7,0,Math.PI*2);mx.fill();
+
+  // --- 3D view ---
+  const sc=document.getElementById('c3d');
+  const sx=sc.getContext('2d');
+  const SW=320,SH=200;
+  sx.fillStyle='#87CEEB';sx.fillRect(0,0,SW,SH/2); // sky
+  sx.fillStyle='#8B7355';sx.fillRect(0,SH/2,SW,SH/2); // floor
+
+  for(let x=0;x<SW;x++){
+    const cX=2*x/SW-1;
+    const rdx=dx+px2*plen*cX,rdy=dy+py2*plen*cX;
+    const mag=Math.sqrt(rdx*rdx+rdy*rdy);
+    const rndx=rdx/mag,rndy=rdy/mag;
+    let rx=px,ry=py,hit=false;
+    let perpDist=0;
+    let steps=0;
+    let mapX=Math.floor(px),mapY=Math.floor(py);
+    const ddx=Math.abs(1/rndx),ddy=Math.abs(1/rndy);
+    const stepX=rndx<0?-1:1,stepY=rndy<0?-1:1;
+    let sdx=rndx<0?(px-mapX)*ddx:(mapX+1-px)*ddx;
+    let sdy=rndy<0?(py-mapY)*ddy:(mapY+1-py)*ddy;
+    let side=0;
+    while(!hit&&steps<20){
+      if(sdx<sdy){sdx+=ddx;mapX+=stepX;side=0;}
+      else{sdy+=ddy;mapY+=stepY;side=1;}
+      if(demoMap[mapY]&&demoMap[mapY][mapX]===1)hit=true;
+      steps++;
+    }
+    perpDist=side===0?(sdx-ddx):(sdy-ddy);
+    const lineH=Math.min(SH,Math.floor(SH/Math.max(perpDist,0.1)));
+    const drawS=Math.floor(SH/2-lineH/2);
+    const shade=side===1?0.7:1.0;
+    const r=Math.floor(160*shade),g=Math.floor(120*shade),b=Math.floor(80*shade);
+    sx.fillStyle=`rgb(${r},${g},${b})`;
+    sx.fillRect(x,drawS,1,lineH);
+  }
+}
+
+function arrowHead(cx,x,y,dx,dy,color){
+  const size=8;
+  const angle=Math.atan2(dy,dx);
+  cx.fillStyle=color;
+  cx.beginPath();
+  cx.moveTo(x,y);
+  cx.lineTo(x-size*Math.cos(angle-0.4),y-size*Math.sin(angle-0.4));
+  cx.lineTo(x-size*Math.cos(angle+0.4),y-size*Math.sin(angle+0.4));
+  cx.closePath();
+  cx.fill();
+}
+
+function switchTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+
+// init all panels
+drawFOV(66);
+drawPlane(0);
+drawRays(160);
+drawDemo(0);
+</script>

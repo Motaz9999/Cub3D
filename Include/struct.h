@@ -93,6 +93,14 @@ typedef struct s_player
 	double		plane_y;
 }				t_player;
 
+typedef enum e_dir
+{
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+}				t_dir;
+
 typedef struct s_game
 {
 	t_config	*config_file_data;

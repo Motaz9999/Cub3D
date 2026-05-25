@@ -271,14 +271,26 @@
               "done": false,
               "start": 1779377601476
             }
+          },
+          {
+            "key": 1779558648478,
+            "children": [],
+            "todo": {
+              "content": "",
+              "id": 1779558648478,
+              "level": "default",
+              "done": false,
+              "start": 1779558648478
+            }
           }
         ],
         "todo": {
           "content": "moving",
           "id": 1779092846517,
-          "level": "default",
+          "level": "danger",
           "done": false,
-          "start": 1779092846517
+          "start": 1779092846517,
+          "focus": true
         }
       },
       {
@@ -291,8 +303,10 @@
               "content": ". Position in the world.",
               "id": 1779276991783,
               "level": "default",
-              "done": false,
-              "start": 1779276991783
+              "done": true,
+              "start": 1779276991783,
+              "focus": false,
+              "end": 1779558612392
             }
           },
           {
@@ -302,8 +316,10 @@
               "content": ". Direction vector (where they look).",
               "id": 1779277004823,
               "level": "default",
-              "done": false,
-              "start": 1779277004823
+              "done": true,
+              "start": 1779277004823,
+              "focus": false,
+              "end": 1779558613562
             }
           },
           {
@@ -316,8 +332,10 @@
                   "content": "The camera plane is always perpendicular to the direction vector.s",
                   "id": 1779277131519,
                   "level": "default",
-                  "done": false,
-                  "start": 1779277131519
+                  "done": true,
+                  "start": 1779277131519,
+                  "focus": false,
+                  "end": 1779558615881
                 }
               }
             ],
@@ -325,8 +343,10 @@
               "content": ". Camera plane (for rendering perspective).",
               "id": 1779277018373,
               "level": "default",
-              "done": false,
-              "start": 1779277018373
+              "done": true,
+              "start": 1779277018373,
+              "focus": false,
+              "end": 1779558615223
             }
           },
           {
@@ -339,8 +359,10 @@
                   "content": "| `N`    | Facing up (y-)    |",
                   "id": 1779277054334,
                   "level": "default",
-                  "done": false,
-                  "start": 1779277054334
+                  "done": true,
+                  "start": 1779277054334,
+                  "focus": false,
+                  "end": 1779558619109
                 }
               },
               {
@@ -350,8 +372,10 @@
                   "content": "| `S`    | Facing down (y+)  |",
                   "id": 1779277061553,
                   "level": "default",
-                  "done": false,
-                  "start": 1779277061553
+                  "done": true,
+                  "start": 1779277061553,
+                  "focus": false,
+                  "end": 1779558618641
                 }
               },
               {
@@ -361,8 +385,10 @@
                   "content": "| `E`    | Facing right (x+) |",
                   "id": 1779277067711,
                   "level": "default",
-                  "done": false,
-                  "start": 1779277067711
+                  "done": true,
+                  "start": 1779277067711,
+                  "focus": false,
+                  "end": 1779558619567
                 }
               },
               {
@@ -372,8 +398,10 @@
                   "content": "| `W`    | Facing left (x-)  |",
                   "id": 1779277073613,
                   "level": "default",
-                  "done": false,
-                  "start": 1779277073613
+                  "done": true,
+                  "start": 1779277073613,
+                  "focus": false,
+                  "end": 1779558620075
                 }
               }
             ],
@@ -381,8 +409,10 @@
               "content": ". Spawn letters meaning.",
               "id": 1779277027152,
               "level": "default",
-              "done": false,
-              "start": 1779277027152
+              "done": true,
+              "start": 1779277027152,
+              "focus": false,
+              "end": 1779558617956
             }
           },
           {
@@ -395,8 +425,10 @@
                   "content": "| `x`, `y`             | Initial coordinates in the map            |",
                   "id": 1779277102812,
                   "level": "default",
-                  "done": false,
-                  "start": 1779277102812
+                  "done": true,
+                  "start": 1779277102812,
+                  "focus": false,
+                  "end": 1779558622906
                 }
               },
               {
@@ -406,8 +438,10 @@
                   "content": "| `dir_x`, `dir_y`     | Where the player is looking               |",
                   "id": 1779277109011,
                   "level": "default",
-                  "done": false,
-                  "start": 1779277109011
+                  "done": true,
+                  "start": 1779277109011,
+                  "focus": false,
+                  "end": 1779558623356
                 }
               },
               {
@@ -417,8 +451,10 @@
                   "content": "| `plane_x`, `plane_y` | Used for FOV in raycasting (camera width) |",
                   "id": 1779277117194,
                   "level": "default",
-                  "done": false,
-                  "start": 1779277117194
+                  "done": true,
+                  "start": 1779277117194,
+                  "focus": false,
+                  "end": 1779558623831
                 }
               }
             ],
@@ -426,8 +462,10 @@
               "content": "player data",
               "id": 1779277084228,
               "level": "default",
-              "done": false,
-              "start": 1779277084228
+              "done": true,
+              "start": 1779277084228,
+              "focus": false,
+              "end": 1779558622555
             }
           }
         ],
@@ -435,8 +473,10 @@
           "content": "player",
           "id": 1779276988288,
           "level": "success",
-          "done": false,
-          "start": 1779276988288
+          "done": true,
+          "start": 1779276988288,
+          "focus": false,
+          "end": 1779558644221
         }
       },
       {
@@ -445,7 +485,7 @@
         "todo": {
           "content": "mouse",
           "id": 1779377535928,
-          "level": "default",
+          "level": "secondary",
           "done": false,
           "start": 1779377535928
         }
@@ -456,7 +496,7 @@
         "todo": {
           "content": "render cieling first then floor then the imges upthem",
           "id": 1779377542146,
-          "level": "default",
+          "level": "warning",
           "done": false,
           "start": 1779377542146
         }
@@ -482,6 +522,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1779377672666"
+    "version": "1779558655039"
   }
 }

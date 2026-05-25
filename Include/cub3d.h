@@ -99,5 +99,10 @@ int			close_game(void *game_void);
 // player
 int			setup_player(t_game *game);
 // movement
+void		handle_movement(t_game *game);
+void		move_forword(t_game *game);
+void		move_backword(t_game *game);
+void		strafe_left(t_game *game);
+void		strafe_right(t_game *game);
 
 #endif

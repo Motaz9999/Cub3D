@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive DDA Raycasting Explainer</title>
+<style>
+:root {
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, monospace;
+}
+/* Light Mode */
+:root[data-theme="light"] {
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f3f5;
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --border-subtle: rgba(0,0,0,0.1);
+  --border-strong: rgba(0,0,0,0.2);
+  --accent-color: #3b82f6;
+  --wall-color: #ced4da;
+  --grid-line: rgba(0,0,0,0.05);
+}
+/* Dark Mode */
+:root[data-theme="dark"] {
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #2a2a2a;
+  --text-primary: #e0e0e0;
+  --text-secondary: #aaaaaa;
+  --border-subtle: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.16);
+  --accent-color: #60a5fa;
+  --wall-color: #444444;
+  --grid-line: rgba(255,255,255,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+  padding: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+h1 { font-size: 24px; font-weight: 600; }
+.theme-toggle {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+.theme-toggle:hover { filter: brightness(1.1); }
+
+.intro-text {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.intro-text strong { color: var(--text-primary); }
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.tab {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  transition: all 0.2s;
+}
+.tab:hover { background: var(--bg-tertiary); }
+.tab.active {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border-color: transparent;
+}
+
+canvas {
+  display: block;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  width: 100%;
+  background: var(--bg-secondary);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.card {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  border: 1px solid var(--border-subtle);
+}
+.card b { color: var(--text-primary); font-weight: 600; }
+.card code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-tertiary);
+  padding: 3px 6px;
+  border-radius: 4px;
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+.ctrl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-secondary);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+}
+.ctrl label { font-size: 13px; color: var(--text-secondary); min-width: 80px; font-weight: 500;}
+.ctrl input[type="range"] { flex: 1; cursor: pointer; }
+.ctrl span { font-size: 13px; font-weight: 600; min-width: 45px; color: var(--accent-color); text-align: right;}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.metric-box {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--border-subtle);
+  border-left: 4px solid var(--border-subtle);
+  transition: border-color 0.2s;
+}
+.metric-box.highlight { border-left-color: var(--accent-color); background: var(--bg-tertiary); }
+.metric-box.x-axis { border-left-color: #E85D24; }
+.metric-box.y-axis { border-left-color: #1D9E75; }
+
+.metric-lbl { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.metric-val { font-family: var(--font-mono); font-size: 16px; font-weight: 600; color: var(--text-primary); }
+
+.step-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.step-item {
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s;
+}
+.step-item:hover { border-color: var(--text-secondary); }
+.step-item.active { border-color: var(--accent-color); background: var(--bg-tertiary); }
+.step-item b { color: var(--text-primary); font-weight: 600; }
+.step-item code { font-family: var(--font-mono); font-size: 12px; background: var(--bg-primary); padding: 2px 6px; border-radius: 4px; color: var(--text-primary); }
+
+.panel { display: none; animation: fadeIn 0.3s ease; }
+.panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Shared logic colors */
+.color-dir { color: #7F77DD; font-weight: bold; }
+.color-plane { color: #1D9E75; font-weight: bold; }
+.color-ray { color: #E85D24; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="header-row">
+  <h1>Inside the Cub3D DDA Raycaster</h1>
+  <button class="theme-toggle" onclick="toggleTheme()" id="thBtn">☀️ Light Mode</button>
+</div>
+
+<div class="intro-text">
+  <strong>What the hell is DDA (Digital Differential Analyzer)?</strong><br>
+  In raycasting, shooting a ray blindly by tiny steps like <code>0.01</code> until it hits a wall is extremely slow and skips corners. DDA is a math trick that calculates exactly where the ray intersects the map's horizontal and vertical <strong>grid lines</strong>. It lets the ray "jump" cleanly from one cell boundary to the next without missing anything, making it perfectly precise and lightning fast. 
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab(0)">1. Ray Setup</div>
+  <div class="tab" onclick="showTab(1)">2. Delta Distances</div>
+  <div class="tab" onclick="showTab(2)">3. Side Distances</div>
+  <div class="tab" onclick="showTab(3)">4. The DDA Algorithm</div>
+  <div class="tab" onclick="showTab(4)">5. Fix the Fisheye</div>
+</div>
+
+<!-- ==============================================
+     TAB 0: RAY SETUP
+=============================================== -->
+<div id="p0" class="panel active">
+  <div class="card">
+    To cast a frame, we look at every single pixel column <code>x</code> on the screen. We assign an imaginary coordinate <b>cameraX</b> that spans from <code>-1</code> (left screen edge) to <code>+1</code> (right screen edge).<br><br>
+    <code>cameraX = 2 * x / screen_width - 1</code><br>
+    <code>ray_dir_x = dir_x + plane_x * cameraX</code><br>
+    <code>ray_dir_y = dir_y + plane_y * cameraX</code>
+  </div>
+  <canvas id="c0" height="340"></canvas>
+  <div class="controls">
+    <div class="ctrl">
+      <label>Screen Col x</label>
+      <input type="range" min="0" max="319" value="160" id="s0" oninput="drawTab0()">
+      <span id="sv0">160</span>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric-box"><div class="metric-lbl">cameraX</div><div class="metric-val" id="v0cx">0.00</div></div>
+    <div class="metric-box"><div class="metric-lbl">ray_dir_x</div><div class="metric-val" id="v0rx">0.00</div></div>
+    <div class="metric-box"><div class="metric-lbl">ray_dir_y</div><div class="metric-val" id="v0ry">0.00</div></div>
+  </div>
+</div>
+
+<!-- ==============================================
+     TAB 1: DELTA DISTANCES
+=============================================== -->
+<div id="p1" class="panel">
+  <div class="card">
+    <strong>Delta Distance</strong> is a constant size for a given ray. It answers: <em>If the ray travels perfectly out, how far does it travel to clear exactly 1 unit (1 grid box) in the X axis? What about the Y axis?</em><br><br>
+    The formulas are simple geometry (using Pythagoras):<br>
+    <code>delta_dist_x = |1 / ray_dir_x|</code><br>
+    <code>delta_dist_y = |1 / ray_dir_y|</code>
+  </div>
+  <canvas id="c1" height="340"></canvas>
+  <div class="controls">
+    <div class="ctrl">
+      <label>Ray Angle</label>
+      <input type="range" min="5" max="355" value="30" id="s1" oninput="drawTab1()">
+      <span id="sv1">30°</span>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric-box x-axis"><div class="metric-lbl">deltaDistX</div><div class="metric-val" id="v1dx">0.00</div></div>
+    <div class="metric-box y-axis"><div class="metric-lbl">deltaDistY</div><div class="metric-val" id="v1dy">0.00</div></div>
+  </div>
+</div>
+
+<!-- ==============================================
+     TAB 2: SIDE DISTANCES
+=============================================== -->
+<div id="p2" class="panel">
+  <div class="card">
+    <strong>Side Distance</strong> is your <em>starting</em> distance. Since the player isn't perfectly on a grid line, the ray has to travel a custom distance just to hit the very <strong>first</strong> X-line and Y-line. After it hits the first line, all future bumps use the constant <code>deltaDist</code>.<br><br>
+    For example, if ray goes right (ray_dir_x > 0): <code>side_dist_x = (map_x + 1.0 - pos_x) * deltaDistX</code><br>
+    If it goes left (ray_dir_x < 0): <code>side_dist_x = (pos_x - map_x) * deltaDistX</code>
+  </div>
+  <canvas id="c2" height="340"></canvas>
+  <div class="controls">
+    <div class="ctrl">
+      <label>Player X</label>
+      <input type="range" min="10" max="90" value="35" id="s2x" oninput="drawTab2()">
+      <span id="sv2x">0.35</span>
+    </div>
+    <div class="ctrl">
+      <label>Player Y</label>
+      <input type="range" min="10" max="90" value="60" id="s2y" oninput="drawTab2()">
+      <span id="sv2y">0.60</span>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric-box x-axis"><div class="metric-lbl">sideDistX (to 1st X line)</div><div class="metric-val" id="v2sx">0.00</div></div>
+    <div class="metric-box y-axis"><div class="metric-lbl">sideDistY (to 1st Y line)</div><div class="metric-val" id="v2sy">0.00</div></div>
+  </div>
+</div>
+
+<!-- ==============================================
+     TAB 3: THE DDA ALGORITHM
+=============================================== -->
+<div id="p3" class="panel">
+  <div class="card">
+    <strong>The Loop:</strong> The ray compares <code>sideDistX</code> and <code>sideDistY</code>.<br>
+    If <code>sideDistX</code> is smaller, it means the next grid-line we'd hit is an X-line. We jump there! We add <code>deltaDistX</code> to our counter, and move 1 cell in the X axis.<br>
+    We repeat this, "climbing the ladder" of the grid lines, until we land inside a cell that is a wall (<code>map[y][x] > 0</code>). This logic guarantees we check <em>every single cell</em> the ray touches.
+  </div>
+  <canvas id="c3" height="360"></canvas>
+  <div class="controls">
+    <div class="ctrl">
+      <label>Simulation Step</label>
+      <input type="range" min="0" max="7" value="0" id="s3" oninput="drawTab3()">
+      <span id="sv3">0</span>
+    </div>
+  </div>
+  <div class="step-list" id="steplist"></div>
+</div>
+
+<!-- ==============================================
+     TAB 4: FIX THE FISHEYE
+=============================================== -->
+<div id="p4" class="panel">
+  <div class="card">
+    If we draw wall heights using the real Euclidean distance from the player to the wall, we get a rounded "Fisheye" distortion at the edges of our screen (because the edges are actually further away).<br><br>
+    To fix it, we use <strong>Perpendicular Distance</strong>, which projects the hit point straight back perpendicular to the camera plane.
+    <br><code>perpWallDist = (side == 0) ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY)</code>
+  </div>
+  <canvas id="c4" height="340"></canvas>
+  <div class="controls">
+    <div class="ctrl">
+      <label>Hit Distance</label>
+      <input type="range" min="5" max="95" value="30" id="s4" oninput="drawTab4()">
+      <span id="sv4">1.5</span>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric-box highlight"><div class="metric-lbl">perpWallDist</div><div class="metric-val" id="v4d">0.00</div></div>
+    <div class="metric-box"><div class="metric-lbl">Wall Height</div><div class="metric-val" id="v4h">0px</div></div>
+    <div class="metric-box"><div class="metric-lbl">DrawStart</div><div class="metric-val" id="v4s">0</div></div>
+    <div class="metric-box"><div class="metric-lbl">DrawEnd</div><div class="metric-val" id="v4e">0</div></div>
+  </div>
+</div>
+
+<script>
+// --- Theme Handling ---
+function toggleTheme() {
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  const newTheme = current === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', newTheme);
+  document.getElementById('thBtn').textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  
+  // Refresh active canvas to update colors
+  drawTab0(); drawTab1(); drawTab2(); drawTab3(); drawTab4();
+}
+
+function getColors() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return {
+    bg: isDark ? '#1e1e1e' : '#ffffff',
+    bg2: isDark ? '#2a2a2a' : '#f1f3f5',
+    textPrimary: isDark ? '#e0e0e0' : '#212529',
+    textSecondary: isDark ? '#aaaaaa' : '#495057',
+    grid: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+    border: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)',
+    wall: isDark ? '#444' : '#bdc3c7',
+    player: '#D85A30',
+    dir: '#7F77DD',
+    plane: '#1D9E75',
+    ray: '#E85D24',
+    ddx: '#E85D24',
+    ddy: '#1D9E75'
+  };
+}
+
+// --- Tab System ---
+function showTab(idx) {
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.panel');
+  tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+  panels.forEach((p, i) => p.classList.toggle('active', i === idx));
+
+  // Wait one frame so layout settles and canvases have width.
+  requestAnimationFrame(() => {
+    if(idx === 0) drawTab0();
+    if(idx === 1) drawTab1();
+    if(idx === 2) drawTab2();
+    if(idx === 3) drawTab3();
+    if(idx === 4) drawTab4();
+  });
+}
+
+// --- Canvas Utilities ---
+function setupCanvas(id) {
+  const c = document.getElementById(id);
+  // Support sharp rendering on high DPI displays
+  const dpr = window.devicePixelRatio || 1;
+  const rect = c.parentElement.getBoundingClientRect();
+  const w = rect.width || 600;
+  const h = c.getAttribute('height') || 340;
+  c.width = w * dpr;
+  c.height = h * dpr;
+  c.style.width = w + 'px';
+  c.style.height = h + 'px';
+  const ctx = c.getContext('2d');
+  // Avoid accumulating transforms on repeated redraws.
+  if (typeof ctx.resetTransform === 'function') ctx.resetTransform();
+  else ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
+  return { ctx, w, h };
+}
+
+function drawGrid(ctx, w, h, cellSize, ox, oy, cols, rows, colors) {
+  ctx.strokeStyle = colors.grid;
+  ctx.lineWidth = 1;
+  for(let c=0; c<=cols; c++) {
+    ctx.beginPath(); ctx.moveTo(ox + c*cellSize, oy); ctx.lineTo(ox + c*cellSize, oy + rows*cellSize); ctx.stroke();
+  }
+  for(let r=0; r<=rows; r++) {
+    ctx.beginPath(); ctx.moveTo(ox, oy + r*cellSize); ctx.lineTo(ox + cols*cellSize, oy + r*cellSize); ctx.stroke();
+  }
+}
+
+function drawArrow(ctx, x, y, dx, dy, color, size=10) {
+  const angle = Math.atan2(dy, dx);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - size*Math.cos(angle - 0.4), y - size*Math.sin(angle - 0.4));
+  ctx.lineTo(x - size*Math.cos(angle + 0.4), y - size*Math.sin(angle + 0.4));
+  ctx.closePath();
+  ctx.fill();
+}
+
+// --- Map Data for Tabs 0 and 3 ---
+const mapLayout = [
+  [1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,1,0,0,0,0,1],
+  [1,0,0,0,1,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,0,0,1,1,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1]
+];
+
+// A cleaner map specifically for the step-by-step DDA panel (more steps before hit).
+const ddaDemoMap = [
+  [1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,1,0,1],
+  [1,0,0,0,0,0,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1]
+];
+
+function isWall(map, x, y) {
+  if (y < 0 || y >= map.length) return true;
+  if (x < 0 || x >= map[0].length) return true;
+  return map[y][x] !== 0;
+}
+
+function normalizeVec(x, y) {
+  const m = Math.hypot(x, y);
+  if (!isFinite(m) || m <= 1e-12) return { x: 0, y: 0, m: 0 };
+  return { x: x / m, y: y / m, m };
+}
+
+function ddaCastRay(map, posX, posY, dirX, dirY, maxSteps = 128) {
+  const n = normalizeVec(dirX, dirY);
+  const rayDirX = n.x;
+  const rayDirY = n.y;
+  if (n.m === 0) {
+    return {
+      hit: false,
+      rayDirX,
+      rayDirY,
+      mapX: Math.floor(posX),
+      mapY: Math.floor(posY),
+      side: -1,
+      deltaDistX: Infinity,
+      deltaDistY: Infinity,
+      steps: [],
+    };
+  }
+
+  const mapW = map[0].length;
+  const mapH = map.length;
+
+  let mapX = Math.floor(posX);
+  let mapY = Math.floor(posY);
+
+  const deltaDistX = rayDirX === 0 ? Infinity : Math.abs(1 / rayDirX);
+  const deltaDistY = rayDirY === 0 ? Infinity : Math.abs(1 / rayDirY);
+
+  const stepX = rayDirX < 0 ? -1 : 1;
+  const stepY = rayDirY < 0 ? -1 : 1;
+
+  let sideDistX;
+  let sideDistY;
+
+  if (rayDirX < 0) sideDistX = (posX - mapX) * deltaDistX;
+  else sideDistX = (mapX + 1.0 - posX) * deltaDistX;
+
+  if (rayDirY < 0) sideDistY = (posY - mapY) * deltaDistY;
+  else sideDistY = (mapY + 1.0 - posY) * deltaDistY;
+
+  const steps = [];
+  steps.push({
+    i: 0,
+    mapX,
+    mapY,
+    side: -1,
+    hit: false,
+    sideDistX,
+    sideDistY,
+    deltaDistX,
+    deltaDistY,
+  });
+
+  let hit = false;
+  let side = -1;
+  let perpWallDist = Infinity;
+  let hitX = posX;
+  let hitY = posY;
+
+  for (let i = 1; i <= maxSteps; i++) {
+    if (sideDistX < sideDistY) {
+      sideDistX += deltaDistX;
+      mapX += stepX;
+      side = 0;
+    } else {
+      sideDistY += deltaDistY;
+      mapY += stepY;
+      side = 1;
+    }
+
+    if (mapX < 0 || mapX >= mapW || mapY < 0 || mapY >= mapH) break;
+    if (map[mapY][mapX] !== 0) {
+      hit = true;
+      perpWallDist = side === 0 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
+      hitX = posX + rayDirX * perpWallDist;
+      hitY = posY + rayDirY * perpWallDist;
+    }
+
+    steps.push({
+      i,
+      mapX,
+      mapY,
+      side,
+      hit,
+      sideDistX,
+      sideDistY,
+      deltaDistX,
+      deltaDistY,
+      perpWallDist: hit ? perpWallDist : undefined,
+      hitX: hit ? hitX : undefined,
+      hitY: hit ? hitY : undefined,
+    });
+
+    if (hit) break;
+  }
+
+  return {
+    hit,
+    rayDirX,
+    rayDirY,
+    mapX,
+    mapY,
+    side,
+    stepX,
+    stepY,
+    deltaDistX,
+    deltaDistY,
+    sideDistX,
+    sideDistY,
+    perpWallDist,
+    hitX,
+    hitY,
+    steps,
+  };
+}
+
+// ==============================================
+//  TAB 0 LOGIC: RAY SETUP
+// ==============================================
+function drawTab0() {
+  const panelActive = document.getElementById('p0').classList.contains('active');
+  if(!panelActive) return;
+
+  const C = getColors();
+  const val = parseInt(document.getElementById('s0').value);
+  document.getElementById('sv0').textContent = val;
+  
+  const width = 320;
+  const cameraX = 2 * val / width - 1;
+  const dirX = 1.0, dirY = 0.0;
+  const planeX = 0.0, planeY = 0.66;
+  const rayDirX = dirX + planeX * cameraX;
+  const rayDirY = dirY + planeY * cameraX;
+  
+  document.getElementById('v0cx').textContent = cameraX.toFixed(3);
+  document.getElementById('v0rx').textContent = rayDirX.toFixed(3);
+  document.getElementById('v0ry').textContent = rayDirY.toFixed(3);
+
+  const { ctx, w, h } = setupCanvas('c0');
+  ctx.fillStyle = C.bg; ctx.fillRect(0,0,w,h);
+  
+  const mapCols = 10, mapRows = 8;
+  const cs = Math.min((w-60)/mapCols, (h-60)/mapRows);
+  const ox = (w - mapCols*cs)/2;
+  const oy = (h - mapRows*cs)/2;
+
+  // Draw blocks
+  for(let r=0; r<mapRows; r++) {
+    for(let c=0; c<mapCols; c++) {
+      ctx.fillStyle = mapLayout[r][c] ? C.wall : C.bg2;
+      ctx.fillRect(ox + c*cs, oy + r*cs, cs, cs);
+    }
+  }
+  drawGrid(ctx, w, h, cs, ox, oy, mapCols, mapRows, C);
+
+  // Player position
+  const px = 2.5, py = 4.5;
+  const ppx = ox + px*cs;
+  const ppy = oy + py*cs;
+
+  // Draw all faint rays using real DDA (fast + doesn't miss corners)
+  ctx.strokeStyle = C.ray;
+  ctx.lineWidth = 1;
+  for (let x = 0; x < width; x += 16) {
+    const cx_iter = 2 * x / width - 1;
+    const rdx = dirX + planeX * cx_iter;
+    const rdy = dirY + planeY * cx_iter;
+    const cast = ddaCastRay(mapLayout, px, py, rdx, rdy, 64);
+    const ex = cast.hit ? cast.hitX : (px + cast.rayDirX * 12);
+    const ey = cast.hit ? cast.hitY : (py + cast.rayDirY * 12);
+    ctx.globalAlpha = 0.14;
+    ctx.beginPath();
+    ctx.moveTo(ppx, ppy);
+    ctx.lineTo(ox + ex * cs, oy + ey * cs);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1.0;
+
+  // Draw selected ray + its true hit point
+  const sel = ddaCastRay(mapLayout, px, py, rayDirX, rayDirY, 64);
+  const ex = sel.hit ? sel.hitX : (px + sel.rayDirX * 12);
+  const ey = sel.hit ? sel.hitY : (py + sel.rayDirY * 12);
+
+  ctx.strokeStyle = C.ray;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(ppx, ppy);
+  ctx.lineTo(ox + ex * cs, oy + ey * cs);
+  ctx.stroke();
+  drawArrow(ctx, ox + ex * cs, oy + ey * cs, sel.rayDirX, sel.rayDirY, C.ray, 12);
+
+  if (sel.hit) {
+    ctx.fillStyle = C.ray;
+    ctx.globalAlpha = 0.35;
+    ctx.fillRect(ox + Math.floor(sel.hitX) * cs, oy + Math.floor(sel.hitY) * cs, cs, cs);
+    ctx.globalAlpha = 1.0;
+  }
+
+  // Draw plane and dir
+  ctx.strokeStyle = C.plane; ctx.lineWidth = 4;
+  ctx.beginPath();
+  // plane is a vector perpendicular to dir; draw it as a segment centered on player
+  ctx.moveTo(ppx - planeX*cs, ppy - planeY*cs);
+  ctx.lineTo(ppx + planeX*cs, ppy + planeY*cs);
+  ctx.stroke();
+
+  // Draw specific cameraX point on plane
+  const planePointX = ppx + planeX*cs*cameraX;
+  const planePointY = ppy + planeY*cs*cameraX;
+  ctx.fillStyle = C.plane;
+  ctx.beginPath(); ctx.arc(planePointX, planePointY, 5, 0, Math.PI*2); ctx.fill();
+
+  ctx.strokeStyle = C.dir; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(ppx, ppy); ctx.lineTo(ppx + dirX*cs, ppy + dirY*cs); ctx.stroke();
+  drawArrow(ctx, ppx + dirX*cs, ppy + dirY*cs, dirX, dirY, C.dir, 10);
+
+  // draw player
+  ctx.fillStyle = C.player;
+  ctx.beginPath(); ctx.arc(ppx, ppy, cs*0.2, 0, Math.PI*2); ctx.fill();
+}
+
+// ==============================================
+//  TAB 1 LOGIC: DELTA DISTANCES
+// ==============================================
+function drawTab1() {
+  const panelActive = document.getElementById('p1').classList.contains('active');
+  if(!panelActive) return;
+
+  const C = getColors();
+  const deg = parseFloat(document.getElementById('s1').value);
+  document.getElementById('sv1').textContent = deg + "°";
+  
+  const rad = deg * Math.PI / 180;
+  const rayDirX = Math.cos(rad);
+  const rayDirY = Math.sin(rad);
+  
+  // For a unit ray direction, these are real distances along the ray.
+  const deltaDistX = rayDirX === 0 ? Infinity : Math.abs(1 / rayDirX);
+  const deltaDistY = rayDirY === 0 ? Infinity : Math.abs(1 / rayDirY);
+
+  document.getElementById('v1dx').textContent = !isFinite(deltaDistX) || deltaDistX > 50 ? "Infinity" : deltaDistX.toFixed(3);
+  document.getElementById('v1dy').textContent = !isFinite(deltaDistY) || deltaDistY > 50 ? "Infinity" : deltaDistY.toFixed(3);
+
+  const { ctx, w, h } = setupCanvas('c1');
+  ctx.fillStyle = C.bg; ctx.fillRect(0,0,w,h);
+  
+  const cs = 52;
+  const cols = 8;
+  const rows = 5;
+  const ox = (w - cols * cs) / 2;
+  const oy = 26;
+
+  drawGrid(ctx, w, h, cs, ox, oy, cols, rows, C);
+
+  const px = 1.5;
+  const py = 1.5;
+  const ppx = ox + px*cs;
+  const ppy = oy + py*cs;
+
+  // Ray extension (visual)
+  const maxLen = 6.8 * cs;
+
+  // Draw the ray
+  ctx.strokeStyle = C.ray;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(ppx, ppy);
+  ctx.lineTo(ppx + rayDirX * maxLen, ppy + rayDirY * maxLen);
+  ctx.stroke();
+  drawArrow(ctx, ppx + rayDirX * maxLen, ppy + rayDirY * maxLen, rayDirX, rayDirY, C.ray, 12);
+
+  // Show the first two vertical crossings (Δx apart along the ray)
+  if (isFinite(deltaDistX)) {
+    const stepX = rayDirX < 0 ? -1 : 1;
+    const nextVert = rayDirX < 0 ? Math.floor(px) : (Math.floor(px) + 1);
+    const t1 = (nextVert - px) / rayDirX;
+    if (isFinite(t1) && t1 >= 0) {
+      const x1 = px + rayDirX * t1;
+      const y1 = py + rayDirY * t1;
+      const t2 = t1 + deltaDistX;
+      const x2 = px + rayDirX * t2;
+      const y2 = py + rayDirY * t2;
+
+      ctx.strokeStyle = C.ddx;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(ox + x1 * cs, oy + y1 * cs);
+      ctx.lineTo(ox + x2 * cs, oy + y2 * cs);
+      ctx.stroke();
+
+      ctx.fillStyle = C.ddx;
+      ctx.beginPath(); ctx.arc(ox + x1 * cs, oy + y1 * cs, 5, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(ox + x2 * cs, oy + y2 * cs, 5, 0, Math.PI*2); ctx.fill();
+      ctx.font = "12px ui-monospace, SFMono-Regular, monospace";
+      ctx.fillText("Δx", (ox + x1*cs + ox + x2*cs)/2 - 10, (oy + y1*cs + oy + y2*cs)/2 - 10);
+
+      // Mark the vertical grid lines we crossed
+      ctx.strokeStyle = C.ddx;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([5,4]);
+      ctx.beginPath(); ctx.moveTo(ox + nextVert * cs, oy); ctx.lineTo(ox + nextVert * cs, oy + rows * cs); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ox + (nextVert + stepX) * cs, oy); ctx.lineTo(ox + (nextVert + stepX) * cs, oy + rows * cs); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // Show the first two horizontal crossings (Δy apart along the ray)
+  if (isFinite(deltaDistY)) {
+    const stepY = rayDirY < 0 ? -1 : 1;
+    const nextHoriz = rayDirY < 0 ? Math.floor(py) : (Math.floor(py) + 1);
+    const t1 = (nextHoriz - py) / rayDirY;
+    if (isFinite(t1) && t1 >= 0) {
+      const x1 = px + rayDirX * t1;
+      const y1 = py + rayDirY * t1;
+      const t2 = t1 + deltaDistY;
+      const x2 = px + rayDirX * t2;
+      const y2 = py + rayDirY * t2;
+
+      ctx.strokeStyle = C.ddy;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(ox + x1 * cs, oy + y1 * cs);
+      ctx.lineTo(ox + x2 * cs, oy + y2 * cs);
+      ctx.stroke();
+
+      ctx.fillStyle = C.ddy;
+      ctx.beginPath(); ctx.arc(ox + x1 * cs, oy + y1 * cs, 5, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(ox + x2 * cs, oy + y2 * cs, 5, 0, Math.PI*2); ctx.fill();
+      ctx.font = "12px ui-monospace, SFMono-Regular, monospace";
+      ctx.fillText("Δy", (ox + x1*cs + ox + x2*cs)/2 + 8, (oy + y1*cs + oy + y2*cs)/2 + 4);
+
+      // Mark the horizontal grid lines we crossed
+      ctx.strokeStyle = C.ddy;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([5,4]);
+      ctx.beginPath(); ctx.moveTo(ox, oy + nextHoriz * cs); ctx.lineTo(ox + cols * cs, oy + nextHoriz * cs); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ox, oy + (nextHoriz + stepY) * cs); ctx.lineTo(ox + cols * cs, oy + (nextHoriz + stepY) * cs); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // Player
+  ctx.fillStyle = C.player; ctx.beginPath(); ctx.arc(ppx, ppy, 8, 0, Math.PI*2); ctx.fill();
+}
+
+// ==============================================
+//  TAB 2 LOGIC: SIDE DISTANCES
+// ==============================================
+function drawTab2() {
+  const panelActive = document.getElementById('p2').classList.contains('active');
+  if(!panelActive) return;
+
+  const C = getColors();
+  const fx = parseFloat(document.getElementById('s2x').value) / 100;
+  const fy = parseFloat(document.getElementById('s2y').value) / 100;
+  
+  document.getElementById('sv2x').textContent = fx.toFixed(2);
+  document.getElementById('sv2y').textContent = fy.toFixed(2);
+
+  // Ray direction (static 45 deg roughly for visual)
+  const deg = 50; 
+  const rad = deg * Math.PI / 180;
+  const rayDirX = Math.cos(rad);
+  const rayDirY = Math.sin(rad);
+
+  const deltaDistX = Math.abs(1 / rayDirX);
+  const deltaDistY = Math.abs(1 / rayDirY);
+
+  // Keep player inside a single visible cell for clarity.
+  const px = 1.0 + fx;
+  const py = 1.0 + fy;
+  const mapX = Math.floor(px);
+  const mapY = Math.floor(py);
+
+  const sideDistX = (rayDirX < 0 ? (px - mapX) : (mapX + 1.0 - px)) * deltaDistX;
+  const sideDistY = (rayDirY < 0 ? (py - mapY) : (mapY + 1.0 - py)) * deltaDistY;
+
+  document.getElementById('v2sx').textContent = sideDistX.toFixed(3);
+  document.getElementById('v2sy').textContent = sideDistY.toFixed(3);
+
+  const { ctx, w, h } = setupCanvas('c2');
+  ctx.fillStyle = C.bg; ctx.fillRect(0,0,w,h);
+  
+  const cols = 5;
+  const rows = 4;
+  const cs = Math.min((w - 40) / cols, (h - 40) / rows);
+  const ox = (w - cols * cs) / 2;
+  const oy = (h - rows * cs) / 2;
+
+  drawGrid(ctx, w, h, cs, ox, oy, cols, rows, C);
+  
+  const ppx = ox + px * cs;
+  const ppy = oy + py * cs;
+
+  // Ray
+  const maxLen = 4.2 * cs;
+  ctx.strokeStyle = C.ray; ctx.lineWidth = 2; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(ppx, ppy); ctx.lineTo(ppx + rayDirX*maxLen, ppy + rayDirY*maxLen); ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.font = "13px ui-monospace, SFMono-Regular, monospace";
+
+  // sideDistX line
+  const sxHitX = px + rayDirX * sideDistX;
+  const sxHitY = py + rayDirY * sideDistX;
+  const sxPx = ox + sxHitX * cs;
+  const sxPy = oy + sxHitY * cs;
+  
+  ctx.strokeStyle = C.ddx; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(ppx, ppy); ctx.lineTo(sxPx, sxPy); ctx.stroke();
+  ctx.fillStyle = C.ddx; ctx.beginPath(); ctx.arc(sxPx, sxPy, 6, 0, Math.PI*2); ctx.fill();
+  ctx.fillText("sideDistX", ppx + (sxPx-ppx)/2 - 30, ppy + (sxPy-ppy)/2 - 10);
+
+  // sideDistY line
+  const syHitX = px + rayDirX * sideDistY;
+  const syHitY = py + rayDirY * sideDistY;
+  const syPx = ox + syHitX * cs;
+  const syPy = oy + syHitY * cs;
+
+  ctx.strokeStyle = C.ddy; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(ppx, ppy); ctx.lineTo(syPx, syPy); ctx.stroke();
+  ctx.fillStyle = C.ddy; ctx.beginPath(); ctx.arc(syPx, syPy, 6, 0, Math.PI*2); ctx.fill();
+  ctx.fillText("sideDistY", ppx + (syPx-ppx)/2 + 10, ppy + (syPy-ppy)/2 + 20);
+
+  // Player
+  ctx.fillStyle = C.player; ctx.beginPath(); ctx.arc(ppx, ppy, 8, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = C.textPrimary; ctx.font = "14px system-ui";
+  ctx.fillText("player Pos", ppx - 35, ppy + 25);
+}
+
+// ==============================================
+//  TAB 3 LOGIC: THE DDA ALGORITHM
+// ==============================================
+let ddaSteps = [];
+function calculateDDASteps() {
+  const px = 2.3, py = 2.3;
+  // Direction chosen so we traverse a bunch of cells before hitting the demo wall.
+  const rayDirX = 0.8;
+  const rayDirY = 0.4;
+
+  const cast = ddaCastRay(ddaDemoMap, px, py, rayDirX, rayDirY, 32);
+  ddaSteps = cast.steps.map((st) => {
+    let msg;
+    if (st.i === 0) {
+      msg = `Start in cell <code>(${st.mapX}, ${st.mapY})</code>. Compute <code>deltaDist</code> and initial <code>sideDist</code>.`;
+    } else {
+      msg = st.side === 0
+        ? `Because <code>sideDistX</code> was smaller, step to the next X gridline → enter cell <code>(${st.mapX}, ${st.mapY})</code>.`
+        : `Because <code>sideDistY</code> was smaller, step to the next Y gridline → enter cell <code>(${st.mapX}, ${st.mapY})</code>.`;
+      if (st.hit) msg += ` <b>WALL HIT</b> (stop).`;
+    }
+    return { ...st, desc: `<b>${st.i === 0 ? 'Init' : ('Step ' + st.i)}:</b> ` + msg };
+  });
+}
+calculateDDASteps();
+
+function drawTab3() {
+  const panelActive = document.getElementById('p3').classList.contains('active');
+  if(!panelActive) return;
+
+  const C = getColors();
+  const s3 = document.getElementById('s3');
+  s3.max = Math.max(0, ddaSteps.length - 1);
+  const stepIdx = parseInt(s3.value);
+  document.getElementById('sv3').textContent = stepIdx;
+  
+  if (stepIdx >= ddaSteps.length) {
+    document.getElementById('s3').value = ddaSteps.length - 1;
+    return drawTab3();
+  }
+
+  const { ctx, w, h } = setupCanvas('c3');
+  ctx.fillStyle = C.bg; ctx.fillRect(0,0,w,h);
+  
+  const mapCols = 10, mapRows = 8;
+  const cs = Math.min((w-60)/mapCols, (h-40)/mapRows);
+  const ox = (w - mapCols*cs)/2;
+  const oy = 20;
+
+  // Draw blocks
+  for(let r=0; r<mapRows; r++) {
+    for(let c=0; c<mapCols; c++) {
+      ctx.fillStyle = ddaDemoMap[r][c] ? C.wall : C.bg2;
+      ctx.fillRect(ox + c*cs, oy + r*cs, cs, cs);
+    }
+  }
+  drawGrid(ctx, w, h, cs, ox, oy, mapCols, mapRows, C);
+
+  const px = 2.3, py = 2.3;
+  const ppx = ox + px*cs;
+  const ppy = oy + py*cs;
+
+  // Highlight visited cells (orange for X-steps, green for Y-steps)
+  for (let i = 0; i <= stepIdx; i++) {
+    const s = ddaSteps[i];
+    if (i === 0) continue;
+    const col = s.side === 0 ? C.ddx : C.ddy;
+    ctx.fillStyle = s.hit ? (C.ray + "66") : (col + "55");
+    ctx.fillRect(ox + s.mapX * cs, oy + s.mapY * cs, cs, cs);
+  }
+
+  // Draw ray projection
+  const rX = 0.8;
+  const rY = 0.4;
+
+  // Draw ray up to the current step (or the wall hit if already hit)
+  const current = ddaSteps[stepIdx];
+  const cast = ddaCastRay(ddaDemoMap, px, py, rX, rY, 32);
+  const endX = cast.hit ? cast.hitX : (px + cast.rayDirX * 12);
+  const endY = cast.hit ? cast.hitY : (py + cast.rayDirY * 12);
+  ctx.strokeStyle = C.ray; ctx.lineWidth = 3; ctx.setLineDash([5,5]);
+  ctx.beginPath(); ctx.moveTo(ppx, ppy);
+  ctx.lineTo(ox + endX * cs, oy + endY * cs);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw Player
+  ctx.fillStyle = C.player; ctx.beginPath(); ctx.arc(ppx, ppy, cs*0.25, 0, Math.PI*2); ctx.fill();
+
+  // Populate list
+  let html = "";
+  ddaSteps.forEach((st, i) => {
+    html += `<div class="step-item ${i === stepIdx ? 'active' : ''}" onclick="document.getElementById('s3').value=${i}; drawTab3();">
+      ${st.desc}
+      ${i === stepIdx ? `<br><small style="color:var(--accent-color)">cell=(${st.mapX},${st.mapY}) | sideDistX=${st.sideDistX.toFixed(2)} | sideDistY=${st.sideDistY.toFixed(2)}</small>` : ''}
+    </div>`;
+  });
+  document.getElementById('steplist').innerHTML = html;
+}
+
+// ==============================================
+//  TAB 4 LOGIC: FISHEYE
+// ==============================================
+function drawTab4() {
+  const panelActive = document.getElementById('p4').classList.contains('active');
+  if(!panelActive) return;
+
+  const C = getColors();
+  let dist = parseFloat(document.getElementById('s4').value) / 10;
+  document.getElementById('sv4').textContent = dist.toFixed(1);
+
+  const screenH = 240;
+  let lineHeight = Math.min(screenH, Math.floor(screenH / dist));
+  let drawStart = Math.max(0, Math.floor(-lineHeight/2 + screenH/2));
+  let drawEnd = Math.min(screenH - 1, Math.floor(lineHeight/2 + screenH/2));
+
+  document.getElementById('v4d').textContent = dist.toFixed(2);
+  document.getElementById('v4h').textContent = lineHeight + "px";
+  document.getElementById('v4s').textContent = drawStart;
+  document.getElementById('v4e').textContent = drawEnd;
+
+  const { ctx, w, h } = setupCanvas('c4');
+  ctx.fillStyle = C.bg; ctx.fillRect(0,0,w,h);
+
+  // Top/Down preview
+  const mapOx = 20; const mapOy = h/2;
+  ctx.fillStyle = C.textPrimary; ctx.font = "14px system-ui";
+  ctx.fillText("Top-down Map view:", mapOx, 30);
+  
+  ctx.fillStyle = C.player; ctx.beginPath(); ctx.arc(mapOx+20, mapOy, 8, 0, Math.PI*2); ctx.fill();
+  
+  // Wall line
+  const wallX = mapOx + 20 + dist * 30; // scaled dist
+  ctx.strokeStyle = C.wall; ctx.lineWidth = 8;
+  ctx.beginPath(); ctx.moveTo(wallX, mapOy-80); ctx.lineTo(wallX, mapOy+80); ctx.stroke();
+
+  // Straight Euclidean
+  ctx.strokeStyle = "red"; ctx.lineWidth = 1.5; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(mapOx+20, mapOy-30); ctx.lineTo(wallX, mapOy-30); ctx.stroke();
+  ctx.fillStyle = "red"; ctx.fillText("Real distance (creates fisheye)", mapOx+30, mapOy-35);
+
+  // Perp Dist
+  ctx.setLineDash([]); ctx.strokeStyle = C.dir; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(mapOx+20, mapOy); ctx.lineTo(wallX, mapOy); ctx.stroke();
+  ctx.fillStyle = C.dir; ctx.fillText("Perp Wall Dist", mapOx+30, mapOy-5);
+
+
+  // Render Preview
+  const viewW = 100;
+  const viewOx = w - viewW - 40;
+  const viewOy = (h - screenH)/2;
+
+  // Background
+  ctx.fillStyle = C.bg2; ctx.fillRect(viewOx, viewOy, viewW, screenH);
+  ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'dark' ? '#1c2833' : '#a2d9ce'; 
+  ctx.fillRect(viewOx, viewOy, viewW, screenH/2); // Ceiling
+  ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'dark' ? '#2e2118' : '#e6b0aa'; 
+  ctx.fillRect(viewOx, viewOy + screenH/2, viewW, screenH/2); // Floor
+
+  // Wall strip
+  ctx.fillStyle = C.wall;
+  ctx.fillRect(viewOx, viewOy + drawStart, viewW, drawEnd - drawStart);
+  
+  ctx.strokeStyle = C.textPrimary; ctx.lineWidth = 1;
+  ctx.strokeRect(viewOx, viewOy, viewW, screenH);
+
+  ctx.fillStyle = C.textPrimary; ctx.textAlign = "right";
+  ctx.fillText("3D Render:", viewOx-10, viewOy + 20);
+  ctx.fillStyle = C.textSecondary;
+  ctx.fillText("Draw Start: " + drawStart, viewOx-10, viewOy + drawStart);
+  ctx.fillText("Draw End: " + drawEnd, viewOx-10, viewOy + drawEnd);
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('thBtn').textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Init theme from system preference
+const themeMQ = window.matchMedia('(prefers-color-scheme: dark)');
+applyTheme(themeMQ.matches ? 'dark' : 'light');
+themeMQ.addEventListener('change', e => {
+  applyTheme(e.matches ? 'dark' : 'light');
+  drawTab0(); drawTab1(); drawTab2(); drawTab3(); drawTab4();
+});
+
+// Keep canvas sizes correct on resize
+window.addEventListener('resize', () => {
+  const activeIdx = Array.from(document.querySelectorAll('.tab')).findIndex(t => t.classList.contains('active'));
+  requestAnimationFrame(() => {
+    if(activeIdx === 0) drawTab0();
+    if(activeIdx === 1) drawTab1();
+    if(activeIdx === 2) drawTab2();
+    if(activeIdx === 3) drawTab3();
+    if(activeIdx === 4) drawTab4();
+  });
+});
+
+// Sync slider properties on init
+document.querySelectorAll('input[type=range]').forEach(el => {
+  const event = new Event('input');
+  el.dispatchEvent(event);
+});
+</script>
+</body>
+</html>

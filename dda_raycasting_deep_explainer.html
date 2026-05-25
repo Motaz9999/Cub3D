@@ -248,10 +248,26 @@ canvas {
 =============================================== -->
 <div id="p1" class="panel">
   <div class="card">
-    <strong>Delta Distance</strong> is a constant size for a given ray. It answers: <em>If the ray travels perfectly out, how far does it travel to clear exactly 1 unit (1 grid box) in the X axis? What about the Y axis?</em><br><br>
-    The formulas are simple geometry (using Pythagoras):<br>
-    <code>delta_dist_x = |1 / ray_dir_x|</code><br>
-    <code>delta_dist_y = |1 / ray_dir_y|</code>
+    <strong>Delta Distance</strong> is a <b>constant step size</b> for a given ray direction. It answers this very specific question:
+    <br><br>
+    <em>If the ray intersects one vertical grid line (an <code>x = integer</code> line), how far along the ray do we travel until it intersects the <b>next</b> vertical grid line?</em>
+    <br>
+    (Same idea for horizontal grid lines <code>y = integer</code>.)
+    <br><br>
+    In DDA we keep two running counters (<code>sideDistX</code>, <code>sideDistY</code>). Each time we step to the next X grid line, we add <code>deltaDistX</code>. Each time we step to the next Y grid line, we add <code>deltaDistY</code>.
+    <br><br>
+    <b>Two equivalent formulas (depends on whether your ray direction is normalized):</b><br>
+    <span style="color:var(--text-secondary)">If you normalize the ray direction so that <code>|rayDir| = 1</code> (this explainer does):</span><br>
+    <code>deltaDistX = |1 / rayDirX|</code><br>
+    <code>deltaDistY = |1 / rayDirY|</code>
+    <br><br>
+    <span style="color:var(--text-secondary)">If your ray direction is <b>not</b> normalized (common in raycasters: <code>rayDir = dir + plane * cameraX</code>):</span><br>
+    <code>deltaDistX = |rayLen / rayDirX|</code> &nbsp; where <code>rayLen = sqrt(rayDirX^2 + rayDirY^2)</code><br>
+    <code>deltaDistY = |rayLen / rayDirY|</code>
+    <br>
+    <span style="color:var(--text-secondary)">This is the same as the “Pythagoras form”:</span>
+    <code>deltaDistX = sqrt(1 + (rayDirY^2)/(rayDirX^2))</code>,
+    <code>deltaDistY = sqrt(1 + (rayDirX^2)/(rayDirY^2))</code>
   </div>
   <canvas id="c1" height="340"></canvas>
   <div class="controls">
@@ -264,6 +280,7 @@ canvas {
   <div class="metrics">
     <div class="metric-box x-axis"><div class="metric-lbl">deltaDistX</div><div class="metric-val" id="v1dx">0.00</div></div>
     <div class="metric-box y-axis"><div class="metric-lbl">deltaDistY</div><div class="metric-val" id="v1dy">0.00</div></div>
+    <div class="metric-box"><div class="metric-lbl">|rayDir|</div><div class="metric-val" id="v1len">1.00</div></div>
   </div>
 </div>
 
@@ -701,6 +718,7 @@ function drawTab1() {
   const rad = deg * Math.PI / 180;
   const rayDirX = Math.cos(rad);
   const rayDirY = Math.sin(rad);
+  const rayLen = Math.hypot(rayDirX, rayDirY);
   
   // For a unit ray direction, these are real distances along the ray.
   const deltaDistX = rayDirX === 0 ? Infinity : Math.abs(1 / rayDirX);
@@ -708,6 +726,7 @@ function drawTab1() {
 
   document.getElementById('v1dx').textContent = !isFinite(deltaDistX) || deltaDistX > 50 ? "Infinity" : deltaDistX.toFixed(3);
   document.getElementById('v1dy').textContent = !isFinite(deltaDistY) || deltaDistY > 50 ? "Infinity" : deltaDistY.toFixed(3);
+  document.getElementById('v1len').textContent = isFinite(rayLen) ? rayLen.toFixed(3) : 'NaN';
 
   const { ctx, w, h } = setupCanvas('c1');
   ctx.fillStyle = C.bg; ctx.fillRect(0,0,w,h);

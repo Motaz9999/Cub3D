@@ -6,31 +6,37 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/23 13:56:19 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/25 14:41:18 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/25 20:41:17 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+// if it wall or beside wall return FALSE else its ok
+static int	is_wall(t_map *map_data, int x, int y)
+{
+	if (y < 0 || y >= map_data->map_hight || x < 0 || x >= map_data->map_width)
+		return (TRUE);
+	if (map_data->map[y][x] == '1')
+		return (TRUE);
+	return (FALSE);
+}
+
 // this fun his job to see if the place the player want to move for is valid place or not
 // so if the player move to new block we update the previous map into new with new plyer loc
 // why the here are x and y so
-static int	check_move_to_block(double x, double y, t_map *map_data, t_player *player)
+// we checks diagonals ups and downs
+// if checks fails we cant move more and return false else the loc is safe and can move ok
+static int	check_player_hitbox(double new_x, double new_y, t_map *map_data)
 {
-	int		old_loc_x;
-	int		old_loc_y;
-	char	*c;
+	double	buffer;
 
-	if (map_data->map[(int)y][(int)x] == '1')
+	buffer = HITBOX;
+	if (is_wall(map_data, new_x + buffer, new_y + buffer) || is_wall(map_data,
+			new_x - buffer, new_y - buffer) || is_wall(map_data, new_x + buffer,
+			new_y - buffer) || is_wall(map_data, new_x - buffer, new_y
+			+ buffer))
 		return (FALSE);
-	if (map_data->map[(int)y][(int)x] == '0') // here i must update the map
-	{
-		old_loc_x = (int)player->x;
-		old_loc_y = (int)player->y;
-		c = map_data->map[old_loc_y][old_loc_x];
-		map_data->map[old_loc_y][old_loc_x] = '0';
-		map_data->map[(int)y][(int)x] = c;
-	}
 	return (TRUE);
 }
 
@@ -56,47 +62,43 @@ static int	check_move_to_block(double x, double y, t_map *map_data, t_player *pl
 // the wall ZERO if it is it will make a problem with rendering the map in the right way
 // btw when u press W,S u r moving on the  same line u see so there is no need to do anything with the dirs just add or just minis
 // 0deg where i am looking
-void	move_forword(t_game *game)
+void	move_forward(t_game *game)
 {
 	double	check_x;
 	double	check_y;
-	double	buffer;
 
-	buffer = 0.2;
-	check_x = game->player->x + (game->player->dir_x * (MOVE_SPEED + buffer));
-	if (check_move_to_block(check_x, game->player->y,
-			game->config_file_data->map_data, game->player))
+	check_x = game->player->x + ((game->player->dir_x * MOVE_SPEED));
+	if (check_player_hitbox(check_x, game->player->y,
+			game->config_file_data->map_data))
 	{
 		game->player->x += game->player->dir_x * MOVE_SPEED;
 	}
 	// current loc + (speed +buffer) * current dir) how many i can move
-	check_y = game->player->y + (game->player->dir_y * (MOVE_SPEED + buffer));
-	if (check_move_to_block(game->player->x, check_y,
-			game->config_file_data->map_data, game->player))
+	check_y = game->player->y + ((game->player->dir_y * MOVE_SPEED));
+	if (check_player_hitbox(game->player->x, check_y,
+			game->config_file_data->map_data))
 	{
-		game->player->y += game->player->dir_x * MOVE_SPEED;
+		game->player->y += game->player->dir_y * MOVE_SPEED;
 	}
 }
 
-void	move_backword(t_game *game)
+void	move_backward(t_game *game)
 {
 	double	check_x;
 	double	check_y;
-	double	buffer;
 
-	buffer = 0.2;
-	check_x = game->player->x - (game->player->dir_x * (MOVE_SPEED + buffer));
-	if (check_move_to_block(check_x, game->player->y,
-			game->config_file_data->map_data, game->player))
+	check_x = game->player->x - (game->player->dir_x * MOVE_SPEED);
+	if (check_player_hitbox(check_x, game->player->y,
+			game->config_file_data->map_data))
 	{
 		game->player->x -= game->player->dir_x * MOVE_SPEED;
 	}
 	// current loc + (speed +buffer) * current dir) how many i can move
-	check_y = game->player->y - (game->player->dir_y * (MOVE_SPEED + buffer));
-	if (check_move_to_block(game->player->x, check_y,
-			game->config_file_data->map_data, game->player))
+	check_y = game->player->y - (game->player->dir_y * MOVE_SPEED);
+	if (check_player_hitbox(game->player->x, check_y,
+			game->config_file_data->map_data))
 	{
-		game->player->y -= game->player->dir_x * MOVE_SPEED;
+		game->player->y -= game->player->dir_y * MOVE_SPEED;
 	}
 }
 
@@ -114,23 +116,21 @@ void	strafe_left(t_game *game)
 	double	check_y;
 	double	prop_x;
 	double	prop_y;
-	double	buffer;
 
-	buffer = 0.2;
 	prop_x = -game->player->dir_y;
 	prop_y = game->player->dir_x;
-	check_x = game->player->x - (prop_x * (buffer + MOVE_SPEED));
-	if (check_move_to_block(check_x, game->player->y,
-			game->config_file_data->map_data, game->player))
+	check_x = game->player->x - (prop_x * MOVE_SPEED);
+	if (check_player_hitbox(check_x, game->player->y,
+			game->config_file_data->map_data))
 	{
-		game->player->x -= prop_x * (buffer + MOVE_SPEED);
+		game->player->x -= prop_x * (MOVE_SPEED);
 	}
 	// current loc + (speed +buffer) * current dir) how many i can move
-	check_y = game->player->y - (prop_y * (MOVE_SPEED + buffer));
-	if (check_move_to_block(game->player->x, check_y,
-			game->config_file_data->map_data, game->player))
+	check_y = game->player->y - (prop_y * MOVE_SPEED);
+	if (check_player_hitbox(game->player->x, check_y,
+			game->config_file_data->map_data))
 	{
-		game->player->y -= prop_y * (MOVE_SPEED + buffer);
+		game->player->y -= prop_y * MOVE_SPEED;
 	}
 }
 
@@ -140,25 +140,19 @@ void	strafe_right(t_game *game)
 	double	check_y;
 	double	prop_x;
 	double	prop_y;
-	double	buffer;
 
-	buffer = 0.2;
 	prop_x = -game->player->dir_y;
 	prop_y = game->player->dir_x;
-	check_x = game->player->x + (prop_x * (buffer + MOVE_SPEED));
-	if (check_move_to_block(check_x, game->player->y,
-			game->config_file_data->map_data, game->player))
+	check_x = game->player->x + (prop_x * MOVE_SPEED);
+	if (check_player_hitbox(check_x, game->player->y,
+			game->config_file_data->map_data))
 	{
-		game->player->x += prop_x * (buffer + MOVE_SPEED);
+		game->player->x += prop_x * (MOVE_SPEED);
 	}
-	// current loc + (speed +buffer) * current dir) how many i can move
-	check_y = game->player->y + (prop_y * (MOVE_SPEED + buffer));
-	if (check_move_to_block(game->player->x, check_y,
-			game->config_file_data->map_data, game->player))
+	check_y = game->player->y + (prop_y * MOVE_SPEED);
+	if (check_player_hitbox(game->player->x, check_y,
+			game->config_file_data->map_data))
 	{
-		game->player->y += prop_y * (MOVE_SPEED + buffer);
+		game->player->y += prop_y * MOVE_SPEED;
 	}
 }
-
-
-

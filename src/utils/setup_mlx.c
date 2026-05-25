@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 11:25:19 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/21 17:49:21 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/05/25 17:48:51 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 
 // this fun is responsible to color the pixel at (x,y) and given a color
 // by standard convention, y is the row and x is the column
-//here we move the pointer so we can color the pixel the right way
-//the other fun for putting the whole img to screen after i put some colors using this fun
+// here we move the pointer so we can color the pixel the right way
+// the other fun for putting the whole img to screen after i put some colors using this fun
 void	put_pixel_to_img_buffer(t_mlx *mlx_lib, int x, int y, int color)
 {
 	char	*dst;
 
+	if (x < 0 || x >= WIDTH_OF_WIN || y < 0 || y >= HIGHT_OF_WIN)
+		return ;
 	dst = mlx_lib->addr + (y * mlx_lib->line_len + x * (mlx_lib->bpp / 8));
 	*(unsigned int *)dst = color;
 }

@@ -25,13 +25,17 @@
 # define KEY_RIGHT 65363
 # define KEY_LEFT 65361
 
-# define MOVE_SPEED 0.05
+# define BLOCK 32
+# define HITBOX 0.15
+
+# define MOVE_SPEED 0.03
+
 # define ROT_SPEED 0.03
 
 # define FOV_DIG 66.8
 
-# define WIDTH_OF_WIN 800
-# define HIGHT_OF_WIN 600
+# define WIDTH_OF_WIN 1200
+# define HIGHT_OF_WIN 800
 
 # define ALPHA_COLOR 120
 
@@ -100,9 +104,10 @@ int			close_game(void *game_void);
 int			setup_player(t_game *game);
 // movement
 void		handle_movement(t_game *game);
-void		move_forword(t_game *game);
-void		move_backword(t_game *game);
+void		move_backward(t_game *game);
+void		move_forward(t_game *game);
 void		strafe_left(t_game *game);
 void		strafe_right(t_game *game);
-
+// 2d map
+void		draw2d_map(t_game *game);
 #endif

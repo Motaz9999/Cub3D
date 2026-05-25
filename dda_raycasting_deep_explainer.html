@@ -296,12 +296,12 @@ canvas {
   <canvas id="c2" height="340"></canvas>
   <div class="controls">
     <div class="ctrl">
-      <label>Player X</label>
+      <label>Player X (inside cell)</label>
       <input type="range" min="10" max="90" value="35" id="s2x" oninput="drawTab2()">
       <span id="sv2x">0.35</span>
     </div>
     <div class="ctrl">
-      <label>Player Y</label>
+      <label>Player Y (inside cell)</label>
       <input type="range" min="10" max="90" value="60" id="s2y" oninput="drawTab2()">
       <span id="sv2y">0.60</span>
     </div>
@@ -730,104 +730,154 @@ function drawTab1() {
 
   const { ctx, w, h } = setupCanvas('c1');
   ctx.fillStyle = C.bg; ctx.fillRect(0,0,w,h);
-  
-  const cs = 52;
-  const cols = 8;
-  const rows = 5;
-  const ox = (w - cols * cs) / 2;
-  const oy = 26;
 
-  drawGrid(ctx, w, h, cs, ox, oy, cols, rows, C);
-
+  // Auto-fit view so Δx/Δy markers stay visible for extreme angles.
   const px = 1.5;
   const py = 1.5;
-  const ppx = ox + px*cs;
-  const ppy = oy + py*cs;
 
-  // Ray extension (visual)
-  const maxLen = 6.8 * cs;
+  const stepX = rayDirX < 0 ? -1 : 1;
+  const stepY = rayDirY < 0 ? -1 : 1;
+  const nextVert = rayDirX < 0 ? Math.floor(px) : (Math.floor(px) + 1);
+  const nextHoriz = rayDirY < 0 ? Math.floor(py) : (Math.floor(py) + 1);
+
+  const t1x = rayDirX === 0 ? Infinity : (nextVert - px) / rayDirX;
+  const t1y = rayDirY === 0 ? Infinity : (nextHoriz - py) / rayDirY;
+
+  const hasX = isFinite(deltaDistX) && isFinite(t1x) && t1x >= 0;
+  const hasY = isFinite(deltaDistY) && isFinite(t1y) && t1y >= 0;
+
+  const x1 = hasX ? (px + rayDirX * t1x) : undefined;
+  const y1 = hasX ? (py + rayDirY * t1x) : undefined;
+  const x2 = hasX ? (px + rayDirX * (t1x + deltaDistX)) : undefined;
+  const y2 = hasX ? (py + rayDirY * (t1x + deltaDistX)) : undefined;
+
+  const hx1 = hasY ? (px + rayDirX * t1y) : undefined;
+  const hy1 = hasY ? (py + rayDirY * t1y) : undefined;
+  const hx2 = hasY ? (px + rayDirX * (t1y + deltaDistY)) : undefined;
+  const hy2 = hasY ? (py + rayDirY * (t1y + deltaDistY)) : undefined;
+
+  // Ray length to display (in world units)
+  let tNeed = 6;
+  if (hasX) tNeed = Math.max(tNeed, t1x + deltaDistX);
+  if (hasY) tNeed = Math.max(tNeed, t1y + deltaDistY);
+  const rayEndX = px + rayDirX * (tNeed * 1.05);
+  const rayEndY = py + rayDirY * (tNeed * 1.05);
+
+  // World bounds
+  let minX = px, maxX = px, minY = py, maxY = py;
+  const include = (x, y) => {
+    minX = Math.min(minX, x);
+    maxX = Math.max(maxX, x);
+    minY = Math.min(minY, y);
+    maxY = Math.max(maxY, y);
+  };
+  include(rayEndX, rayEndY);
+  if (hasX) { include(x1, y1); include(x2, y2); }
+  if (hasY) { include(hx1, hy1); include(hx2, hy2); }
+
+  const padWorld = 0.8;
+  minX -= padWorld; maxX += padWorld;
+  minY -= padWorld; maxY += padWorld;
+  if (maxX - minX < 1) { const mid = (maxX + minX) / 2; minX = mid - 0.5; maxX = mid + 0.5; }
+  if (maxY - minY < 1) { const mid = (maxY + minY) / 2; minY = mid - 0.5; maxY = mid + 0.5; }
+
+  const padPx = 28;
+  const availW = Math.max(10, w - padPx * 2);
+  const availH = Math.max(10, h - padPx * 2);
+  const worldW = (maxX - minX);
+  const worldH = (maxY - minY);
+  const scale = Math.min(availW / worldW, availH / worldH);
+  const usedW = worldW * scale;
+  const usedH = worldH * scale;
+  const offX = (w - usedW) / 2;
+  const offY = (h - usedH) / 2;
+  const toScreen = (x, y) => ({
+    x: offX + (x - minX) * scale,
+    y: offY + (y - minY) * scale,
+  });
+
+  // Grid lines at integer coordinates
+  ctx.strokeStyle = C.grid;
+  ctx.lineWidth = 1;
+  const gx0 = Math.floor(minX);
+  const gx1 = Math.ceil(maxX);
+  const gy0 = Math.floor(minY);
+  const gy1 = Math.ceil(maxY);
+  for (let gx = gx0; gx <= gx1; gx++) {
+    const a = toScreen(gx, minY);
+    const b = toScreen(gx, maxY);
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+  }
+  for (let gy = gy0; gy <= gy1; gy++) {
+    const a = toScreen(minX, gy);
+    const b = toScreen(maxX, gy);
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+  }
+
+  const pS = toScreen(px, py);
+  const endS = toScreen(rayEndX, rayEndY);
 
   // Draw the ray
   ctx.strokeStyle = C.ray;
   ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.moveTo(ppx, ppy);
-  ctx.lineTo(ppx + rayDirX * maxLen, ppy + rayDirY * maxLen);
+  ctx.moveTo(pS.x, pS.y);
+  ctx.lineTo(endS.x, endS.y);
   ctx.stroke();
-  drawArrow(ctx, ppx + rayDirX * maxLen, ppy + rayDirY * maxLen, rayDirX, rayDirY, C.ray, 12);
+  drawArrow(ctx, endS.x, endS.y, rayDirX, rayDirY, C.ray, 12);
 
-  // Show the first two vertical crossings (Δx apart along the ray)
-  if (isFinite(deltaDistX)) {
-    const stepX = rayDirX < 0 ? -1 : 1;
-    const nextVert = rayDirX < 0 ? Math.floor(px) : (Math.floor(px) + 1);
-    const t1 = (nextVert - px) / rayDirX;
-    if (isFinite(t1) && t1 >= 0) {
-      const x1 = px + rayDirX * t1;
-      const y1 = py + rayDirY * t1;
-      const t2 = t1 + deltaDistX;
-      const x2 = px + rayDirX * t2;
-      const y2 = py + rayDirY * t2;
+  ctx.font = "12px ui-monospace, SFMono-Regular, monospace";
 
-      ctx.strokeStyle = C.ddx;
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(ox + x1 * cs, oy + y1 * cs);
-      ctx.lineTo(ox + x2 * cs, oy + y2 * cs);
-      ctx.stroke();
+  // Mark the X grid lines we cross for the Δx segment
+  if (hasX) {
+    ctx.strokeStyle = C.ddx;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5,4]);
+    const v0 = toScreen(nextVert, minY);
+    const v1 = toScreen(nextVert, maxY);
+    ctx.beginPath(); ctx.moveTo(v0.x, v0.y); ctx.lineTo(v1.x, v1.y); ctx.stroke();
+    const v2 = toScreen(nextVert + stepX, minY);
+    const v3 = toScreen(nextVert + stepX, maxY);
+    ctx.beginPath(); ctx.moveTo(v2.x, v2.y); ctx.lineTo(v3.x, v3.y); ctx.stroke();
+    ctx.setLineDash([]);
 
-      ctx.fillStyle = C.ddx;
-      ctx.beginPath(); ctx.arc(ox + x1 * cs, oy + y1 * cs, 5, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(ox + x2 * cs, oy + y2 * cs, 5, 0, Math.PI*2); ctx.fill();
-      ctx.font = "12px ui-monospace, SFMono-Regular, monospace";
-      ctx.fillText("Δx", (ox + x1*cs + ox + x2*cs)/2 - 10, (oy + y1*cs + oy + y2*cs)/2 - 10);
-
-      // Mark the vertical grid lines we crossed
-      ctx.strokeStyle = C.ddx;
-      ctx.lineWidth = 1;
-      ctx.setLineDash([5,4]);
-      ctx.beginPath(); ctx.moveTo(ox + nextVert * cs, oy); ctx.lineTo(ox + nextVert * cs, oy + rows * cs); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(ox + (nextVert + stepX) * cs, oy); ctx.lineTo(ox + (nextVert + stepX) * cs, oy + rows * cs); ctx.stroke();
-      ctx.setLineDash([]);
-    }
+    const a = toScreen(x1, y1);
+    const b = toScreen(x2, y2);
+    ctx.strokeStyle = C.ddx;
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    ctx.fillStyle = C.ddx;
+    ctx.beginPath(); ctx.arc(a.x, a.y, 5, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(b.x, b.y, 5, 0, Math.PI*2); ctx.fill();
+    ctx.fillText("Δx", (a.x + b.x) / 2 - 10, (a.y + b.y) / 2 - 10);
   }
 
-  // Show the first two horizontal crossings (Δy apart along the ray)
-  if (isFinite(deltaDistY)) {
-    const stepY = rayDirY < 0 ? -1 : 1;
-    const nextHoriz = rayDirY < 0 ? Math.floor(py) : (Math.floor(py) + 1);
-    const t1 = (nextHoriz - py) / rayDirY;
-    if (isFinite(t1) && t1 >= 0) {
-      const x1 = px + rayDirX * t1;
-      const y1 = py + rayDirY * t1;
-      const t2 = t1 + deltaDistY;
-      const x2 = px + rayDirX * t2;
-      const y2 = py + rayDirY * t2;
+  // Mark the Y grid lines we cross for the Δy segment
+  if (hasY) {
+    ctx.strokeStyle = C.ddy;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5,4]);
+    const h0 = toScreen(minX, nextHoriz);
+    const h1 = toScreen(maxX, nextHoriz);
+    ctx.beginPath(); ctx.moveTo(h0.x, h0.y); ctx.lineTo(h1.x, h1.y); ctx.stroke();
+    const h2 = toScreen(minX, nextHoriz + stepY);
+    const h3 = toScreen(maxX, nextHoriz + stepY);
+    ctx.beginPath(); ctx.moveTo(h2.x, h2.y); ctx.lineTo(h3.x, h3.y); ctx.stroke();
+    ctx.setLineDash([]);
 
-      ctx.strokeStyle = C.ddy;
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(ox + x1 * cs, oy + y1 * cs);
-      ctx.lineTo(ox + x2 * cs, oy + y2 * cs);
-      ctx.stroke();
-
-      ctx.fillStyle = C.ddy;
-      ctx.beginPath(); ctx.arc(ox + x1 * cs, oy + y1 * cs, 5, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(ox + x2 * cs, oy + y2 * cs, 5, 0, Math.PI*2); ctx.fill();
-      ctx.font = "12px ui-monospace, SFMono-Regular, monospace";
-      ctx.fillText("Δy", (ox + x1*cs + ox + x2*cs)/2 + 8, (oy + y1*cs + oy + y2*cs)/2 + 4);
-
-      // Mark the horizontal grid lines we crossed
-      ctx.strokeStyle = C.ddy;
-      ctx.lineWidth = 1;
-      ctx.setLineDash([5,4]);
-      ctx.beginPath(); ctx.moveTo(ox, oy + nextHoriz * cs); ctx.lineTo(ox + cols * cs, oy + nextHoriz * cs); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(ox, oy + (nextHoriz + stepY) * cs); ctx.lineTo(ox + cols * cs, oy + (nextHoriz + stepY) * cs); ctx.stroke();
-      ctx.setLineDash([]);
-    }
+    const a = toScreen(hx1, hy1);
+    const b = toScreen(hx2, hy2);
+    ctx.strokeStyle = C.ddy;
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    ctx.fillStyle = C.ddy;
+    ctx.beginPath(); ctx.arc(a.x, a.y, 5, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(b.x, b.y, 5, 0, Math.PI*2); ctx.fill();
+    ctx.fillText("Δy", (a.x + b.x) / 2 + 8, (a.y + b.y) / 2 + 4);
   }
 
   // Player
-  ctx.fillStyle = C.player; ctx.beginPath(); ctx.arc(ppx, ppy, 8, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = C.player; ctx.beginPath(); ctx.arc(pS.x, pS.y, 7, 0, Math.PI*2); ctx.fill();
 }
 
 // ==============================================
@@ -990,16 +1040,35 @@ function drawTab3() {
   const rX = 0.8;
   const rY = 0.4;
 
-  // Draw ray up to the current step (or the wall hit if already hit)
-  const current = ddaSteps[stepIdx];
+  // Draw ray up to the CURRENT step (so the slider feels real).
   const cast = ddaCastRay(ddaDemoMap, px, py, rX, rY, 32);
-  const endX = cast.hit ? cast.hitX : (px + cast.rayDirX * 12);
-  const endY = cast.hit ? cast.hitY : (py + cast.rayDirY * 12);
+  let drawDist = 0;
+  let dotColor = C.ray;
+
+  if (stepIdx === 0) {
+    // Show the *next* grid crossing from the start position.
+    drawDist = Math.min(ddaSteps[0].sideDistX, ddaSteps[0].sideDistY);
+    dotColor = ddaSteps[0].sideDistX < ddaSteps[0].sideDistY ? C.ddx : C.ddy;
+  } else {
+    const st = ddaSteps[stepIdx];
+    const crossDist = (st.hit && isFinite(st.perpWallDist))
+      ? st.perpWallDist
+      : (st.side === 0 ? (st.sideDistX - st.deltaDistX) : (st.sideDistY - st.deltaDistY));
+    drawDist = Math.max(0, crossDist);
+    dotColor = st.hit ? C.ray : (st.side === 0 ? C.ddx : C.ddy);
+  }
+
+  const endX = px + cast.rayDirX * drawDist;
+  const endY = py + cast.rayDirY * drawDist;
   ctx.strokeStyle = C.ray; ctx.lineWidth = 3; ctx.setLineDash([5,5]);
   ctx.beginPath(); ctx.moveTo(ppx, ppy);
   ctx.lineTo(ox + endX * cs, oy + endY * cs);
   ctx.stroke();
   ctx.setLineDash([]);
+
+  // Mark current crossing point
+  ctx.fillStyle = dotColor;
+  ctx.beginPath(); ctx.arc(ox + endX * cs, oy + endY * cs, 6, 0, Math.PI * 2); ctx.fill();
 
   // Draw Player
   ctx.fillStyle = C.player; ctx.beginPath(); ctx.arc(ppx, ppy, cs*0.25, 0, Math.PI*2); ctx.fill();

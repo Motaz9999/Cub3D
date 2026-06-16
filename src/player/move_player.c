@@ -6,12 +6,13 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/23 13:56:19 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/25 20:41:17 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/16 04:44:36 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+// it checks for the boundaries of the map and for ifi am at a wall
 // if it wall or beside wall return FALSE else its ok
 static int	is_wall(t_map *map_data, int x, int y)
 {

@@ -6,13 +6,15 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 16:32:13 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/23 20:36:32 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/16 04:28:45 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 // this is take the face of player N,E,W,S and convert it into value
+// find the dir of the player
+// where the player look
 void	setup_dir_player(t_player *player, char player_face)
 {
 	if (player_face == 'N')
@@ -37,6 +39,7 @@ void	setup_dir_player(t_player *player, char player_face)
 	}
 }
 
+// the player whole pov is the same as his dir
 void	setup_plane(t_player *player, char player_face)
 {
 	if (player_face == 'N')
@@ -62,7 +65,7 @@ void	setup_plane(t_player *player, char player_face)
 }
 
 // this fun calc plane from the FOV angle u givin
-// we div the FOV on 2 WHY bc the fov is right triangle and left so there are 2 triangles
+// we div the FOV on 2 WHY? bc the fov is right triangle and left so there are 2 triangles
 // next step is from angle to radian so the computer can understand it well
 // so we multiply it with PI/180
 // the tan to calc the len of plane ()
@@ -75,7 +78,7 @@ void	calc_plane(t_player *player)
 	player->plane_len = tan(rad);
 }
 
-// the +0.5 bc i dont want the player to start at the boundary of the (x, y)
+// the +0.5 bc i  want the player to start at the center of the (x, y)
 int	setup_player(t_game *game)
 {
 	game->player = malloc(sizeof(t_player));

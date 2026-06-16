@@ -6,12 +6,12 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:33:25 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/25 20:44:48 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/16 05:44:39 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
+//2D vector rotation
 // this just change the dir of the player
 // so if i look right the dir_x and dir_y changes
 // so it ok if i look in any dir i want to look at
@@ -34,6 +34,7 @@
 // new x = X*cos(a) -Y*sin(a)
 // new y = X*sin(a) + Y*cos(a)
 // btw its also effect the plane of camera so they change with the dirs
+//with clock dir
 static void	rotate_right(t_game *game)
 {
 	double	old_dir_x;
@@ -51,6 +52,7 @@ static void	rotate_right(t_game *game)
 		* cos(ROT_SPEED);
 }
 
+//revers clock dir
 static void	rotate_left(t_game *game)
 {
 	double	old_dir_x;

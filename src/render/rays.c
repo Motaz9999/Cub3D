@@ -6,22 +6,99 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 15:31:30 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/16 11:05:09 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/17 09:31:54 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-//ok now we calc the ray len using DDA -> Digital Differential Analyzer
-//so it work by finding diff between x1 x2 delta and y1 y2 delta
-//so i have the player pos and the dir of the rays
-//the next step is to make the ray traverse between grid bc i have a 2d map
-//so we must know which square are we in (take the pos as int)
-//this the first sq from the grid and the next Q is where we want to go?
-//and btw bc we want to traverse inside the map i want a step_x ,step_y 
-double	calc_ray_len(t_game *game, double ray_dir_X , double  ray_dir_y)
+// this fun is to know which side the ray going i mean
+// like if the ray goes for right it must ++1 and for left --1
+// and find the first value for side_dest_x
+void	find_first_x(t_ray *ray, double ray_dir_x, double player_x, int map_x)
 {
-	
+	if (ray_dir_x > 0)
+	{
+		ray->step_x = 1;
+		ray->delta_dist_x = ((map_x + 1.0) - player_x) * ray->delta_dist_x;
+	}
+	else
+	{
+		ray->step_x = -1;
+		ray->delta_dist_x = (player_x - map_x) * ray->delta_dist_x;
+	}
+}
+
+void	find_first_y(t_ray *ray, double ray_dir_y, double player_y, int map_y)
+{
+	if (ray_dir_y > 0)
+	{
+		ray->step_y = 1;
+		ray->delta_dist_y = ((map_y + 1.0) - player_y) * ray->delta_dist_y;
+	}
+	else
+	{
+		ray->step_y = -1;
+		ray->delta_dist_y = (player_y - map_y) * ray->delta_dist_y;
+	}
+}
+
+// ok now we calc the ray len using DDA -> Digital Differential Analyzer
+// so it work by finding diff between x1 x2 delta and y1 y2 delta
+// so i have the player pos and the dir of the rays
+// the next step is to make the ray traverse between grid bc i have a 2d map
+// so we must know which square are we in (take the pos as int)
+// this the first sq from the grid and the next Q is where we want to go?
+// and btw bc we want to traverse inside the map i want a step_x ,step_y
+double	calc_ray_len(t_game *game, double ray_dir_x, double ray_dir_y)
+{
+	t_ray	ray;
+	double	ray_len;
+
+	int map_x, map_y;
+	if (ray_dir_x == 0)
+		ray_dir_x = 1e30;
+	if (ray_dir_y == 0)
+		ray_dir_y = 1e30;
+	ray.delta_dist_x = fabs(1 / ray_dir_x);
+	ray.delta_dist_y = fabs(1 / ray_dir_y);
+	ray.hit = 0;
+	map_x = (int)game->player->x;
+	map_y = (int)game->player->y;
+	// setup the init values of side_dest
+	find_first_x(&ray, ray_dir_x, game->player->x, map_x);
+	// the ray of x is so important way bc it tell u are left or right not up and down like y
+	find_first_y(&ray, ray_dir_y, game->player->y, map_y);
+	while (ray.hit == 0)
+	{
+		if (ray.side_dest_x < ray.side_dest_y)
+		{
+			ray.side_dest_x += ray.delta_dist_x;
+			map_x += ray.step_x;
+			ray.side = 1;
+			// this important bc it till me about texture its like dose the wall hit a side wall(left or right) or a not side wall
+			// why its with x ? imagin u r looking forward and the ray of u thats go right hit wall on ur right (so its will be a side wall bc its on x side)
+		}
+		else
+		{
+			ray.side_dest_y += ray.delta_dist_y;
+			map_y += ray.step_y;
+			ray.side = 0; // its mean i hit a wall that the player looking at
+		}
+		if (game->config_file_data->map_data->map[map_y][map_x] == '1')
+			ray.hit = 1; // hit a wall
+	}
+	// if we hit a wall on the X axis (left or right side)
+	if (ray.side == 1)
+	{
+		ray_len = ray.side_dest_x - ray.delta_dist_x;
+	}
+	// If we hit a wall on the Y axis (top or bottom side of a block)
+	else
+	{
+		ray_len = ray.side_dest_y - ray.delta_dist_y;
+	}
+	return (ray_len);
 }
 
 // this fun is responsible for drawing rays coming from player to hit a wall
@@ -43,9 +120,9 @@ double	calc_ray_len(t_game *game, double ray_dir_X , double  ray_dir_y)
 //	0 , -1 but now are 2 ,1 ,0
 // so i minus 1 from it so it will be 1 , 0 , -1
 // so camera x for knowing where the ray going so i can knows the dir of it
-// ok there something we forget about ITS the angle between each ray 
+// ok there something we forget about ITS the angle between each ray
 // next step is is calc the length form point to point
-//SO FIRST ELEMENT WE be at camx = -1
+// SO FIRST ELEMENT WE be at camx = -1
 // [أقصى يسار الشاشة]             [منتصف الشاشة]            [أقصى يمين الشاشة]
 //          X-----------------------------X-----------------------------X
 //           \                            ^                            /
@@ -76,7 +153,7 @@ void	draw_rays(int start_x, int start_y, int color, t_game *game)
 		camera_x = 2 * ((double)i / WIDTH_OF_WIN) - 1;
 		ray_dir_x = game->player->dir_x + (camera_x * game->player->plane_x);
 		ray_dir_y = game->player->dir_y + (camera_x * game->player->plane_y);
-		ray_len = calc_ray_len(game,ray_dir_x, ray_dir_y);
+		ray_len = calc_ray_len(game, ray_dir_x, ray_dir_y);
 		draw_ray(game, ray_len, ray_dir_x, ray_dir_y);
 		i++;
 	}

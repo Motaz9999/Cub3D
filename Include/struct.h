@@ -110,4 +110,16 @@ typedef struct s_game
 	t_player	*player;
 }				t_game;
 
+typedef struct s_ray
+{
+	int			side;
+	int			step_x;
+	int			step_y;
+	int			hit;
+	double		delta_dist_x;
+	double		delta_dist_y;
+	double		side_dest_x;
+	double		side_dest_y;
+}				t_ray;
+
 #endif

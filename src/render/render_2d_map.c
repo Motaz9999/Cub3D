@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 20:45:28 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/25 21:22:17 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/17 09:38:02 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static void	draw_walls(t_game *game)
 		}
 	}
 }
+void draw_lines();
 
 // here we find the full size from blocksize -> wall
 // and from the hitbox->its for the player
@@ -55,5 +56,5 @@ void	draw2d_map(t_game *game)
 	draw_walls(game);
 
 	draw_block(start_x, start_y, 0xFF0000, full_size, game);
-    draw_rays(start_x , start_y , 0xFF0000 , game);
+    draw_lines(start_x , start_y , 0xFF0000 , game);
 }

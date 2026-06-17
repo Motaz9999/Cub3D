@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 15:31:30 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/17 09:31:54 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/17 09:48:45 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,12 @@ void	find_first_y(t_ray *ray, double ray_dir_y, double player_y, int map_y)
 // so we must know which square are we in (take the pos as int)
 // this the first sq from the grid and the next Q is where we want to go?
 // and btw bc we want to traverse inside the map i want a step_x ,step_y
-double	calc_ray_len(t_game *game, double ray_dir_x, double ray_dir_y)
+t_ray	dda(t_game *game, double ray_dir_x, double ray_dir_y)
 {
 	t_ray	ray;
-	double	ray_len;
+	int		map_x;
+	int		map_y;
 
-	int map_x, map_y;
 	if (ray_dir_x == 0)
 		ray_dir_x = 1e30;
 	if (ray_dir_y == 0)
@@ -88,6 +88,26 @@ double	calc_ray_len(t_game *game, double ray_dir_x, double ray_dir_y)
 		if (game->config_file_data->map_data->map[map_y][map_x] == '1')
 			ray.hit = 1; // hit a wall
 	}
+	return (ray);
+}
+
+//if we are looking to side walls its hard look not normal
+//and to avoid this problem(fish eye effect) we sub 1 delta from it to
+//and the same for not side walls 
+//what i have   
+// |       |
+//  \     /
+//   \   /
+//    \_/
+//what i want 
+// |       |
+// |       |
+// |       |
+// |       |
+double	find_ray_len(t_ray ray)
+{
+	double	ray_len;
+
 	// if we hit a wall on the X axis (left or right side)
 	if (ray.side == 1)
 	{
@@ -140,7 +160,6 @@ double	calc_ray_len(t_game *game, double ray_dir_x, double ray_dir_y)
 //                       \_____________(اللاعب)____________/
 //                        |<----------- FOV ----------->
 //					here we start with came x = -1
-
 void	draw_rays(int start_x, int start_y, int color, t_game *game)
 {
 	int i = 0;
@@ -148,13 +167,14 @@ void	draw_rays(int start_x, int start_y, int color, t_game *game)
 	double ray_dir_x;
 	double ray_dir_y;
 	double camera_x;
+	t_ray ray;
 	while (i < WIDTH_OF_WIN)
 	{
 		camera_x = 2 * ((double)i / WIDTH_OF_WIN) - 1;
 		ray_dir_x = game->player->dir_x + (camera_x * game->player->plane_x);
 		ray_dir_y = game->player->dir_y + (camera_x * game->player->plane_y);
-		ray_len = calc_ray_len(game, ray_dir_x, ray_dir_y);
-		draw_ray(game, ray_len, ray_dir_x, ray_dir_y);
+		ray = dda(game, game->player->dir_x, game->player->dir_y);
+		ray_len = find_ray_len(ray);
 		i++;
 	}
 }

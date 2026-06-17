@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 16:32:13 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/16 04:28:45 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/17 14:56:00 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,23 +44,27 @@ void	setup_plane(t_player *player, char player_face)
 {
 	if (player_face == 'N')
 	{
-		player->plane_x = 0;
-		player->plane_y = -player->plane_len;
-	}
-	else if (player_face == 'S')
-	{
-		player->plane_x = 0;
-		player->plane_y = player->plane_len;
-	}
-	else if (player_face == 'E')
-	{
+		// Face North: Dir is (0, -1), Plane must be X-axis
 		player->plane_x = player->plane_len;
 		player->plane_y = 0;
 	}
-	else if (player_face == 'W')
+	else if (player_face == 'S')
 	{
+		// Face South: Dir is (0, 1), Plane must be negative X-axis to keep left/right correct
 		player->plane_x = -player->plane_len;
 		player->plane_y = 0;
+	}
+	else if (player_face == 'E')
+	{
+		// Face East: Dir is (1, 0), Plane must be Y-axis
+		player->plane_x = 0;
+		player->plane_y = player->plane_len;
+	}
+	else if (player_face == 'W')
+	{
+		// Face West: Dir is (-1, 0), Plane must be negative Y-axis
+		player->plane_x = 0;
+		player->plane_y = -player->plane_len;
 	}
 }
 

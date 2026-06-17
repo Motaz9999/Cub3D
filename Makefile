@@ -32,6 +32,7 @@ SRCS = $(SRC_DIR)main.c \
   $(SRC_DIR)player/rotate.c \
   $(SRC_DIR)player/move_player.c \
   $(SRC_DIR)render/rays.c \
+  $(SRC_DIR)render/render_slice_texture.c \
   $(SRC_DIR)render/render_2d_map.c\
   $(GNL_DIR)get_next_line.c \
   $(GNL_DIR)get_next_line_utils.c

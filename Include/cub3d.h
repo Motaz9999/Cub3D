@@ -14,9 +14,11 @@
 # include <unistd.h>
 # define TRUE 1
 # define FALSE 0
+
 # ifndef M_PI
 #  define M_PI 3.14159265358979323846
 # endif
+
 # define KEY_W 119
 # define KEY_A 97
 # define KEY_S 115
@@ -26,6 +28,7 @@
 # define KEY_LEFT 65361
 
 # define BLOCK 32
+
 # define HITBOX 0.15
 
 # define MOVE_SPEED 0.03
@@ -34,8 +37,8 @@
 
 # define FOV_DIG 66.8
 
-# define WIDTH_OF_WIN 1200
-# define HIGHT_OF_WIN 800
+# define WIDTH_OF_WIN 800
+# define HIGHT_OF_WIN 600
 
 # define ALPHA_COLOR 120
 
@@ -94,6 +97,9 @@ int			valid_map(t_map *map_data);
 
 // render
 int			render(void *game_void);
+void		render_as_3d(t_game *game);
+void		render_a_slice(t_game *game, t_ray *ray, double ray_len,
+				int i_in_width);
 
 // hooks
 int			setup_hooks(t_game *game);
@@ -109,5 +115,5 @@ void		move_forward(t_game *game);
 void		strafe_left(t_game *game);
 void		strafe_right(t_game *game);
 // 2d map
-void		draw2d_map(t_game *game);
+// void		draw2d_map(t_game *game);
 #endif

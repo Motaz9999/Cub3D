@@ -57,10 +57,12 @@ typedef struct s_mlx
 // have texture ready to use
 typedef struct s_texture
 {
-	void		*no_texture;
-	void		*so_texture;
-	void		*we_texture;
-	void		*ea_texture;
+	int*		*no_texture;
+	int*		*so_texture;
+	int*		*we_texture;
+	int*		*ea_texture;
+	int width;//keep track of the texture size
+	int hight;
 	int			c_color;
 	int			f_color;
 }				t_texture;

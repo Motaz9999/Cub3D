@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 15:31:30 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/17 14:54:43 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/19 20:11:11 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ t_ray	*dda(t_game *game, double ray_dir_x, double ray_dir_y)
 
 	ray = malloc(sizeof(t_ray));
 	ft_memset((void *)ray, 0, sizeof(t_ray));
-	// Calculate delta_dist_x
+	// calculate delta_dist_x
 	if (ray_dir_x == 0)
 		ray->delta_dist_x = 1e30;
 	else
 		ray->delta_dist_x = fabs(1 / ray_dir_x);
-	// Calculate delta_dist_y
+	// calculate delta_dist_y
 	if (ray_dir_y == 0)
 		ray->delta_dist_y = 1e30;
 	else
@@ -81,6 +81,7 @@ t_ray	*dda(t_game *game, double ray_dir_x, double ray_dir_y)
 	find_first_y(ray, ray_dir_y, game->player->y, map_y);
 	while (ray->hit == 0)
 	{
+		//which side is closer(smaller)
 		if (ray->side_dest_x < ray->side_dest_y)
 		{
 			ray->side_dest_x += ray->delta_dist_x;
@@ -168,7 +169,8 @@ double	find_ray_len(t_ray *ray)
 //                     \                  |                  /
 //                      \                 |                 /
 //                       \_____________(اللاعب)____________/
-//                        |<----------- FOV ----------->
+//                        |  <----------- FOV ----------->
+//						  |
 //					here we start with came x = -1
 void	render_as_3d(t_game *game)
 {
@@ -187,7 +189,7 @@ void	render_as_3d(t_game *game)
 		ray = dda(game, ray_dir_x, ray_dir_y);
 		ray_len = find_ray_len(ray);
 		// now this len i will use it to draw vertical line
-		render_a_slice(game, ray, ray_len, i);
+		render_a_slice(game, ray, ray_len, i, ray_dir_x ,ray_dir_y);
 		free(ray);
 		ray = NULL;
 		i++;

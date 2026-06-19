@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 16:32:13 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/17 14:56:00 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/19 08:27:48 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,25 +44,25 @@ void	setup_plane(t_player *player, char player_face)
 {
 	if (player_face == 'N')
 	{
-		// Face North: Dir is (0, -1), Plane must be X-axis
+		// face North dir is (0, -1), plane must be X-axis
 		player->plane_x = player->plane_len;
 		player->plane_y = 0;
 	}
 	else if (player_face == 'S')
 	{
-		// Face South: Dir is (0, 1), Plane must be negative X-axis to keep left/right correct
+		//face South dir is (0, 1), plane must be negative X-axis to keep left right correct
 		player->plane_x = -player->plane_len;
 		player->plane_y = 0;
 	}
 	else if (player_face == 'E')
 	{
-		// Face East: Dir is (1, 0), Plane must be Y-axis
+		// face East dir is (1, 0), plane must be Y-axis
 		player->plane_x = 0;
 		player->plane_y = player->plane_len;
 	}
 	else if (player_face == 'W')
 	{
-		// Face West: Dir is (-1, 0), Plane must be negative Y-axis
+		// face West dir is (-1, 0), plane must be negative Y-axis
 		player->plane_x = 0;
 		player->plane_y = -player->plane_len;
 	}

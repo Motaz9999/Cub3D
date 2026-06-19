@@ -76,17 +76,15 @@ void	clean_texture(void *mlx_ptr, t_texture *texture)
 {
 	if (texture == NULL)
 		return ;
-	if (mlx_ptr != NULL)
-	{
-		if (texture->no_texture != NULL)
-			mlx_destroy_image(mlx_ptr, texture->no_texture);
-		if (texture->so_texture != NULL)
-			mlx_destroy_image(mlx_ptr, texture->so_texture);
-		if (texture->we_texture != NULL)
-			mlx_destroy_image(mlx_ptr, texture->we_texture);
-		if (texture->ea_texture != NULL)
-			mlx_destroy_image(mlx_ptr, texture->ea_texture);
-	}
+	(void)mlx_ptr;
+	if (texture->no_texture != NULL)
+		ft_free_all2((void **)texture->no_texture, NULL);
+	if (texture->so_texture != NULL)
+		ft_free_all2((void **)texture->so_texture, NULL);
+	if (texture->we_texture != NULL)
+		ft_free_all2((void **)texture->we_texture, NULL);
+	if (texture->ea_texture != NULL)
+		ft_free_all2((void **)texture->ea_texture, NULL);
 	free(texture);
 }
 

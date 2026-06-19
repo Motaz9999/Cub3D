@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:37:44 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/21 16:36:11 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/19 11:17:33 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ static int	check_on_all_texture(t_texture *texture)
 	if (!texture->no_texture || !texture->so_texture || !texture->we_texture
 		|| !texture->ea_texture)
 	{
-		return (error_handling("failed to load texture from path", (int)FALSE));
+		return (error_handling("failed to load texture as 2d array",
+				(int)FALSE));
 	}
 	if (texture->c_color == -1 || texture->f_color == -1)
 	{
@@ -70,20 +71,81 @@ static int	convert_to_color(char *data)
 	return (ret);
 }
 
+static void	free_texture_2d(void *mlx, void *image, int **texture)
+{
+	if (image != NULL)
+		mlx_destroy_image(mlx, image);
+	if (texture != NULL)
+		ft_free_all2((void **)texture, NULL);
+}
+
+// this fun its make the texture into array of colors like imagin the whole texture pix of an array of 64x64 and this array have on pixle color
+// the height here represent how many rows i have in the img
+//->rows and the width is how many pixels are in the 1 row
+// so what we doing here is to save each pixel in this array of pixels
+// to move inside a rows we use  (j * (bpp / 8))
+//	->the bpp is any type of bitrate img
+// and to move rows itself we use (i *line_len)
+// and both are inside adder
+static int	**make_texture_2d(void *mlx, char *flie_name, int *width,
+		int *height)
+{
+	void			*texture;
+	char			*addr;
+	int				bpp;
+	int				line_len;
+	int				endian;
+	int				**array_of_texture;
+	char			*pixel;
+	int				i;
+	int				j;
+	texture = mlx_xpm_file_to_image(mlx, flie_name, width, height);
+	if (texture == NULL)
+	{
+		error_handling("failed to load texture", (int)FALSE);
+		return (NULL);
+	}
+	addr = mlx_get_data_addr(texture, &bpp, &line_len, &endian);
+	array_of_texture = ft_calloc((*height) + 1, sizeof(int *));
+	if (array_of_texture == NULL)
+	{
+		free_texture_2d(mlx, texture, NULL);
+		return (NULL);
+	}
+	i = 0;
+	while (i < (*height))
+	{
+		array_of_texture[i] = malloc(sizeof(int) * (*width));
+		if (array_of_texture[i] == NULL)
+		{
+			free_texture_2d(mlx, texture, array_of_texture);
+			return (NULL);
+		}
+		j = 0;
+		while (j < (*width))
+		{
+			pixel = addr + (i * line_len + j * (bpp / 8));
+			array_of_texture[i][j] = *(unsigned int *)pixel;
+			j++;
+		}
+		i++;
+	}
+	array_of_texture[*height] = NULL;
+	mlx_destroy_image(mlx, texture); // we dont use this img anymore
+	return (array_of_texture);
+}
+
 // this fun for setup the texture to use them later in the img draw
 static int	load_texture(void *mlx, t_texture *texture, t_config *data)
 {
-	int	w;
-	int	h;
-
-	texture->no_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)NO], &w,
-			&h);
-	texture->so_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)SO], &w,
-			&h);
-	texture->we_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)WE], &w,
-			&h);
-	texture->ea_texture = mlx_xpm_file_to_image(mlx, data->texture[(int)EA], &w,
-			&h);
+	texture->no_texture = make_texture_2d(mlx, data->texture[(int)NO],
+			&texture->width, &texture->hight);
+	texture->so_texture = make_texture_2d(mlx, data->texture[(int)SO],
+			&texture->width, &texture->hight);
+	texture->we_texture = make_texture_2d(mlx, data->texture[(int)WE],
+			&texture->width, &texture->hight);
+	texture->ea_texture = make_texture_2d(mlx, data->texture[(int)EA],
+			&texture->width, &texture->hight);
 	texture->c_color = convert_to_color(data->texture[(int)C]);
 	texture->f_color = convert_to_color(data->texture[(int)F]);
 	if (!check_on_all_texture(texture))

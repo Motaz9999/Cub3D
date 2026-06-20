@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/17 12:07:38 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/19 20:19:36 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/20 10:26:54 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,9 @@ void	render_a_slice(t_game *game, t_ray *ray, double ray_len, int i_in_width , d
 	
 	//must know which wall the ray hit
 	if (ray->side == 1)//hit vertical wall
-	exact_hit = game->player->y * (ray_len *ray_dir_y);
+	exact_hit = game->player->y + (ray_len *ray_dir_y);
 	else //hit horizontal wall
-	exact_hit = game->player->x * (ray_len *ray_dir_x); 
+	exact_hit = game->player->x + (ray_len *ray_dir_x); 
 	//after knowing which wall being hit we want to know how many of the wall being hit
 	double precentage = exact_hit - floor(exact_hit);//its for knowing exactly where it hit the wall like if i have a wall number 5 and the ray hit 5.6 so  hit 60% of the way down that block.
 		// Flip texture if looking South or West so it's not mirrored

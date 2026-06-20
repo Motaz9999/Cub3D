@@ -29,7 +29,7 @@
 # define KEY_RIGHT 65363
 # define KEY_LEFT 65361
 
-# define BLOCK 32
+# define BLOCK 8
 
 # define HITBOX 0.15
 
@@ -100,8 +100,7 @@ int			valid_map(t_map *map_data);
 // render
 int			render(void *game_void);
 void		render_as_3d(t_game *game);
-void	render_a_slice(t_game *game, t_ray *ray, double ray_len, int i_in_width , double ray_dir_x , double ray_dir_y);
-
+void    render_a_slice(t_game *game, t_ray *ray, double ray_len, int i_in_width, double ray_dir_x, double ray_dir_y);
 
 // hooks
 int			setup_hooks(t_game *game);
@@ -117,5 +116,5 @@ void		move_forward(t_game *game);
 void		strafe_left(t_game *game);
 void		strafe_right(t_game *game);
 // 2d map
-// void		draw2d_map(t_game *game);
+void		draw2d_map(t_game *game);
 #endif

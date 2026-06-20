@@ -122,6 +122,8 @@ typedef struct s_ray
 	double		delta_dist_y;
 	double		side_dest_x;
 	double		side_dest_y;
+	int map_x;
+	int map_y;
 }				t_ray;
 
 #endif

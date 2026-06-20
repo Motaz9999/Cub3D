@@ -6,7 +6,7 @@
 /*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 15:31:30 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/19 20:11:11 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/06/20 10:26:32 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,17 +181,17 @@ void	render_as_3d(t_game *game)
 	double camera_x;
 	t_ray *ray;
 	ray = NULL;
-	while (i < WIDTH_OF_WIN)
-	{
-		camera_x = 2.0 * ((double)i / (double)WIDTH_OF_WIN) - 1.0;
-		ray_dir_x = game->player->dir_x + (camera_x * game->player->plane_x);
-		ray_dir_y = game->player->dir_y + (camera_x * game->player->plane_y);
-		ray = dda(game, ray_dir_x, ray_dir_y);
-		ray_len = find_ray_len(ray);
-		// now this len i will use it to draw vertical line
-		render_a_slice(game, ray, ray_len, i, ray_dir_x ,ray_dir_y);
-		free(ray);
-		ray = NULL;
-		i++;
-	}
+ while (i < WIDTH_OF_WIN)
+        {
+                camera_x = 2.0 * ((double)i / (double)WIDTH_OF_WIN) - 1.0;
+                ray_dir_x = game->player->dir_x + (camera_x * game->player->plane_x);
+                ray_dir_y = game->player->dir_y + (camera_x * game->player->plane_y);
+                
+                ray = dda(game, ray_dir_x, ray_dir_y);
+                ray_len = find_ray_len(ray);
+                                render_a_slice(game, ray, ray_len, i, ray_dir_x, ray_dir_y);
+                
+                free(ray);
+                i++;
+        }
 }

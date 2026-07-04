@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_game.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 02:43:11 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/23 20:48:17 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:29:15 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	init_map(t_map *map)
 	map->map = NULL;
 	map->map_hight = 0;
 	map->map_width = 0;
-	map->map_char = "01NSEW \n"; // allowed chars for now to take line
+	map->map_char = "01NSEW \n";
 	map->player_loc = malloc(sizeof(t_point));
 	if (map->player_loc)
 	{

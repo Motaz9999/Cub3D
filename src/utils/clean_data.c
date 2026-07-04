@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean_data.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 02:50:38 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/23 14:09:49 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:28:41 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	clean_game(t_game *game)
 
 int	close_game(void *game_void)
 {
-	t_game *game;
+	t_game	*game;
 
 	game = (t_game *)game_void;
 	if (game != NULL)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   valid_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 10:22:26 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/14 17:21:29 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:20:42 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ char	**copy_map(char **map_2d, int n)
 	return (copy_map);
 }
 
-// this fun is for search for player loc and check if there is more than 1 player
+// this fun is for search for player loc 
+// and check if there is more than 1 player
 // true mean that i have the player loc
 // false mean that i have more than one or none
 // i is the row
@@ -103,7 +104,8 @@ int	find_player_and_check(t_map *map_data)
 
 int	valid_map(t_map *map_data)
 {
-	char **new_map;
+	char	**new_map;
+
 	if (!find_player_and_check(map_data))
 	{
 		return (FALSE);
@@ -113,7 +115,6 @@ int	valid_map(t_map *map_data)
 		return (FALSE);
 	if (!check_outer_edges(map_data->map, map_data->map_hight)
 		|| !flood_fill(new_map, map_data))
-
 	{
 		ft_free_all2((void **)new_map, NULL);
 		return (FALSE);

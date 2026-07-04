@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   struct.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/04 19:33:06 by samarnah          #+#    #+#             */
+/*   Updated: 2026/07/04 19:35:48 by samarnah         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef STRUCT_H
 # define STRUCT_H
 
@@ -10,13 +22,12 @@ typedef struct s_point
 
 typedef struct s_map
 {
-	char **map;     // the hole map
-	char *map_char; // allowed chars
-	int map_hight;  // the hight of the whole map
+	char		**map;
+	char		*map_char;
+	int			map_hight;
 	int			map_width;
 	t_point		*player_loc;
 	char		player_face;
-	// u must also add the player loc
 }				t_map;
 
 // from 0-5 -> 6 elements
@@ -36,33 +47,30 @@ typedef struct s_config
 	int			fd;
 	int			count_of_elements;
 	char		*texture[6];
-	// texture path checks NO,SO,WE,EA,C,F(see the enum to know what each index mean)
 	char		*save_line_map;
 	t_map		*map_data;
 }				t_config;
 
 typedef struct s_mlx
 {
-	void *mlx; // connection to display
-	void *win; // the window here we want to put the img
-	void *img; // the image buffer the img i want to print on the window
+	void		*mlx;
+	void		*win;
+	void		*img;
 	char		*addr;
-	// raw pixel array (pointer to the first pixel in the screen)  useed when we want to color pixel at x,y  on the img
 	int			bpp;
-	// bits per pixel  always its 32 its mean each pixel have 4bytes argb coloring  and to till what each time i move and how in the the adder
-	int line_len; // bytes per row  used to get to the next row on the img
-	int endian;   // byte order  we dont use it
+	int			line_len;
+	int			endian;
 }				t_mlx;
 
 // have texture ready to use
 typedef struct s_texture
 {
-	int*		*no_texture;
-	int*		*so_texture;
-	int*		*we_texture;
-	int*		*ea_texture;
-	int width;//keep track of the texture size
-	int hight;
+	int			**no_texture;
+	int			**so_texture;
+	int			**we_texture;
+	int			**ea_texture;
+	int			width;
+	int			hight;
 	int			c_color;
 	int			f_color;
 }				t_texture;
@@ -88,10 +96,10 @@ typedef struct s_player
 {
 	double		x;
 	double		plane_len;
-	double y; // moving is difference
+	double		y;
 	double		dir_x;
-	double dir_y;   // where the player looking
-	double plane_x; // the width for the whole FOV
+	double		dir_y;
+	double		plane_x;
 	double		plane_y;
 }				t_player;
 
@@ -122,8 +130,8 @@ typedef struct s_ray
 	double		delta_dist_y;
 	double		side_dest_x;
 	double		side_dest_y;
-	int map_x;
-	int map_y;
+	int			map_x;
+	int			map_y;
 }				t_ray;
 
 #endif

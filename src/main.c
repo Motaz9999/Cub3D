@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 21:10:46 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/16 04:07:52 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:31:21 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	loop(t_game *game)
 		clean_game(game);
 		exit(1);
 	}
-	mlx_loop(game->mlx_lib->mlx);//start the game until i exit 
+	mlx_loop(game->mlx_lib->mlx);
 }
 
 int	main(int argc, char **argv)
@@ -36,7 +36,7 @@ int	main(int argc, char **argv)
 		clean_game(&game);
 		exit(1);
 	}
-	setup_mlx(&game); // this is make the window
+	setup_mlx(&game);
 	if (game.mlx_lib == NULL)
 	{
 		clean_game(&game);

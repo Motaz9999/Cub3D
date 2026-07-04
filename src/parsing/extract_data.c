@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extract_data.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 22:35:40 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/05 06:07:44 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:21:08 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	add_to_data(t_config *data, char *extract_path, t_type_of_text type,
 // NO//SO//WE//EA//F//C
 int	extract_data(t_config *data, char *line)
 {
-	char *trim;
-	int status;
+	char	*trim;
+	int		status;
 
 	trim = ft_strtrim(line, "\n \t");
 	if (!trim)

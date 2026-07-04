@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_texture.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:37:44 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/19 11:17:33 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:30:58 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ static int	convert_to_color(char *data)
 		return (-1);
 	alpha = (int)ALPHA_COLOR;
 	ret = 0;
-	r = ft_atoi(nums[0]); // red color
-	g = ft_atoi(nums[1]); // green color
-	b = ft_atoi(nums[2]); // blue color
+	r = ft_atoi(nums[0]);
+	g = ft_atoi(nums[1]);
+	b = ft_atoi(nums[2]);
 	if ((alpha > 255 || alpha < 0) || (r > 255 || r < 0) || (g > 255 || g < 0)
 		|| (b > 255 || b < 0))
 	{
@@ -79,7 +79,9 @@ static void	free_texture_2d(void *mlx, void *image, int **texture)
 		ft_free_all2((void **)texture, NULL);
 }
 
-// this fun its make the texture into array of colors like imagin the whole texture pix of an array of 64x64 and this array have on pixle color
+// this fun its make the texture into array of colors 
+// like imagin the whole texture pix of an array of 64x64 
+// and this array have on pixle color
 // the height here represent how many rows i have in the img
 //->rows and the width is how many pixels are in the 1 row
 // so what we doing here is to save each pixel in this array of pixels
@@ -99,6 +101,7 @@ static int	**make_texture_2d(void *mlx, char *flie_name, int *width,
 	char			*pixel;
 	int				i;
 	int				j;
+
 	texture = mlx_xpm_file_to_image(mlx, flie_name, width, height);
 	if (texture == NULL)
 	{
@@ -131,7 +134,7 @@ static int	**make_texture_2d(void *mlx, char *flie_name, int *width,
 		i++;
 	}
 	array_of_texture[*height] = NULL;
-	mlx_destroy_image(mlx, texture); // we dont use this img anymore
+	mlx_destroy_image(mlx, texture);
 	return (array_of_texture);
 }
 
@@ -158,7 +161,8 @@ static int	load_texture(void *mlx, t_texture *texture, t_config *data)
 //	SO,
 //	WE,
 //	EA,
-//	C,	F not texture but i need them as 1 number 32 bit (use bitwise ops to do it )
+//	C,	F not texture but i need them as 1 number 32 bit 
+// (use bitwise ops to do it )
 void	setup_texture(t_game *game)
 {
 	game->loaded_texture = malloc(sizeof(t_texture));

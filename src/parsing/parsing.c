@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 22:19:32 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/08 07:26:30 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:22:26 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ static int	is_map_line(char *line)
 	return (TRUE);
 }
 
-// check if the line have some char must not have or check on the line is from the map or not in the same time
+// check if the line have some char must not have 
+// or check on the line is from the map or not in the same time
 int	line_have_trash(char *line)
 {
 	int	i;
@@ -66,7 +67,7 @@ int	line_have_trash(char *line)
 	if (is_map_line(line))
 		return (FALSE);
 	error_handling("Line contains trash values", 2);
-	return (TRUE); // has trash value
+	return (TRUE);
 }
 
 // just skip
@@ -78,11 +79,10 @@ int	line_is_empty(char *line)
 	while (line[i] != '\0' && line[i] != '\n')
 	{
 		if (line[i] != '\t' && line[i] != ' ')
-			// this mean that i have data on the line
 			return (FALSE);
 		i++;
 	}
-	return (TRUE); // this mean that the file is empty
+	return (TRUE);
 }
 
 // this fun is for gathering multible checks on map
@@ -104,7 +104,6 @@ static int	fill_data(t_config *data)
 {
 	char	*line;
 
-	// take line by line (skip the empty lines or the one have trash values)
 	line = get_next_line(data->fd);
 	while (line != NULL)
 	{
@@ -124,7 +123,8 @@ static int	fill_data(t_config *data)
 			if (data->count_of_elements != 6)
 			{
 				free(line);
-				return (error_handling("starts the map without having all texture element",
+				return (error_handling("starts the map without 
+					having all texture element",
 						(int)FALSE));
 			}
 			data->save_line_map = line;
@@ -151,10 +151,9 @@ t_config	*parse_file(char *file_name)
 	t_config	*data;
 
 	data = malloc(sizeof(t_config));
-	// now i have element that can store data so lets start
 	if (data == NULL)
 		exit(error_handling("Malloc error", 2));
-	init_config(data); // first test to see if i can open fd
+	init_config(data);
 	if (!check_extension(file_name, ".cub"))
 	{
 		free(data);
@@ -165,7 +164,7 @@ t_config	*parse_file(char *file_name)
 	{
 		free(data);
 		exit(error_handling("File not found or couldn't access", 2));
-	} // now i have an open file so
+	}
 	if (!fill_data(data) || !check_texture(data) || !parse_map(data))
 	{
 		clean_data(data);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/04 19:32:14 by samarnah          #+#    #+#             */
+/*   Updated: 2026/07/04 19:32:51 by samarnah         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 # include "get_next_line.h"
@@ -100,7 +112,8 @@ int			valid_map(t_map *map_data);
 // render
 int			render(void *game_void);
 void		render_as_3d(t_game *game);
-void    render_a_slice(t_game *game, t_ray *ray, double ray_len, int i_in_width, double ray_dir_x, double ray_dir_y);
+void		render_a_slice(t_game *game, t_ray *ray, double ray_len,
+				int i_in_width, double ray_dir_x, double ray_dir_y);
 
 // hooks
 int			setup_hooks(t_game *game);

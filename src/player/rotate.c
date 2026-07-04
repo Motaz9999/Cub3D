@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rotate.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:33:25 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/16 05:44:39 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:26:15 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@
 // u must calc new dir x and dir y
 // btw here we use angels and (Xsin ,Ycos)
 // and dot->its like speed value but for rotation
-// so if u rotate for Right we multi play the cos(angel) bc the we take from Y and add to x
-// So to make clear if u r rotate left or Right it will effect the ROT_SPEED bc we dont have angles here
+// so if u rotate for Right we multi play the cos(angel) 
+// bc the we take from Y and add to x
+// So to make clear if u r rotate left or Right 
+// it will effect the ROT_SPEED bc we dont have angles here
 //	-+
 // the right is + and the left -
 // now if i am want to rotate it will effect the horizontal and vertical
@@ -82,10 +84,8 @@ void	handle_movement(t_game *game)
 		move_backward(game);
 	if (game->keys->a == 1)
 		strafe_left(game);
-
 	if (game->keys->d == 1)
 		strafe_right(game);
-
 	if (game->keys->right_arrow == 1)
 		rotate_right(game);
 	if (game->keys->left_arrow == 1)

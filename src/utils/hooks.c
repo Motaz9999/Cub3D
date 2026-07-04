@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hooks.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 17:51:53 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/23 20:48:56 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:28:59 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,7 @@ int	setup_hooks(t_game *game)
 	init_key(game->keys);
 	mlx_hook(game->mlx_lib->win, 2, (1L << 0), handle_key_press, game);
 	mlx_hook(game->mlx_lib->win, 3, (1L << 1), handle_key_release, game);
-	mlx_hook(game->mlx_lib->win, 17, 0L, close_game, game); // x button
+	mlx_hook(game->mlx_lib->win, 17, 0L, close_game, game);
 	mlx_loop_hook(game->mlx_lib->mlx, render, game);
-	// render as mush it could to render
 	return (TRUE);
 }

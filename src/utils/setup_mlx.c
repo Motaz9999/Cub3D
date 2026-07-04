@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_mlx.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 11:25:19 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/25 17:48:51 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:29:56 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 // this fun is responsible to color the pixel at (x,y) and given a color
 // by standard convention, y is the row and x is the column
 // here we move the pointer so we can color the pixel the right way
-// the other fun for putting the whole img to screen after i put some colors using this fun
+// the other fun for putting the whole img to screen 
+// after i put some colors using this fun
 void	put_pixel_to_img_buffer(t_mlx *mlx_lib, int x, int y, int color)
 {
 	char	*dst;
@@ -40,7 +41,8 @@ static int	init_window(t_game *game)
 	return (TRUE);
 }
 
-// this fun is for setting (img pointer) i will use to put imgs in it then print it in window
+// this fun is for setting (img pointer) 
+// i will use to put imgs in it then print it in window
 static int	init_image(t_game *game)
 {
 	game->mlx_lib->img = mlx_new_image(game->mlx_lib->mlx, WIDTH_OF_WIN,
@@ -65,7 +67,7 @@ int	setup_mlx(t_game *game)
 	if (!game->mlx_lib)
 		return (error_handling("error in mlx lib", (int)FALSE));
 	init_mlx_lib(game->mlx_lib);
-	game->mlx_lib->mlx = mlx_init(); // link to lib
+	game->mlx_lib->mlx = mlx_init();
 	if (!game->mlx_lib->mlx)
 	{
 		free(game->mlx_lib);

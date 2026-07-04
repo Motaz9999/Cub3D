@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_player.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 16:32:13 by moodeh            #+#    #+#             */
-/*   Updated: 2026/06/19 08:27:48 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:26:51 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,32 +44,29 @@ void	setup_plane(t_player *player, char player_face)
 {
 	if (player_face == 'N')
 	{
-		// face North dir is (0, -1), plane must be X-axis
 		player->plane_x = player->plane_len;
 		player->plane_y = 0;
 	}
 	else if (player_face == 'S')
 	{
-		//face South dir is (0, 1), plane must be negative X-axis to keep left right correct
 		player->plane_x = -player->plane_len;
 		player->plane_y = 0;
 	}
 	else if (player_face == 'E')
 	{
-		// face East dir is (1, 0), plane must be Y-axis
 		player->plane_x = 0;
 		player->plane_y = player->plane_len;
 	}
 	else if (player_face == 'W')
 	{
-		// face West dir is (-1, 0), plane must be negative Y-axis
 		player->plane_x = 0;
 		player->plane_y = -player->plane_len;
 	}
 }
 
 // this fun calc plane from the FOV angle u givin
-// we div the FOV on 2 WHY? bc the fov is right triangle and left so there are 2 triangles
+// we div the FOV on 2 WHY? 
+// bc the fov is right triangle and left so there are 2 triangles
 // next step is from angle to radian so the computer can understand it well
 // so we multiply it with PI/180
 // the tan to calc the len of plane ()
@@ -93,7 +90,6 @@ int	setup_player(t_game *game)
 		+ 0.5;
 	game->player->y = (double)game->config_file_data->map_data->player_loc->y
 		+ 0.5;
-	// now i have x and y on map next i want the dir of x and y
 	calc_plane(game->player);
 	setup_dir_player(game->player,
 		game->config_file_data->map_data->player_face);

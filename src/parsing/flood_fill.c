@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   flood_fill.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:08:05 by moodeh            #+#    #+#             */
-/*   Updated: 2026/05/16 09:58:20 by moodeh           ###   ########.fr       */
+/*   Updated: 2026/07/04 19:21:32 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,14 @@ static t_point	add_point(t_point point, int x, int y)
 
 // ok this fun job is adding the right neighbors
 // but check on them before adding them like are they are valid
-// like if the row have 4zeros 0000 and the last zero try to go to then next its not valid
+// like if the row have 4zeros 0000 
+// and the last zero try to go to then next its not valid
 // or if the zero have a neighbors of space this is not valid
 // after all and adding zeros into the queue
 // we return to the main fun
 // so the check are
-// (1 , 0) up  , (-1 ,0 ) down ,  (0 , 1) right , (0 , -1) right left
+// (1 , 0) up  , (-1 ,0 ) down ,  
+// (0 , 1) right , (0 , -1) right left
 // so we make them as double arrays and these arrays
 static int	check_on_4_dirs(t_point *queue, char **map, t_point *point, int *tail,
 		t_map *map_data)
@@ -45,11 +47,13 @@ static int	check_on_4_dirs(t_point *queue, char **map, t_point *point, int *tail
 	int	i;
 	int	next_x;
 	int	next_y;
+	int	dx[];
+	int	dy[];
 
-	int dx[] = {0, 0, 1, -1}; // right, left
-	int dy[] = {1, -1, 0, 0}; // down, up
+	dx[] = {0, 0, 1, -1};
+	dy[] = {1, -1, 0, 0};
 	i = 0;
-	while (i < 4) // sec step is to check on the map chars
+	while (i < 4)
 	{
 		next_x = point->x + dx[i];
 		next_y = point->y + dy[i];
@@ -86,13 +90,12 @@ int	flood_fill(char **map, t_map *map_data)
 	int		tail_index;
 	t_point	point;
 
-
 	queue = malloc(sizeof(t_point) * (map_data->map_hight
 				* map_data->map_width));
-	init_queue(queue, (map_data->map_hight * map_data->map_width) ,&tail_index , &head_index);
+	init_queue(queue, (map_data->map_hight * map_data->map_width), &tail_index, &head_index);
 	point.x = map_data->player_loc->x;
 	point.y = map_data->player_loc->y;
-	map[point.y][point.x] = '1'; // already visited
+	map[point.y][point.x] = '1';
 	inqueue(queue, &tail_index, point);
 	while (!is_queue_empty(head_index, tail_index))
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   move_player.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/23 13:56:19 by moodeh            #+#    #+#             */
-/*   Updated: 2026/07/10 21:31:52 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 23:49:38 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	is_wall(t_map *map_data, int x, int y)
 // we checks diagonals ups and downs
 // if checks fails we cant move more 
 // and return false else the loc is safe and can move ok
-static int	check_player_hitbox(double new_x, double new_y, t_map *map_data)
+int	check_player_hitbox(double new_x, double new_y, t_map *map_data)
 {
 	double	buffer;
 

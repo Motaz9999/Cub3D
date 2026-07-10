@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 08:39:33 by moodeh            #+#    #+#             */
-/*   Updated: 2026/07/10 21:28:25 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 23:44:23 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	check_line_map(char *line, char *set)
 	return (TRUE);
 }
 
-static char	**copy_map_and_free(char **new_map, char **old_map, char *new_line,
+char	**copy_map_and_free(char **new_map, char **old_map, char *new_line,
 		int hight)
 {
 	int	i;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_texture.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:37:44 by moodeh            #+#    #+#             */
-/*   Updated: 2026/07/10 23:02:40 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 23:46:33 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	check_on_all_texture(t_texture *texture)
 //	EA,
 //	C,	F not texture but i need them as 1 number 32 bit 
 // (use bitwise ops to do it )
-static int	load_texture(void *mlx, t_texture *texture, t_config *data)
+int	load_texture(void *mlx, t_texture *texture, t_config *data)
 {
 	texture->no_texture = make_texture_2d(mlx, data->texture[(int)NO],
 			&texture->width, &texture->hight);

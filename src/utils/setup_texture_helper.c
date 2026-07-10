@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_texture_helper.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/10 22:58:34 by samarnah          #+#    #+#             */
-/*   Updated: 2026/07/10 23:03:42 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 23:56:27 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	color_is_valid(int color[4])
 // aw each element start from bit to bit and we must be sure about colors
 // this like i insert each num in
 // its right place in the 32bit  like the 32-24 bits are for alpha a...
-static int	convert_to_color(char *data)
+int	convert_to_color(char *data)
 {
 	char	**nums;
 	int		color[4];

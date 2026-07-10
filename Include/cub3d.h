@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/04 19:32:14 by samarnah          #+#    #+#             */
-/*   Updated: 2026/07/10 23:33:54 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 23:53:05 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ void		clean_data(t_config *data);
 void		clean_mlx_data(t_mlx *mlx_lib);
 void		clean_texture(void *mlx_ptr, t_texture *texture);
 void		clean_game(t_game *game);
-
+// color
+int			texture_to_use_color(t_ray *ray, t_game *game, int tex_x,
+				int tex_y);
 // Init structs
 void		init_game(t_game *game);
 void		init_map(t_map *map);
@@ -77,6 +79,7 @@ void		init_player(t_player *player);
 int			setup_mlx(t_game *game);
 void		put_pixel_to_img_buffer(t_mlx *mlx_lib, int x, int y, int color);
 // parsing
+int			is_map_line(char *line);
 int			get_hight(char **map);
 int			get_width(char *line);
 t_config	*parse_file(char *file_name);
@@ -89,7 +92,8 @@ void		print_map(t_map *map);
 // texture
 int			check_texture(t_config *data);
 void		setup_texture(t_game *game);
-
+int			load_texture(void *mlx, t_texture *texture, t_config *data);
+int			convert_to_color(char *data);
 // make map
 char		**init_map_array(char *first_row);
 char		**line_map_error(char **map, char *line);
@@ -97,6 +101,8 @@ char		**end_map_error(char **map);
 char		**append_line_to_map(char **map, char *line, int hight);
 char		**make_map(int fd, char *first_row, char *set);
 
+char		**copy_map_and_free(char **new_map, char **old_map, char *new_line,
+				int hight);
 // remake map
 char		**remake_map(t_map *map);
 
@@ -149,12 +155,16 @@ int			close_game(void *game_void);
 
 // player
 int			setup_player(t_game *game);
+int			check_player_hitbox(double new_x, double new_y, t_map *map_data);
 // movement
 void		handle_movement(t_game *game);
 void		move_backward(t_game *game);
 void		move_forward(t_game *game);
 void		strafe_left(t_game *game);
 void		strafe_right(t_game *game);
+
 // 2d map
 void		draw2d_map(t_game *game);
+int			**make_texture_2d(void *mlx, char *file_name, int *width,
+				int *height);
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: moodeh <moodeh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/10 21:19:00 by samarnah          #+#    #+#             */
-/*   Updated: 2026/07/10 21:19:51 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 23:43:12 by moodeh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	check_extension(char *path, char *ext)
 	return (FALSE);
 }
 
-static int	is_map_line(char *line)
+int	is_map_line(char *line)
 {
 	int	i;
 

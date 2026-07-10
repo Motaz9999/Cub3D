@@ -47,19 +47,3 @@ void	init_player(t_player *player)
 	player->plane_y = 0.0;
 	player->plane_len = 0.0;
 }
-
-// setup_texture
-void	setup_texture(t_game *game)
-{
-	game->loaded_texture = malloc(sizeof(t_texture));
-	if (!game->loaded_texture)
-		return ;
-	init_texture(game->loaded_texture);
-	if (!load_texture(game->mlx_lib->mlx, game->loaded_texture,
-			game->config_file_data))
-	{
-		clean_texture(game->mlx_lib->mlx, game->loaded_texture);
-		game->loaded_texture = NULL;
-		return ;
-	}
-}

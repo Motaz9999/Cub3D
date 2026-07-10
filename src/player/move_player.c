@@ -6,7 +6,7 @@
 /*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/23 13:56:19 by moodeh            #+#    #+#             */
-/*   Updated: 2026/07/04 19:25:27 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 21:31:52 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,28 +136,5 @@ void	strafe_left(t_game *game)
 			game->config_file_data->map_data))
 	{
 		game->player->y -= prop_y * MOVE_SPEED;
-	}
-}
-
-void	strafe_right(t_game *game)
-{
-	double	check_x;
-	double	check_y;
-	double	prop_x;
-	double	prop_y;
-
-	prop_x = -game->player->dir_y;
-	prop_y = game->player->dir_x;
-	check_x = game->player->x + (prop_x * MOVE_SPEED);
-	if (check_player_hitbox(check_x, game->player->y,
-			game->config_file_data->map_data))
-	{
-		game->player->x += prop_x * (MOVE_SPEED);
-	}
-	check_y = game->player->y + (prop_y * MOVE_SPEED);
-	if (check_player_hitbox(game->player->x, check_y,
-			game->config_file_data->map_data))
-	{
-		game->player->y += prop_y * MOVE_SPEED;
 	}
 }

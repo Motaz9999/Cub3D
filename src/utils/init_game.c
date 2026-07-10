@@ -6,7 +6,7 @@
 /*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 02:43:11 by moodeh            #+#    #+#             */
-/*   Updated: 2026/07/04 19:29:15 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 21:51:33 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,25 +70,4 @@ void	init_texture(t_texture *texture)
 	texture->ea_texture = NULL;
 	texture->c_color = -1;
 	texture->f_color = -1;
-}
-
-void	init_key(t_key *keys)
-{
-	keys->a = 0;
-	keys->s = 0;
-	keys->d = 0;
-	keys->w = 0;
-	keys->right_arrow = 0;
-	keys->left_arrow = 0;
-}
-
-void	init_player(t_player *player)
-{
-	player->x = 0.0;
-	player->y = 0.0;
-	player->dir_x = 0.0;
-	player->dir_y = 0.0;
-	player->plane_x = 0.0;
-	player->plane_y = 0.0;
-	player->plane_len = 0.0;
 }

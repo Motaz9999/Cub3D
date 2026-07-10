@@ -6,15 +6,19 @@
 /*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 22:35:40 by moodeh            #+#    #+#             */
-/*   Updated: 2026/07/04 19:21:08 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/04 20:10:42 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-// add new path and
-// checks if i already added this path
-// and take the path
+static int	check_data_value(char *path, t_type_of_text type)
+{
+	if (type != C && type != F)
+		return (check_on_path(path));
+	return (check_on_value(path));
+}
+
 int	add_to_data(t_config *data, char *extract_path, t_type_of_text type,
 		int skip)
 {
@@ -28,12 +32,7 @@ int	add_to_data(t_config *data, char *extract_path, t_type_of_text type,
 		error_handling("strtrim", 2);
 		return (FALSE);
 	}
-	if ((type != C && type != F) && !check_on_path(path))
-	{
-		free(path);
-		return (FALSE);
-	}
-	else if ((type == C || type == F) && !check_on_value(path))
+	if (!check_data_value(path, type))
 	{
 		free(path);
 		return (FALSE);
@@ -43,8 +42,28 @@ int	add_to_data(t_config *data, char *extract_path, t_type_of_text type,
 	return (TRUE);
 }
 
-// this fun is for searching for the something i needs and it starts with
-// NO//SO//WE//EA//F//C
+static int	extract_texture_path(t_config *data, char *trim)
+{
+	if (ft_strncmp(trim, "NO ", 3) == 0)
+		return (add_to_data(data, trim, NO, 3));
+	if (ft_strncmp(trim, "SO ", 3) == 0)
+		return (add_to_data(data, trim, SO, 3));
+	if (ft_strncmp(trim, "WE ", 3) == 0)
+		return (add_to_data(data, trim, WE, 3));
+	if (ft_strncmp(trim, "EA ", 3) == 0)
+		return (add_to_data(data, trim, EA, 3));
+	return (-1);
+}
+
+static int	extract_color_value(t_config *data, char *trim)
+{
+	if (ft_strncmp(trim, "F ", 2) == 0)
+		return (add_to_data(data, trim, F, 2));
+	if (ft_strncmp(trim, "C ", 2) == 0)
+		return (add_to_data(data, trim, C, 2));
+	return (-1);
+}
+
 int	extract_data(t_config *data, char *line)
 {
 	char	*trim;
@@ -53,20 +72,10 @@ int	extract_data(t_config *data, char *line)
 	trim = ft_strtrim(line, "\n \t");
 	if (!trim)
 		return (FALSE);
-	status = TRUE;
-	if (ft_strncmp(trim, "NO ", 3) == 0)
-		status = add_to_data(data, trim, NO, 3);
-	else if (ft_strncmp(trim, "SO ", 3) == 0)
-		status = add_to_data(data, trim, SO, 3);
-	else if (ft_strncmp(trim, "WE ", 3) == 0)
-		status = add_to_data(data, trim, WE, 3);
-	else if (ft_strncmp(trim, "EA ", 3) == 0)
-		status = add_to_data(data, trim, EA, 3);
-	else if (ft_strncmp(trim, "F ", 2) == 0)
-		status = add_to_data(data, trim, F, 2);
-	else if (ft_strncmp(trim, "C ", 2) == 0)
-		status = add_to_data(data, trim, C, 2);
-	else
+	status = extract_texture_path(data, trim);
+	if (status == -1)
+		status = extract_color_value(data, trim);
+	if (status == -1)
 	{
 		error_handling("Invalid identifier", 2);
 		status = FALSE;

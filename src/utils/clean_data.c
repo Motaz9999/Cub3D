@@ -6,7 +6,7 @@
 /*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 02:50:38 by moodeh            #+#    #+#             */
-/*   Updated: 2026/07/04 19:28:41 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 22:43:07 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,17 +107,4 @@ void	clean_game(t_game *game)
 		free(game->keys);
 	if (game->player != NULL)
 		free(game->player);
-}
-
-int	close_game(void *game_void)
-{
-	t_game	*game;
-
-	game = (t_game *)game_void;
-	if (game != NULL)
-	{
-		clean_game(game);
-		exit(0);
-	}
-	return (0);
 }

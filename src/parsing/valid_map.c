@@ -6,70 +6,32 @@
 /*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 10:22:26 by moodeh            #+#    #+#             */
-/*   Updated: 2026/07/04 19:20:42 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 21:17:25 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-// this fun is to be sure no wrong on edges soo bfs algo works perfect
-// y == 0 first line ,, y == height-1  last line
-// x == 0 first element in line ,, x ==line_len - 1 last element in the line
-// so this is initial check
-int	check_outer_edges(char **map, int height)
+static int	is_player_char(char c)
 {
-	int	x;
-	int	y;
-	int	line_len;
+	if (c == 'S' || c == 'E' || c == 'W' || c == 'N')
+		return (TRUE);
+	return (FALSE);
+}
 
-	y = 0;
-	while (y < height)
-	{
-		line_len = ft_strlen(map[y]);
-		x = 0;
-		while (x < line_len)
-		{
-			if (y == 0 || y == height - 1 || x == 0 || x == line_len - 1)
-			{
-				if (map[y][x] != '1' && map[y][x] != ' ')
-					return (error_handling("map edge", (int)FALSE));
-			}
-			x++;
-		}
-		y++;
-	}
+static int	check_player_at(t_map *map_data, int i, int j, int *count)
+{
+	if (!is_player_char(map_data->map[i][j]))
+		return (TRUE);
+	map_data->player_loc->x = j;
+	map_data->player_loc->y = i;
+	map_data->player_face = map_data->map[i][j];
+	(*count)++;
+	if (*count > 1)
+		return (error_handling("more than 1 player", (int)FALSE));
 	return (TRUE);
 }
 
-// this fun is for copying the whole map
-char	**copy_map(char **map_2d, int n)
-{
-	int		i;
-	char	**copy_map;
-
-	i = 0;
-	copy_map = malloc((n + 1) * sizeof(char *));
-	if (!copy_map)
-		return (NULL);
-	while (i < n)
-	{
-		copy_map[i] = ft_strdup(map_2d[i]);
-		if (!copy_map[i])
-		{
-			ft_free_all2((void **)copy_map, NULL);
-			return (NULL);
-		}
-		i++;
-	}
-	copy_map[n] = NULL;
-	return (copy_map);
-}
-
-// this fun is for search for player loc 
-// and check if there is more than 1 player
-// true mean that i have the player loc
-// false mean that i have more than one or none
-// i is the row
 int	find_player_and_check(t_map *map_data)
 {
 	int	count;
@@ -83,16 +45,8 @@ int	find_player_and_check(t_map *map_data)
 		j = 0;
 		while (map_data->map[i][j] != '\0')
 		{
-			if (map_data->map[i][j] == 'S' || map_data->map[i][j] == 'E'
-				|| map_data->map[i][j] == 'W' || map_data->map[i][j] == 'N')
-			{
-				map_data->player_loc->x = j;
-				map_data->player_loc->y = i;
-				map_data->player_face = map_data->map[i][j];
-				count++;
-			}
-			if (count > 1)
-				return (error_handling("more than 1 player", (int)FALSE));
+			if (!check_player_at(map_data, i, j, &count))
+				return (FALSE);
 			j++;
 		}
 		i++;
@@ -107,9 +61,7 @@ int	valid_map(t_map *map_data)
 	char	**new_map;
 
 	if (!find_player_and_check(map_data))
-	{
 		return (FALSE);
-	}
 	new_map = copy_map(map_data->map, map_data->map_hight);
 	if (!new_map)
 		return (FALSE);

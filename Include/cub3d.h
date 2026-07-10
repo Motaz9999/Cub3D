@@ -6,7 +6,7 @@
 /*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/04 19:32:14 by samarnah          #+#    #+#             */
-/*   Updated: 2026/07/04 19:32:51 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 23:33:54 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "libft.h"
 # include "mlx.h"
 # include "struct.h"
-# include <error.h>
+# include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <math.h>
@@ -77,9 +77,13 @@ void		init_player(t_player *player);
 int			setup_mlx(t_game *game);
 void		put_pixel_to_img_buffer(t_mlx *mlx_lib, int x, int y, int color);
 // parsing
+int			get_hight(char **map);
+int			get_width(char *line);
 t_config	*parse_file(char *file_name);
 int			parse_map(t_config *data);
 int			check_extension(char *path, char *ext);
+int			line_have_trash(char *line);
+int			line_is_empty(char *line);
 void		print_map(t_map *map);
 
 // texture
@@ -87,10 +91,19 @@ int			check_texture(t_config *data);
 void		setup_texture(t_game *game);
 
 // make map
+char		**init_map_array(char *first_row);
+char		**line_map_error(char **map, char *line);
+char		**end_map_error(char **map);
+char		**append_line_to_map(char **map, char *line, int hight);
 char		**make_map(int fd, char *first_row, char *set);
 
 // remake map
 char		**remake_map(t_map *map);
+
+// valid map
+int			check_outer_edges(char **map, int height);
+char		**copy_map(char **map_2d, int n);
+int			find_player_and_check(t_map *map_data);
 
 // algorithm to check of map
 // queue
@@ -99,6 +112,11 @@ void		init_queue(t_point *queue, int capacity, int *tail_index,
 t_point		dequeue(t_point *queue, int *head);
 void		inqueue(t_point *queue, int *tail, t_point new_point);
 int			is_queue_empty(int head, int tail);
+t_point		add_point(int x, int y);
+t_point		get_next_point(t_point *point, int index);
+int			is_outside_map(t_fill *fill, t_point next);
+int			check_next_point(t_fill *fill, t_point next);
+int			check_on_4_dirs(t_fill *fill, t_point *point);
 int			flood_fill(char **map, t_map *map_data);
 
 // checks for paths and values
@@ -106,14 +124,23 @@ int			check_on_path(char *path);
 int			check_on_value(char *value);
 
 // data
+int			add_to_data(t_config *data, char *extract_path, t_type_of_text type,
+				int skip);
 int			extract_data(t_config *data, char *line);
 int			valid_map(t_map *map_data);
 
 // render
 int			render(void *game_void);
 void		render_as_3d(t_game *game);
-void		render_a_slice(t_game *game, t_ray *ray, double ray_len,
-				int i_in_width, double ray_dir_x, double ray_dir_y);
+void		get_draw_limits(double ray_len, int limits[3]);
+void		render_a_slice(t_game *game, t_ray *ray, int column,
+				double ray_data[3]);
+void		find_first_x(t_ray *ray, double ray_dir_x, double player_x,
+				int map_x);
+void		find_first_y(t_ray *ray, double ray_dir_y, double player_y,
+				int map_y);
+t_ray		*dda(t_game *game, double ray_dir_x, double ray_dir_y);
+double		find_ray_len(t_ray *ray);
 
 // hooks
 int			setup_hooks(t_game *game);

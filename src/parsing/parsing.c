@@ -6,144 +6,74 @@
 /*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 22:19:32 by moodeh            #+#    #+#             */
-/*   Updated: 2026/07/04 19:22:26 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/10 21:20:21 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#define MAP_STARTED 2
 
-// this file for checking on the extention of the file
-// this to check on path extension
-// use it later U can added to libft
-int	check_extension(char *path, char *ext)
+static int	set_map_start(t_config *data, char *line)
 {
-	int	len;
-	int	ext_len;
-
-	if (!path || !ext)
-		return (FALSE);
-	len = ft_strlen(path);
-	ext_len = ft_strlen(ext);
-	if (len < ext_len)
-		return (FALSE);
-	if (ft_strncmp(&path[len - ext_len], ext, ext_len) == 0)
-		return (TRUE);
-	else
-		return (FALSE);
-}
-
-// check of the line is part of the map (have all the map chars or some of them)
-static int	is_map_line(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i])
+	if (data->count_of_elements != 6)
 	{
-		if (line[i] != ' ' && line[i] != '\t' && line[i] != '\n'
-			&& line[i] != '0' && line[i] != '1' && line[i] != 'N'
-			&& line[i] != 'S' && line[i] != 'E' && line[i] != 'W')
-			return (FALSE);
-		i++;
-	}
-	return (TRUE);
-}
-
-// check if the line have some char must not have 
-// or check on the line is from the map or not in the same time
-int	line_have_trash(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i] == ' ' || line[i] == '\t')
-		i++;
-	if (line[i] == '\n' || line[i] == '\0')
-		return (FALSE);
-	if (!ft_strncmp(&line[i], "NO ", 3) || !ft_strncmp(&line[i], "SO ", 3)
-		|| !ft_strncmp(&line[i], "WE ", 3) || !ft_strncmp(&line[i], "EA ", 3)
-		|| !ft_strncmp(&line[i], "F ", 2) || !ft_strncmp(&line[i], "C ", 2))
-		return (FALSE);
-	if (is_map_line(line))
-		return (FALSE);
-	error_handling("Line contains trash values", 2);
-	return (TRUE);
-}
-
-// just skip
-int	line_is_empty(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i] != '\0' && line[i] != '\n')
-	{
-		if (line[i] != '\t' && line[i] != ' ')
-			return (FALSE);
-		i++;
-	}
-	return (TRUE);
-}
-
-// this fun is for gathering multible checks on map
-// first check is on the file have data i want
-// this fun must read all the lines before coming to the map if
-// it comes to the map (like have a line start with the char not from those
-// NO ./path/north.xpm — north texture path
-// SO ./path/south.xpm — south texture path
-// WE ./path/west.xpm — west texture path
-// EA ./path/east.xpm — east texture path
-// F 220,100,0 — floor RGB color
-// C 225,30,0 — ceiling RGB color
-// so when i hit spaces with zeros and ones this mean i am inside the map
-// and i must check on the counter element
-// u also must check on duplicates
-// btw must be empty after the map
-// must the line dont have trash values (dont start with something we dont know)
-static int	fill_data(t_config *data)
-{
-	char	*line;
-
-	line = get_next_line(data->fd);
-	while (line != NULL)
-	{
-		if (line_is_empty(line))
-		{
-			free(line);
-			line = get_next_line(data->fd);
-			continue ;
-		}
-		else if (line_have_trash(line))
-		{
-			free(line);
-			return (FALSE);
-		}
-		else if (is_map_line(line))
-		{
-			if (data->count_of_elements != 6)
-			{
-				free(line);
-				return (error_handling("starts the map without 
-					having all texture element",
-						(int)FALSE));
-			}
-			data->save_line_map = line;
-			break ;
-		}
-		else if (!extract_data(data, line))
-		{
-			free(line);
-			return (FALSE);
-		}
 		free(line);
-		line = get_next_line(data->fd);
+		return (error_handling("starts the map without having "
+				"all texture element", (int)FALSE));
 	}
+	data->save_line_map = line;
+	return (MAP_STARTED);
+}
+
+static int	process_config_line(t_config *data, char *line)
+{
+	if (line_is_empty(line))
+	{
+		free(line);
+		return (TRUE);
+	}
+	if (line_have_trash(line))
+	{
+		free(line);
+		return (FALSE);
+	}
+	if (is_map_line(line))
+		return (set_map_start(data, line));
+	if (!extract_data(data, line))
+	{
+		free(line);
+		return (FALSE);
+	}
+	free(line);
+	return (TRUE);
+}
+
+static int	check_complete_data(t_config *data)
+{
 	if (data->count_of_elements != 6)
 		return (error_handling("the file dosent have all required info",
 				(int)FALSE));
 	if (data->count_of_elements == 6 && data->save_line_map == NULL)
 		return (error_handling("missing map", (int)FALSE));
 	return (TRUE);
+}
+
+static int	fill_data(t_config *data)
+{
+	char	*line;
+	int		status;
+
+	line = get_next_line(data->fd);
+	while (line != NULL)
+	{
+		status = process_config_line(data, line);
+		if (status == FALSE)
+			return (FALSE);
+		if (status == MAP_STARTED)
+			break ;
+		line = get_next_line(data->fd);
+	}
+	return (check_complete_data(data));
 }
 
 t_config	*parse_file(char *file_name)

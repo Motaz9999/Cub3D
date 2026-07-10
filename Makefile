@@ -13,25 +13,35 @@ GNL_DIR = get_next_line/
 SRCS = $(SRC_DIR)main.c \
   $(SRC_DIR)error/error_handling.c \
   $(SRC_DIR)parsing/parsing.c \
+  $(SRC_DIR)parsing/parsing_utils.c \
   $(SRC_DIR)parsing/extract_data.c \
   $(SRC_DIR)parsing/check_on_path_and_value.c \
   $(SRC_DIR)parsing/parsing_map.c \
   $(SRC_DIR)parsing/make_map.c \
+  $(SRC_DIR)parsing/make_map_utils.c \
   $(SRC_DIR)parsing/remake_map.c \
   $(SRC_DIR)parsing/check_texture.c \
   $(SRC_DIR)parsing/flood_fill.c \
+  $(SRC_DIR)parsing/flood_fill_utils.c \
   $(SRC_DIR)parsing/queue.c \
   $(SRC_DIR)parsing/valid_map.c \
+  $(SRC_DIR)parsing/valid_map_utils.c \
+  $(SRC_DIR)utils/helper.c \
   $(SRC_DIR)utils/init_game.c \
   $(SRC_DIR)utils/clean_data.c \
   $(SRC_DIR)utils/setup_mlx.c \
+  $(SRC_DIR)utils/setup_texture_helper.c \
+  $(SRC_DIR)utils/make_texture.c \
   $(SRC_DIR)utils/setup_texture.c \
   $(SRC_DIR)utils/hooks.c \
   $(SRC_DIR)render/render.c \
   $(SRC_DIR)player/setup_player.c \
   $(SRC_DIR)player/rotate.c \
   $(SRC_DIR)player/move_player.c \
+  $(SRC_DIR)render/rays_helper.c \
+  $(SRC_DIR)render/rays_utils.c \
   $(SRC_DIR)render/rays.c \
+  $(SRC_DIR)render/render_slice_texture_helper.c \
   $(SRC_DIR)render/render_slice_texture.c \
   $(SRC_DIR)render/render_2d_map.c\
   $(GNL_DIR)get_next_line.c \

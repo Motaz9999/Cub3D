@@ -6,12 +6,21 @@
 /*   By: samarnah <samarnah@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/04 19:33:06 by samarnah          #+#    #+#             */
-/*   Updated: 2026/07/04 19:35:48 by samarnah         ###   ########.fr       */
+/*   Updated: 2026/07/04 20:14:13 by samarnah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCT_H
 # define STRUCT_H
+
+// flood_fill
+typedef struct s_fill
+{
+	t_point	*queue;
+	char	**map;
+	int		*tail;
+	t_map	*map_data;
+}	t_fill;
 
 // for queue and player
 typedef struct s_point
